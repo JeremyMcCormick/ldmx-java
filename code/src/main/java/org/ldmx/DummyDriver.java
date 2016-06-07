@@ -1,4 +1,4 @@
-package org.ldx;
+package org.ldmx;
 
 import org.lcsim.util.Driver;
 
