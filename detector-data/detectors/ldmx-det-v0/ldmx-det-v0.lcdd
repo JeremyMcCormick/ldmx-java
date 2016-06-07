@@ -2,12 +2,12 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="GeomConverter" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="1386050662" />
+    <generator name="GeomConverter" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="1425109260" />
     <author name="NONE" />
-    <comment>LDMX test det</comment>
+    <comment>This is the first draft for an LDMX detector including the tagger and recoil trackers, the Tungsten target, and the ECal. The 18D36 field map is used with no offset; the center of the coordinate system is defined by the center of this magnetic field region. Tracker geometry is from Tim Nelson, and ECal geometry was derived the layers_plain.csv spreadsheet defining the detailed layering. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
   <iddict>
-    <idspec name="TrackerHits" length="46">
+    <idspec name="TaggerTrackerHits" length="46">
       <idfield signed="false" label="system" length="6" start="0" />
       <idfield signed="false" label="barrel" length="3" start="6" />
       <idfield signed="false" label="layer" length="4" start="9" />
@@ -16,17 +16,92 @@
       <idfield signed="true" label="side" length="2" start="32" />
       <idfield signed="false" label="strip" length="12" start="34" />
     </idspec>
+    <idspec name="EcalScoringHits" length="46">
+      <idfield signed="false" label="system" length="6" start="0" />
+      <idfield signed="false" label="barrel" length="3" start="6" />
+      <idfield signed="false" label="layer" length="4" start="9" />
+      <idfield signed="false" label="module" length="12" start="13" />
+      <idfield signed="false" label="sensor" length="1" start="25" />
+      <idfield signed="true" label="side" length="2" start="32" />
+      <idfield signed="false" label="strip" length="12" start="34" />
+    </idspec>
+    <idspec name="RecoilTrackerHits" length="46">
+      <idfield signed="false" label="system" length="6" start="0" />
+      <idfield signed="false" label="barrel" length="3" start="6" />
+      <idfield signed="false" label="layer" length="4" start="9" />
+      <idfield signed="false" label="module" length="12" start="13" />
+      <idfield signed="false" label="sensor" length="1" start="25" />
+      <idfield signed="true" label="side" length="2" start="32" />
+      <idfield signed="false" label="strip" length="12" start="34" />
+    </idspec>
+    <idspec name="DummyTargetHits" length="46">
+      <idfield signed="false" label="system" length="6" start="0" />
+      <idfield signed="false" label="barrel" length="3" start="6" />
+      <idfield signed="false" label="layer" length="4" start="9" />
+      <idfield signed="false" label="module" length="12" start="13" />
+      <idfield signed="false" label="sensor" length="1" start="25" />
+      <idfield signed="true" label="side" length="2" start="32" />
+      <idfield signed="false" label="strip" length="12" start="34" />
+    </idspec>
+    <idspec name="EcalHits" length="64">
+      <idfield signed="false" label="system" length="3" start="0" />
+      <idfield signed="false" label="barrel" length="2" start="3" />
+      <idfield signed="false" label="layer" length="7" start="5" />
+      <idfield signed="true" label="x" length="16" start="32" />
+      <idfield signed="true" label="y" length="16" start="48" />
+    </idspec>
   </iddict>
   <sensitive_detectors>
-    <tracker name="Tracker" ecut="0.0" eunit="MeV" verbose="0" hits_collection="TrackerHits">
-      <idspecref ref="TrackerHits" />
+    <tracker name="TaggerTracker" ecut="0.0" eunit="MeV" verbose="0" hits_collection="TaggerTrackerHits">
+      <idspecref ref="TaggerTrackerHits" />
     </tracker>
+    <tracker name="Target" ecut="0.0" eunit="MeV" verbose="0" hits_collection="DummyTargetHits">
+      <idspecref ref="DummyTargetHits" />
+    </tracker>
+    <tracker name="EcalScoring" ecut="0.0" eunit="MeV" verbose="0" hits_collection="EcalScoringHits">
+      <idspecref ref="EcalScoringHits" />
+      <hit_processor type="ScoringTrackerHitProcessor" />
+    </tracker>
+    <tracker name="RecoilTracker" ecut="0.0" eunit="MeV" verbose="0" hits_collection="RecoilTrackerHits">
+      <idspecref ref="RecoilTrackerHits" />
+    </tracker>
+    <calorimeter name="Ecal" ecut="0.0" eunit="MeV" verbose="0" hits_collection="EcalHits">
+      <idspecref ref="EcalHits" />
+      <grid_xyz grid_size_x="1.0" grid_size_y="1.0" grid_size_z="0.0" />
+    </calorimeter>
   </sensitive_detectors>
   <limits />
   <regions>
     <region name="TrackingRegion" store_secondaries="true" kill_tracks="false" cut="10.0" lunit="mm" threshold="1.0" eunit="MeV" />
   </regions>
   <display>
+    <vis name="RecoilTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
+      <color R="0.74" G="0.71" B="0.41" alpha="1.0" />
+    </vis>
+    <vis name="TaggerTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
+      <color R="0.8" G="0.67" B="0.0" alpha="1.0" />
+    </vis>
+    <vis name="InvisibleNoDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="false">
+      <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
+    </vis>
+    <vis name="EcalDetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
+    </vis>
+    <vis name="EcalLayerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
+    </vis>
+    <vis name="EcalSensorVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="1.0" G="0.95" B="0.5" alpha="1.0" />
+    </vis>
+    <vis name="TargetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
+      <color R="0.5" G="0.54" B="0.54" alpha="0.8" />
+    </vis>
+    <vis name="InvisibleWithDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
+      <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
+    </vis>
+    <vis name="EcalScoringVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
+      <color R="0.67" G="0.84" B="0.9" alpha="1.0" />
+    </vis>
     <vis name="WorldVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
       <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
@@ -39,63 +114,347 @@
       <rotation name="identity_rot" x="0.0" y="0.0" z="0.0" unit="radian" />
       <rotation name="reflect_rot" x="3.141592653589793" y="0.0" z="0.0" unit="radian" />
       <position name="identity_pos" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <constant name="ecal_dim_x" value="300.0" />
+      <constant name="tagger_layer6_z" value="292.5" />
       <constant name="world_side" value="5000.0" />
-      <constant name="tracking_region_min" value="50.0" />
-      <constant name="sensorLength" value="98.33" />
-      <constant name="sensorWidth" value="38.3399" />
-      <constant name="tracking_region_radius" value="2000.0" />
+      <constant name="tagger_layer1_z" value="-207.5" />
+      <constant name="ecal_dim_y" value="600.0" />
+      <constant name="tracker_layer5_z" value="490.0" />
+      <constant name="tracking_region_radius" value="500.0" />
+      <constant name="tagger_layer3_z" value="-7.5" />
+      <constant name="tagger_layer4_z" value="92.5" />
+      <constant name="tracker_sensor_gap" value="1.0" />
+      <constant name="tracker_sensor_width" value="38.0" />
+      <constant name="tracker_layer6_z" value="580.0" />
+      <constant name="target_thickness" value="0.35" />
+      <constant name="ecal_total_thickness" value="289.0" />
+      <constant name="ecal_sensor_thickness" value="0.30000000000000004" />
+      <constant name="ecal_face_z" value="600.0" />
+      <constant name="tagger_layer5_z" value="192.5" />
+      <constant name="tracker_layer1_z" value="407.5" />
+      <constant name="target_z" value="400.0" />
+      <constant name="tracker_layer4_z" value="452.5" />
+      <constant name="tracker_layer3_z" value="437.5" />
+      <constant name="ecal_scoring_z" value="599.998" />
+      <constant name="tracker_module_length" value="80.0" />
+      <constant name="tracker_cf_thickness" value="0.2" />
+      <constant name="tracker_layer2_z" value="422.5" />
       <constant name="world_y" value="5000.0" />
+      <constant name="tracker_module_width" value="50.0" />
       <constant name="world_z" value="5000.0" />
-      <constant name="moduleLength" value="100.0" />
-      <constant name="tracking_region_zmax" value="1000.0" />
-      <constant name="moduleWidth" value="40.34" />
+      <constant name="tracker_stereo_angle" value="0.1" />
+      <constant name="tracker_si_thickness" value="0.32" />
+      <constant name="tracker_module_sep" value="3.0" />
       <constant name="world_x" value="5000.0" />
-      <position name="TestRunModuleVolume_component0_position" x="0.0" y="0.0" z="-0.1" unit="mm" />
-      <rotation name="TestRunModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TestRunModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
-      <rotation name="TestRunModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TestRunModuleVolume_component1_position" x="0.0" y="0.0" z="0.16" unit="mm" />
-      <rotation name="TestRunModuleVolume_component1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="Tracker_TestRunModule_layer1_module0_position" x="0.0" y="21.67" z="100.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer1_module0_rotation" x="0.0" y="0.0" z="-1.5707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer1_module1_position" x="0.0" y="-21.67" z="100.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer1_module1_rotation" x="0.0" y="0.0" z="-1.6707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer2_module0_position" x="0.0" y="21.67" z="110.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer2_module0_rotation" x="0.0" y="3.14159" z="-4.812386326794897" unit="radian" />
-      <position name="Tracker_TestRunModule_layer2_module1_position" x="0.0" y="-21.67" z="110.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer2_module1_rotation" x="0.0" y="3.14159" z="-4.712386326794896" unit="radian" />
-      <position name="Tracker_TestRunModule_layer3_module0_position" x="0.0" y="23.17" z="200.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer3_module0_rotation" x="0.0" y="0.0" z="-1.5707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer3_module1_position" x="0.0" y="-23.17" z="200.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer3_module1_rotation" x="0.0" y="0.0" z="-1.6707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer4_module0_position" x="0.0" y="23.17" z="210.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer4_module0_rotation" x="0.0" y="3.14159" z="-4.812386326794897" unit="radian" />
-      <position name="Tracker_TestRunModule_layer4_module1_position" x="0.0" y="-23.17" z="210.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer4_module1_rotation" x="0.0" y="3.14159" z="-4.712386326794896" unit="radian" />
-      <position name="Tracker_TestRunModule_layer5_module0_position" x="0.0" y="24.67" z="300.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer5_module0_rotation" x="0.0" y="0.0" z="-1.5707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer5_module1_position" x="0.0" y="-24.67" z="300.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer5_module1_rotation" x="0.0" y="0.0" z="-1.6707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer6_module0_position" x="0.0" y="24.67" z="310.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer6_module0_rotation" x="0.0" y="3.14159" z="-4.812386326794897" unit="radian" />
-      <position name="Tracker_TestRunModule_layer6_module1_position" x="0.0" y="-24.67" z="310.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer6_module1_rotation" x="0.0" y="3.14159" z="-4.712386326794896" unit="radian" />
-      <position name="Tracker_TestRunModule_layer7_module0_position" x="0.0" y="27.67" z="500.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer7_module0_rotation" x="0.0" y="0.0" z="-1.5707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer7_module1_position" x="0.0" y="-27.67" z="500.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer7_module1_rotation" x="0.0" y="0.0" z="-1.6207963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer8_module0_position" x="0.0" y="27.67" z="510.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer8_module0_rotation" x="0.0" y="3.14159" z="-4.762386326794896" unit="radian" />
-      <position name="Tracker_TestRunModule_layer8_module1_position" x="0.0" y="-27.67" z="510.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer8_module1_rotation" x="0.0" y="3.14159" z="-4.712386326794896" unit="radian" />
-      <position name="Tracker_TestRunModule_layer9_module0_position" x="0.0" y="30.67" z="700.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer9_module0_rotation" x="0.0" y="0.0" z="-1.5707963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer9_module1_position" x="0.0" y="-30.67" z="700.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer9_module1_rotation" x="0.0" y="0.0" z="-1.6207963267948966" unit="radian" />
-      <position name="Tracker_TestRunModule_layer10_module0_position" x="0.0" y="30.67" z="710.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer10_module0_rotation" x="0.0" y="3.14159" z="-4.762386326794896" unit="radian" />
-      <position name="Tracker_TestRunModule_layer10_module1_position" x="0.0" y="-30.67" z="710.0" unit="mm" />
-      <rotation name="Tracker_TestRunModule_layer10_module1_rotation" x="0.0" y="3.14159" z="-4.712386326794896" unit="radian" />
+      <constant name="tagger_layer7_z" value="392.5" />
+      <constant name="ecal_scoring_dim_x" value="300.0" />
+      <constant name="ecal_scoring_dim_y" value="600.0" />
+      <constant name="tracking_region_min" value="0.0" />
+      <constant name="tagger_layer2_z" value="-107.5" />
+      <constant name="ecal_scoring_thickness" value="0.001" />
+      <constant name="target_dim_y" value="35.0" />
+      <constant name="tracker_sensor_length" value="78.0" />
+      <constant name="tracking_region_zmax" value="599.999" />
+      <constant name="target_dim_x" value="95.0" />
+      <position name="LDMXTaggerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.9999999999999999" unit="mm" />
+      <rotation name="LDMXTaggerModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="LDMXTaggerModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="LDMXTaggerModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="LDMXTaggerModuleVolume_component1_position" x="0.0" y="0.0" z="0.16000000000000014" unit="mm" />
+      <rotation name="LDMXTaggerModuleVolume_component1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer1_module0_position" x="0.0" y="0.0" z="-210.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer2_module0_position" x="0.0" y="0.0" z="-204.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer2_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer3_module0_position" x="0.0" y="0.0" z="-110.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer3_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer4_module0_position" x="0.0" y="0.0" z="-104.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer4_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer5_module0_position" x="0.0" y="0.0" z="-10.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer5_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer6_module0_position" x="0.0" y="0.0" z="-4.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer6_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer7_module0_position" x="0.0" y="0.0" z="89.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer7_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer8_module0_position" x="0.0" y="0.0" z="95.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer8_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer9_module0_position" x="0.0" y="0.0" z="189.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer9_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer10_module0_position" x="0.0" y="0.0" z="195.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer10_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer11_module0_position" x="0.0" y="0.0" z="289.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer11_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer12_module0_position" x="0.0" y="0.0" z="295.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer12_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer13_module0_position" x="0.0" y="0.0" z="389.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer13_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer14_module0_position" x="0.0" y="0.0" z="395.5" unit="mm" />
+      <rotation name="TaggerTracker_LDMXTaggerModule_layer14_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
+      <position name="TargetModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="TargetModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="400.0" unit="mm" />
+      <rotation name="Target_TargetModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="ScoringModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="ScoringModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="ScoringModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="ScoringModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="EcalScoring_ScoringModule_layer1_module0_position" x="0.0" y="0.0" z="599.998" unit="mm" />
+      <rotation name="EcalScoring_ScoringModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="LDMXTrackerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.9999999999999999" unit="mm" />
+      <rotation name="LDMXTrackerModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="LDMXTrackerModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="LDMXTrackerModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="LDMXTrackerModuleVolume_component1_position" x="0.0" y="0.0" z="0.16000000000000014" unit="mm" />
+      <rotation name="LDMXTrackerModuleVolume_component1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer1_module0_position" x="0.0" y="0.0" z="404.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer2_module0_position" x="0.0" y="0.0" z="410.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer2_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer3_module0_position" x="0.0" y="0.0" z="419.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer3_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer4_module0_position" x="0.0" y="0.0" z="425.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer4_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer5_module0_position" x="0.0" y="0.0" z="434.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer5_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer6_module0_position" x="0.0" y="0.0" z="440.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer6_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer7_module0_position" x="0.0" y="0.0" z="449.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer7_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer8_module0_position" x="0.0" y="0.0" z="455.5" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer8_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module0_position" x="48.0" y="40.0" z="491.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module1_position" x="0.0" y="40.0" z="489.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module2_position" x="-48.0" y="40.0" z="491.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module2_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module3_position" x="48.0" y="-40.0" z="491.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module3_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module4_position" x="0.0" y="-40.0" z="489.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module4_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module5_position" x="-48.0" y="-40.0" z="491.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module5_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module0_position" x="48.0" y="40.0" z="581.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module1_position" x="0.0" y="40.0" z="579.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module2_position" x="-48.0" y="40.0" z="581.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module2_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module3_position" x="48.0" y="-40.0" z="581.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module3_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module4_position" x="0.0" y="-40.0" z="579.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module4_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module5_position" x="-48.0" y="-40.0" z="581.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module5_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="Ecal_position" x="0.0" y="0.0" z="744.5" unit="mm" />
+      <position name="Ecal_layerType0_slice0_position" x="0.0" y="0.0" z="-3.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType0_slice1_position" x="0.0" y="0.0" z="-3.4000000000000004" unit="mm" />
+      <position name="Ecal_layerType0_slice2_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType0_slice3_position" x="0.0" y="0.0" z="-0.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType0_slice4_position" x="0.0" y="0.0" z="-0.40000000000000036" unit="mm" />
+      <position name="Ecal_layerType0_slice5_position" x="0.0" y="0.0" z="0.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType0_slice6_position" x="0.0" y="0.0" z="2.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType0_slice7_position" x="0.0" y="0.0" z="3.9999999999999996" unit="mm" />
+      <position name="Ecal_layer0_position" x="0.0" y="0.0" z="-140.34999999999997" unit="mm" />
+      <position name="Ecal_layerType1_slice0_position" x="0.0" y="0.0" z="-5.45" unit="mm" />
+      <position name="Ecal_layerType1_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType1_slice2_position" x="0.0" y="0.0" z="1.1499999999999997" unit="mm" />
+      <position name="Ecal_layerType1_slice3_position" x="0.0" y="0.0" z="1.5999999999999996" unit="mm" />
+      <position name="Ecal_layerType1_slice4_position" x="0.0" y="0.0" z="2.7499999999999996" unit="mm" />
+      <position name="Ecal_layerType1_slice5_position" x="0.0" y="0.0" z="4.75" unit="mm" />
+      <position name="Ecal_layer1_position" x="0.0" y="0.0" z="-130.44999999999996" unit="mm" />
+      <position name="Ecal_layerType2_slice0_position" x="0.0" y="0.0" z="-3.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType2_slice1_position" x="0.0" y="0.0" z="-3.4000000000000004" unit="mm" />
+      <position name="Ecal_layerType2_slice2_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType2_slice3_position" x="0.0" y="0.0" z="-0.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType2_slice4_position" x="0.0" y="0.0" z="-0.40000000000000036" unit="mm" />
+      <position name="Ecal_layerType2_slice5_position" x="0.0" y="0.0" z="0.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType2_slice6_position" x="0.0" y="0.0" z="2.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType2_slice7_position" x="0.0" y="0.0" z="3.9999999999999996" unit="mm" />
+      <position name="Ecal_layer2_position" x="0.0" y="0.0" z="-120.54999999999995" unit="mm" />
+      <position name="Ecal_layerType3_slice0_position" x="0.0" y="0.0" z="-5.45" unit="mm" />
+      <position name="Ecal_layerType3_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType3_slice2_position" x="0.0" y="0.0" z="1.1499999999999997" unit="mm" />
+      <position name="Ecal_layerType3_slice3_position" x="0.0" y="0.0" z="1.5999999999999996" unit="mm" />
+      <position name="Ecal_layerType3_slice4_position" x="0.0" y="0.0" z="2.7499999999999996" unit="mm" />
+      <position name="Ecal_layerType3_slice5_position" x="0.0" y="0.0" z="4.75" unit="mm" />
+      <position name="Ecal_layer3_position" x="0.0" y="0.0" z="-110.64999999999995" unit="mm" />
+      <position name="Ecal_layerType4_slice0_position" x="0.0" y="0.0" z="-3.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType4_slice1_position" x="0.0" y="0.0" z="-3.4000000000000004" unit="mm" />
+      <position name="Ecal_layerType4_slice2_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType4_slice3_position" x="0.0" y="0.0" z="-0.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType4_slice4_position" x="0.0" y="0.0" z="-0.40000000000000036" unit="mm" />
+      <position name="Ecal_layerType4_slice5_position" x="0.0" y="0.0" z="0.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType4_slice6_position" x="0.0" y="0.0" z="2.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType4_slice7_position" x="0.0" y="0.0" z="3.9999999999999996" unit="mm" />
+      <position name="Ecal_layer4_position" x="0.0" y="0.0" z="-100.74999999999994" unit="mm" />
+      <position name="Ecal_layerType5_slice0_position" x="0.0" y="0.0" z="-5.45" unit="mm" />
+      <position name="Ecal_layerType5_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType5_slice2_position" x="0.0" y="0.0" z="1.1499999999999997" unit="mm" />
+      <position name="Ecal_layerType5_slice3_position" x="0.0" y="0.0" z="1.5999999999999996" unit="mm" />
+      <position name="Ecal_layerType5_slice4_position" x="0.0" y="0.0" z="2.7499999999999996" unit="mm" />
+      <position name="Ecal_layerType5_slice5_position" x="0.0" y="0.0" z="4.75" unit="mm" />
+      <position name="Ecal_layer5_position" x="0.0" y="0.0" z="-90.84999999999994" unit="mm" />
+      <position name="Ecal_layerType6_slice0_position" x="0.0" y="0.0" z="-3.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType6_slice1_position" x="0.0" y="0.0" z="-3.4000000000000004" unit="mm" />
+      <position name="Ecal_layerType6_slice2_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType6_slice3_position" x="0.0" y="0.0" z="-0.9000000000000004" unit="mm" />
+      <position name="Ecal_layerType6_slice4_position" x="0.0" y="0.0" z="-0.40000000000000036" unit="mm" />
+      <position name="Ecal_layerType6_slice5_position" x="0.0" y="0.0" z="0.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType6_slice6_position" x="0.0" y="0.0" z="2.8499999999999996" unit="mm" />
+      <position name="Ecal_layerType6_slice7_position" x="0.0" y="0.0" z="3.9999999999999996" unit="mm" />
+      <position name="Ecal_layer6_position" x="0.0" y="0.0" z="-80.94999999999993" unit="mm" />
+      <position name="Ecal_layerType7_slice0_position" x="0.0" y="0.0" z="-5.45" unit="mm" />
+      <position name="Ecal_layerType7_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType7_slice2_position" x="0.0" y="0.0" z="1.1499999999999997" unit="mm" />
+      <position name="Ecal_layerType7_slice3_position" x="0.0" y="0.0" z="1.5999999999999996" unit="mm" />
+      <position name="Ecal_layerType7_slice4_position" x="0.0" y="0.0" z="2.7499999999999996" unit="mm" />
+      <position name="Ecal_layerType7_slice5_position" x="0.0" y="0.0" z="4.75" unit="mm" />
+      <position name="Ecal_layer7_position" x="0.0" y="0.0" z="-71.04999999999993" unit="mm" />
+      <position name="Ecal_layerType8_slice0_position" x="0.0" y="0.0" z="-4.300000000000001" unit="mm" />
+      <position name="Ecal_layerType8_slice1_position" x="0.0" y="0.0" z="-3.8000000000000007" unit="mm" />
+      <position name="Ecal_layerType8_slice2_position" x="0.0" y="0.0" z="-2.150000000000001" unit="mm" />
+      <position name="Ecal_layerType8_slice3_position" x="0.0" y="0.0" z="-0.5000000000000009" unit="mm" />
+      <position name="Ecal_layerType8_slice4_position" x="0.0" y="0.0" z="-8.881784197001252E-16" unit="mm" />
+      <position name="Ecal_layerType8_slice5_position" x="0.0" y="0.0" z="1.2499999999999991" unit="mm" />
+      <position name="Ecal_layerType8_slice6_position" x="0.0" y="0.0" z="3.249999999999999" unit="mm" />
+      <position name="Ecal_layerType8_slice7_position" x="0.0" y="0.0" z="4.3999999999999995" unit="mm" />
+      <position name="Ecal_layer8_position" x="0.0" y="0.0" z="-60.74999999999993" unit="mm" />
+      <position name="Ecal_layerType9_slice0_position" x="0.0" y="0.0" z="-5.750000000000001" unit="mm" />
+      <position name="Ecal_layerType9_slice1_position" x="0.0" y="0.0" z="-2.1500000000000012" unit="mm" />
+      <position name="Ecal_layerType9_slice2_position" x="0.0" y="0.0" z="1.4499999999999988" unit="mm" />
+      <position name="Ecal_layerType9_slice3_position" x="0.0" y="0.0" z="2.199999999999999" unit="mm" />
+      <position name="Ecal_layerType9_slice4_position" x="0.0" y="0.0" z="3.3499999999999988" unit="mm" />
+      <position name="Ecal_layerType9_slice5_position" x="0.0" y="0.0" z="5.349999999999999" unit="mm" />
+      <position name="Ecal_layer9_position" x="0.0" y="0.0" z="-49.84999999999993" unit="mm" />
+      <position name="Ecal_layerType10_slice0_position" x="0.0" y="0.0" z="-4.300000000000001" unit="mm" />
+      <position name="Ecal_layerType10_slice1_position" x="0.0" y="0.0" z="-3.8000000000000007" unit="mm" />
+      <position name="Ecal_layerType10_slice2_position" x="0.0" y="0.0" z="-2.150000000000001" unit="mm" />
+      <position name="Ecal_layerType10_slice3_position" x="0.0" y="0.0" z="-0.5000000000000009" unit="mm" />
+      <position name="Ecal_layerType10_slice4_position" x="0.0" y="0.0" z="-8.881784197001252E-16" unit="mm" />
+      <position name="Ecal_layerType10_slice5_position" x="0.0" y="0.0" z="1.2499999999999991" unit="mm" />
+      <position name="Ecal_layerType10_slice6_position" x="0.0" y="0.0" z="3.249999999999999" unit="mm" />
+      <position name="Ecal_layerType10_slice7_position" x="0.0" y="0.0" z="4.3999999999999995" unit="mm" />
+      <position name="Ecal_layer10_position" x="0.0" y="0.0" z="-38.94999999999993" unit="mm" />
+      <position name="Ecal_layerType11_slice0_position" x="0.0" y="0.0" z="-5.750000000000001" unit="mm" />
+      <position name="Ecal_layerType11_slice1_position" x="0.0" y="0.0" z="-2.1500000000000012" unit="mm" />
+      <position name="Ecal_layerType11_slice2_position" x="0.0" y="0.0" z="1.4499999999999988" unit="mm" />
+      <position name="Ecal_layerType11_slice3_position" x="0.0" y="0.0" z="2.199999999999999" unit="mm" />
+      <position name="Ecal_layerType11_slice4_position" x="0.0" y="0.0" z="3.3499999999999988" unit="mm" />
+      <position name="Ecal_layerType11_slice5_position" x="0.0" y="0.0" z="5.349999999999999" unit="mm" />
+      <position name="Ecal_layer11_position" x="0.0" y="0.0" z="-28.049999999999933" unit="mm" />
+      <position name="Ecal_layerType12_slice0_position" x="0.0" y="0.0" z="-4.300000000000001" unit="mm" />
+      <position name="Ecal_layerType12_slice1_position" x="0.0" y="0.0" z="-3.8000000000000007" unit="mm" />
+      <position name="Ecal_layerType12_slice2_position" x="0.0" y="0.0" z="-2.150000000000001" unit="mm" />
+      <position name="Ecal_layerType12_slice3_position" x="0.0" y="0.0" z="-0.5000000000000009" unit="mm" />
+      <position name="Ecal_layerType12_slice4_position" x="0.0" y="0.0" z="-8.881784197001252E-16" unit="mm" />
+      <position name="Ecal_layerType12_slice5_position" x="0.0" y="0.0" z="1.2499999999999991" unit="mm" />
+      <position name="Ecal_layerType12_slice6_position" x="0.0" y="0.0" z="3.249999999999999" unit="mm" />
+      <position name="Ecal_layerType12_slice7_position" x="0.0" y="0.0" z="4.3999999999999995" unit="mm" />
+      <position name="Ecal_layer12_position" x="0.0" y="0.0" z="-17.14999999999993" unit="mm" />
+      <position name="Ecal_layerType13_slice0_position" x="0.0" y="0.0" z="-5.750000000000001" unit="mm" />
+      <position name="Ecal_layerType13_slice1_position" x="0.0" y="0.0" z="-2.1500000000000012" unit="mm" />
+      <position name="Ecal_layerType13_slice2_position" x="0.0" y="0.0" z="1.4499999999999988" unit="mm" />
+      <position name="Ecal_layerType13_slice3_position" x="0.0" y="0.0" z="2.199999999999999" unit="mm" />
+      <position name="Ecal_layerType13_slice4_position" x="0.0" y="0.0" z="3.3499999999999988" unit="mm" />
+      <position name="Ecal_layerType13_slice5_position" x="0.0" y="0.0" z="5.349999999999999" unit="mm" />
+      <position name="Ecal_layer13_position" x="0.0" y="0.0" z="-6.24999999999993" unit="mm" />
+      <position name="Ecal_layerType14_slice0_position" x="0.0" y="0.0" z="-4.300000000000001" unit="mm" />
+      <position name="Ecal_layerType14_slice1_position" x="0.0" y="0.0" z="-3.8000000000000007" unit="mm" />
+      <position name="Ecal_layerType14_slice2_position" x="0.0" y="0.0" z="-2.150000000000001" unit="mm" />
+      <position name="Ecal_layerType14_slice3_position" x="0.0" y="0.0" z="-0.5000000000000009" unit="mm" />
+      <position name="Ecal_layerType14_slice4_position" x="0.0" y="0.0" z="-8.881784197001252E-16" unit="mm" />
+      <position name="Ecal_layerType14_slice5_position" x="0.0" y="0.0" z="1.2499999999999991" unit="mm" />
+      <position name="Ecal_layerType14_slice6_position" x="0.0" y="0.0" z="3.249999999999999" unit="mm" />
+      <position name="Ecal_layerType14_slice7_position" x="0.0" y="0.0" z="4.3999999999999995" unit="mm" />
+      <position name="Ecal_layer14_position" x="0.0" y="0.0" z="4.650000000000071" unit="mm" />
+      <position name="Ecal_layerType15_slice0_position" x="0.0" y="0.0" z="-5.750000000000001" unit="mm" />
+      <position name="Ecal_layerType15_slice1_position" x="0.0" y="0.0" z="-2.1500000000000012" unit="mm" />
+      <position name="Ecal_layerType15_slice2_position" x="0.0" y="0.0" z="1.4499999999999988" unit="mm" />
+      <position name="Ecal_layerType15_slice3_position" x="0.0" y="0.0" z="2.199999999999999" unit="mm" />
+      <position name="Ecal_layerType15_slice4_position" x="0.0" y="0.0" z="3.3499999999999988" unit="mm" />
+      <position name="Ecal_layerType15_slice5_position" x="0.0" y="0.0" z="5.349999999999999" unit="mm" />
+      <position name="Ecal_layer15_position" x="0.0" y="0.0" z="15.550000000000072" unit="mm" />
+      <position name="Ecal_layerType16_slice0_position" x="0.0" y="0.0" z="-4.300000000000001" unit="mm" />
+      <position name="Ecal_layerType16_slice1_position" x="0.0" y="0.0" z="-3.8000000000000007" unit="mm" />
+      <position name="Ecal_layerType16_slice2_position" x="0.0" y="0.0" z="-2.150000000000001" unit="mm" />
+      <position name="Ecal_layerType16_slice3_position" x="0.0" y="0.0" z="-0.5000000000000009" unit="mm" />
+      <position name="Ecal_layerType16_slice4_position" x="0.0" y="0.0" z="-8.881784197001252E-16" unit="mm" />
+      <position name="Ecal_layerType16_slice5_position" x="0.0" y="0.0" z="1.2499999999999991" unit="mm" />
+      <position name="Ecal_layerType16_slice6_position" x="0.0" y="0.0" z="3.249999999999999" unit="mm" />
+      <position name="Ecal_layerType16_slice7_position" x="0.0" y="0.0" z="4.3999999999999995" unit="mm" />
+      <position name="Ecal_layer16_position" x="0.0" y="0.0" z="26.450000000000074" unit="mm" />
+      <position name="Ecal_layerType17_slice0_position" x="0.0" y="0.0" z="-5.750000000000001" unit="mm" />
+      <position name="Ecal_layerType17_slice1_position" x="0.0" y="0.0" z="-2.1500000000000012" unit="mm" />
+      <position name="Ecal_layerType17_slice2_position" x="0.0" y="0.0" z="1.4499999999999988" unit="mm" />
+      <position name="Ecal_layerType17_slice3_position" x="0.0" y="0.0" z="2.199999999999999" unit="mm" />
+      <position name="Ecal_layerType17_slice4_position" x="0.0" y="0.0" z="3.3499999999999988" unit="mm" />
+      <position name="Ecal_layerType17_slice5_position" x="0.0" y="0.0" z="5.349999999999999" unit="mm" />
+      <position name="Ecal_layer17_position" x="0.0" y="0.0" z="37.35000000000007" unit="mm" />
+      <position name="Ecal_layerType18_slice0_position" x="0.0" y="0.0" z="-5.0" unit="mm" />
+      <position name="Ecal_layerType18_slice1_position" x="0.0" y="0.0" z="-4.5" unit="mm" />
+      <position name="Ecal_layerType18_slice2_position" x="0.0" y="0.0" z="-2.15" unit="mm" />
+      <position name="Ecal_layerType18_slice3_position" x="0.0" y="0.0" z="0.20000000000000018" unit="mm" />
+      <position name="Ecal_layerType18_slice4_position" x="0.0" y="0.0" z="0.7000000000000002" unit="mm" />
+      <position name="Ecal_layerType18_slice5_position" x="0.0" y="0.0" z="1.9500000000000002" unit="mm" />
+      <position name="Ecal_layerType18_slice6_position" x="0.0" y="0.0" z="3.95" unit="mm" />
+      <position name="Ecal_layerType18_slice7_position" x="0.0" y="0.0" z="5.1000000000000005" unit="mm" />
+      <position name="Ecal_layer18_position" x="0.0" y="0.0" z="48.950000000000074" unit="mm" />
+      <position name="Ecal_layerType19_slice0_position" x="0.0" y="0.0" z="-6.25" unit="mm" />
+      <position name="Ecal_layerType19_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType19_slice2_position" x="0.0" y="0.0" z="1.9499999999999997" unit="mm" />
+      <position name="Ecal_layerType19_slice3_position" x="0.0" y="0.0" z="3.1999999999999997" unit="mm" />
+      <position name="Ecal_layerType19_slice4_position" x="0.0" y="0.0" z="4.35" unit="mm" />
+      <position name="Ecal_layerType19_slice5_position" x="0.0" y="0.0" z="6.35" unit="mm" />
+      <position name="Ecal_layer19_position" x="0.0" y="0.0" z="61.550000000000075" unit="mm" />
+      <position name="Ecal_layerType20_slice0_position" x="0.0" y="0.0" z="-5.0" unit="mm" />
+      <position name="Ecal_layerType20_slice1_position" x="0.0" y="0.0" z="-4.5" unit="mm" />
+      <position name="Ecal_layerType20_slice2_position" x="0.0" y="0.0" z="-2.15" unit="mm" />
+      <position name="Ecal_layerType20_slice3_position" x="0.0" y="0.0" z="0.20000000000000018" unit="mm" />
+      <position name="Ecal_layerType20_slice4_position" x="0.0" y="0.0" z="0.7000000000000002" unit="mm" />
+      <position name="Ecal_layerType20_slice5_position" x="0.0" y="0.0" z="1.9500000000000002" unit="mm" />
+      <position name="Ecal_layerType20_slice6_position" x="0.0" y="0.0" z="3.95" unit="mm" />
+      <position name="Ecal_layerType20_slice7_position" x="0.0" y="0.0" z="5.1000000000000005" unit="mm" />
+      <position name="Ecal_layer20_position" x="0.0" y="0.0" z="74.15000000000008" unit="mm" />
+      <position name="Ecal_layerType21_slice0_position" x="0.0" y="0.0" z="-6.25" unit="mm" />
+      <position name="Ecal_layerType21_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType21_slice2_position" x="0.0" y="0.0" z="1.9499999999999997" unit="mm" />
+      <position name="Ecal_layerType21_slice3_position" x="0.0" y="0.0" z="3.1999999999999997" unit="mm" />
+      <position name="Ecal_layerType21_slice4_position" x="0.0" y="0.0" z="4.35" unit="mm" />
+      <position name="Ecal_layerType21_slice5_position" x="0.0" y="0.0" z="6.35" unit="mm" />
+      <position name="Ecal_layer21_position" x="0.0" y="0.0" z="86.75000000000007" unit="mm" />
+      <position name="Ecal_layerType22_slice0_position" x="0.0" y="0.0" z="-5.0" unit="mm" />
+      <position name="Ecal_layerType22_slice1_position" x="0.0" y="0.0" z="-4.5" unit="mm" />
+      <position name="Ecal_layerType22_slice2_position" x="0.0" y="0.0" z="-2.15" unit="mm" />
+      <position name="Ecal_layerType22_slice3_position" x="0.0" y="0.0" z="0.20000000000000018" unit="mm" />
+      <position name="Ecal_layerType22_slice4_position" x="0.0" y="0.0" z="0.7000000000000002" unit="mm" />
+      <position name="Ecal_layerType22_slice5_position" x="0.0" y="0.0" z="1.9500000000000002" unit="mm" />
+      <position name="Ecal_layerType22_slice6_position" x="0.0" y="0.0" z="3.95" unit="mm" />
+      <position name="Ecal_layerType22_slice7_position" x="0.0" y="0.0" z="5.1000000000000005" unit="mm" />
+      <position name="Ecal_layer22_position" x="0.0" y="0.0" z="99.35000000000007" unit="mm" />
+      <position name="Ecal_layerType23_slice0_position" x="0.0" y="0.0" z="-6.25" unit="mm" />
+      <position name="Ecal_layerType23_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType23_slice2_position" x="0.0" y="0.0" z="1.9499999999999997" unit="mm" />
+      <position name="Ecal_layerType23_slice3_position" x="0.0" y="0.0" z="3.1999999999999997" unit="mm" />
+      <position name="Ecal_layerType23_slice4_position" x="0.0" y="0.0" z="4.35" unit="mm" />
+      <position name="Ecal_layerType23_slice5_position" x="0.0" y="0.0" z="6.35" unit="mm" />
+      <position name="Ecal_layer23_position" x="0.0" y="0.0" z="111.95000000000006" unit="mm" />
+      <position name="Ecal_layerType24_slice0_position" x="0.0" y="0.0" z="-5.0" unit="mm" />
+      <position name="Ecal_layerType24_slice1_position" x="0.0" y="0.0" z="-4.5" unit="mm" />
+      <position name="Ecal_layerType24_slice2_position" x="0.0" y="0.0" z="-2.15" unit="mm" />
+      <position name="Ecal_layerType24_slice3_position" x="0.0" y="0.0" z="0.20000000000000018" unit="mm" />
+      <position name="Ecal_layerType24_slice4_position" x="0.0" y="0.0" z="0.7000000000000002" unit="mm" />
+      <position name="Ecal_layerType24_slice5_position" x="0.0" y="0.0" z="1.9500000000000002" unit="mm" />
+      <position name="Ecal_layerType24_slice6_position" x="0.0" y="0.0" z="3.95" unit="mm" />
+      <position name="Ecal_layerType24_slice7_position" x="0.0" y="0.0" z="5.1000000000000005" unit="mm" />
+      <position name="Ecal_layer24_position" x="0.0" y="0.0" z="124.55000000000005" unit="mm" />
+      <position name="Ecal_layerType25_slice0_position" x="0.0" y="0.0" z="-6.25" unit="mm" />
+      <position name="Ecal_layerType25_slice1_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
+      <position name="Ecal_layerType25_slice2_position" x="0.0" y="0.0" z="1.9499999999999997" unit="mm" />
+      <position name="Ecal_layerType25_slice3_position" x="0.0" y="0.0" z="3.1999999999999997" unit="mm" />
+      <position name="Ecal_layerType25_slice4_position" x="0.0" y="0.0" z="4.35" unit="mm" />
+      <position name="Ecal_layerType25_slice5_position" x="0.0" y="0.0" z="6.35" unit="mm" />
+      <position name="Ecal_layer25_position" x="0.0" y="0.0" z="137.15000000000006" unit="mm" />
     </define>
     <materials>
       <element Z="7" formula="N" name="N">
@@ -107,6 +466,24 @@
       <element Z="18" formula="Ar" name="Ar">
         <atom type="A" unit="g/mol" value="39.9477" />
       </element>
+      <element Z="14" formula="Si" name="Si">
+        <atom type="A" unit="g/mol" value="28.0854" />
+      </element>
+      <element Z="6" formula="C" name="C">
+        <atom type="A" unit="g/mol" value="12.0107" />
+      </element>
+      <element Z="1" formula="H" name="H">
+        <atom type="A" unit="g/mol" value="1.00794" />
+      </element>
+      <element Z="35" formula="Br" name="Br">
+        <atom type="A" unit="g/mol" value="79.9035" />
+      </element>
+      <element Z="74" formula="W" name="W">
+        <atom type="A" unit="g/mol" value="183.842" />
+      </element>
+      <element Z="29" formula="Cu" name="Cu">
+        <atom type="A" unit="g/mol" value="63.5456" />
+      </element>
       <material name="Air">
         <D type="density" unit="g/cm3" value="0.0012" />
         <fraction n="0.754" ref="N" />
@@ -117,25 +494,47 @@
         <D type="density" unit="g/cm3" value="0.0000000000000001" />
         <fraction n="1.0" ref="Air" />
       </material>
-      <element name="H" formula="H" Z="1">
-        <atom type="A" unit="g/mol" value="1.00794" />
-      </element>
+      <material name="FR4">
+        <D type="density" value="1.7" unit="g/cm3" />
+        <fraction n="0.18077359" ref="Si" />
+        <fraction n="0.4056325" ref="O" />
+        <fraction n="0.27804208" ref="C" />
+        <fraction n="0.068442752" ref="H" />
+        <fraction n="0.067109079" ref="Br" />
+      </material>
+      <material name="Tungsten">
+        <RL type="X0" unit="cm" value="0.350418" />
+        <NIL type="lambda" unit="cm" value="10.3057" />
+        <D type="density" unit="g/cm3" value="19.3" />
+        <composite n="1" ref="W" />
+      </material>
+      <material name="Copper">
+        <RL type="X0" unit="cm" value="1.43558" />
+        <NIL type="lambda" unit="cm" value="15.5141" />
+        <D type="density" unit="g/cm3" value="8.96" />
+        <composite n="1" ref="Cu" />
+      </material>
+      <material name="WCu">
+        <D type="density" value="14.979" unit="g/cm3" />
+        <fraction n="0.75" ref="Tungsten" />
+        <fraction n="0.25" ref="Copper" />
+      </material>
+      <material name="CFMix">
+        <D type="density" value="0.845" unit="g/cm3" />
+        <fraction n="0.84491305" ref="C" />
+        <fraction n="0.042542086" ref="H" />
+        <fraction n="0.11254487" ref="O" />
+      </material>
       <material name="Vacuum">
         <D type="density" unit="g/cm3" value="0.00000001" />
         <fraction n="1" ref="H" />
       </material>
-      <element name="Si" formula="Si" Z="14">
-        <atom type="A" unit="g/mol" value="28.0854" />
-      </element>
       <material name="Silicon">
         <RL type="X0" unit="cm" value="9.36607" />
         <NIL type="lambda" unit="cm" value="45.7531" />
         <D type="density" unit="g/cm3" value="2.33" />
         <composite n="1" ref="Si" />
       </material>
-      <element name="C" formula="C" Z="6">
-        <atom type="A" unit="g/mol" value="12.0107" />
-      </element>
       <material name="Carbon">
         <RL type="X0" unit="cm" value="21.3485" />
         <NIL type="lambda" unit="cm" value="40.1008" />
@@ -146,229 +545,2979 @@
     <solids>
       <box name="world_box" x="world_x" y="world_y" z="world_z" />
       <tube name="tracking_cylinder" deltaphi="6.283185307179586" rmin="0.0" rmax="tracking_region_radius" z="2*tracking_region_zmax" />
-      <box name="TestRunModuleBox" x="40.34" y="100.0" z="0.52" />
-      <box name="TestRunModuleVolume_component0Box" x="40.34" y="100.0" z="0.32" />
-      <box name="TestRunModuleVolume_component0Sensor0Box" x="38.3399" y="98.33" z="0.32" />
-      <box name="TestRunModuleVolume_component1Box" x="40.34" y="100.0" z="0.2" />
+      <box name="LDMXTaggerModuleBox" x="50.0" y="80.0" z="2.32" />
+      <box name="LDMXTaggerModuleVolume_component0Box" x="50.0" y="80.0" z="0.32" />
+      <box name="LDMXTaggerModuleVolume_component0Sensor0Box" x="38.0" y="78.0" z="0.32" />
+      <box name="LDMXTaggerModuleVolume_component1Box" x="50.0" y="80.0" z="2.0" />
+      <box name="TargetModuleBox" x="35.0" y="95.0" z="0.35" />
+      <box name="TargetModuleVolume_component0Box" x="35.0" y="95.0" z="0.35" />
+      <box name="ScoringModuleBox" x="600.0" y="300.0" z="0.001" />
+      <box name="ScoringModuleVolume_component0Box" x="600.0" y="300.0" z="0.001" />
+      <box name="ScoringModuleVolume_component0Sensor0Box" x="600.0" y="300.0" z="0.001" />
+      <box name="LDMXTrackerModuleBox" x="50.0" y="80.0" z="2.32" />
+      <box name="LDMXTrackerModuleVolume_component0Box" x="50.0" y="80.0" z="0.32" />
+      <box name="LDMXTrackerModuleVolume_component0Sensor0Box" x="38.0" y="78.0" z="0.32" />
+      <box name="LDMXTrackerModuleVolume_component1Box" x="50.0" y="80.0" z="2.0" />
+      <box name="Ecal_box" x="600.0" y="300.0" z="288.99999999999994" />
+      <box name="Ecal_layerType0_box" x="600.0" y="300.0" z="8.3" />
+      <box name="Ecal_layerType0_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType0_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType0_slice2_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType0_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType0_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType0_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType0_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType0_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType1_box" x="600.0" y="300.0" z="11.5" />
+      <box name="Ecal_layerType1_slice0_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType1_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType1_slice2_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType1_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType1_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType1_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType2_box" x="600.0" y="300.0" z="8.3" />
+      <box name="Ecal_layerType2_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType2_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType2_slice2_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType2_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType2_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType2_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType2_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType2_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType3_box" x="600.0" y="300.0" z="11.5" />
+      <box name="Ecal_layerType3_slice0_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType3_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType3_slice2_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType3_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType3_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType3_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType4_box" x="600.0" y="300.0" z="8.3" />
+      <box name="Ecal_layerType4_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType4_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType4_slice2_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType4_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType4_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType4_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType4_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType4_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType5_box" x="600.0" y="300.0" z="11.5" />
+      <box name="Ecal_layerType5_slice0_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType5_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType5_slice2_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType5_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType5_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType5_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType6_box" x="600.0" y="300.0" z="8.3" />
+      <box name="Ecal_layerType6_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType6_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType6_slice2_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType6_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType6_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType6_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType6_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType6_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType7_box" x="600.0" y="300.0" z="11.5" />
+      <box name="Ecal_layerType7_slice0_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType7_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType7_slice2_box" x="600.0" y="300.0" z="0.6" />
+      <box name="Ecal_layerType7_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType7_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType7_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType8_box" x="600.0" y="300.0" z="9.100000000000001" />
+      <box name="Ecal_layerType8_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType8_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType8_slice2_box" x="600.0" y="300.0" z="2.8" />
+      <box name="Ecal_layerType8_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType8_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType8_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType8_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType8_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType9_box" x="600.0" y="300.0" z="12.700000000000001" />
+      <box name="Ecal_layerType9_slice0_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType9_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType9_slice2_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType9_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType9_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType9_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType10_box" x="600.0" y="300.0" z="9.100000000000001" />
+      <box name="Ecal_layerType10_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType10_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType10_slice2_box" x="600.0" y="300.0" z="2.8" />
+      <box name="Ecal_layerType10_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType10_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType10_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType10_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType10_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType11_box" x="600.0" y="300.0" z="12.700000000000001" />
+      <box name="Ecal_layerType11_slice0_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType11_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType11_slice2_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType11_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType11_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType11_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType12_box" x="600.0" y="300.0" z="9.100000000000001" />
+      <box name="Ecal_layerType12_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType12_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType12_slice2_box" x="600.0" y="300.0" z="2.8" />
+      <box name="Ecal_layerType12_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType12_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType12_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType12_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType12_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType13_box" x="600.0" y="300.0" z="12.700000000000001" />
+      <box name="Ecal_layerType13_slice0_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType13_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType13_slice2_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType13_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType13_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType13_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType14_box" x="600.0" y="300.0" z="9.100000000000001" />
+      <box name="Ecal_layerType14_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType14_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType14_slice2_box" x="600.0" y="300.0" z="2.8" />
+      <box name="Ecal_layerType14_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType14_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType14_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType14_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType14_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType15_box" x="600.0" y="300.0" z="12.700000000000001" />
+      <box name="Ecal_layerType15_slice0_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType15_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType15_slice2_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType15_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType15_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType15_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType16_box" x="600.0" y="300.0" z="9.100000000000001" />
+      <box name="Ecal_layerType16_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType16_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType16_slice2_box" x="600.0" y="300.0" z="2.8" />
+      <box name="Ecal_layerType16_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType16_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType16_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType16_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType16_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType17_box" x="600.0" y="300.0" z="12.700000000000001" />
+      <box name="Ecal_layerType17_slice0_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType17_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType17_slice2_box" x="600.0" y="300.0" z="1.2" />
+      <box name="Ecal_layerType17_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType17_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType17_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType18_box" x="600.0" y="300.0" z="10.5" />
+      <box name="Ecal_layerType18_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType18_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType18_slice2_box" x="600.0" y="300.0" z="4.2" />
+      <box name="Ecal_layerType18_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType18_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType18_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType18_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType18_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType19_box" x="600.0" y="300.0" z="14.7" />
+      <box name="Ecal_layerType19_slice0_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType19_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType19_slice2_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType19_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType19_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType19_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType20_box" x="600.0" y="300.0" z="10.5" />
+      <box name="Ecal_layerType20_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType20_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType20_slice2_box" x="600.0" y="300.0" z="4.2" />
+      <box name="Ecal_layerType20_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType20_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType20_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType20_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType20_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType21_box" x="600.0" y="300.0" z="14.7" />
+      <box name="Ecal_layerType21_slice0_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType21_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType21_slice2_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType21_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType21_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType21_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType22_box" x="600.0" y="300.0" z="10.5" />
+      <box name="Ecal_layerType22_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType22_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType22_slice2_box" x="600.0" y="300.0" z="4.2" />
+      <box name="Ecal_layerType22_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType22_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType22_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType22_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType22_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType23_box" x="600.0" y="300.0" z="14.7" />
+      <box name="Ecal_layerType23_slice0_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType23_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType23_slice2_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType23_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType23_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType23_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType24_box" x="600.0" y="300.0" z="10.5" />
+      <box name="Ecal_layerType24_slice0_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType24_slice1_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType24_slice2_box" x="600.0" y="300.0" z="4.2" />
+      <box name="Ecal_layerType24_slice3_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType24_slice4_box" x="600.0" y="300.0" z="0.5" />
+      <box name="Ecal_layerType24_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType24_slice6_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType24_slice7_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType25_box" x="600.0" y="300.0" z="14.7" />
+      <box name="Ecal_layerType25_slice0_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType25_slice1_box" x="600.0" y="300.0" z="6.0" />
+      <box name="Ecal_layerType25_slice2_box" x="600.0" y="300.0" z="2.2" />
+      <box name="Ecal_layerType25_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
+      <box name="Ecal_layerType25_slice4_box" x="600.0" y="300.0" z="2.0" />
+      <box name="Ecal_layerType25_slice5_box" x="600.0" y="300.0" z="2.0" />
     </solids>
     <structure>
-      <volume name="TestRunModuleVolume_component0Sensor0">
+      <volume name="LDMXTaggerModuleVolume_component0Sensor0">
         <materialref ref="Silicon" />
-        <solidref ref="TestRunModuleVolume_component0Sensor0Box" />
-        <sdref ref="Tracker" />
+        <solidref ref="LDMXTaggerModuleVolume_component0Sensor0Box" />
+        <sdref ref="TaggerTracker" />
       </volume>
-      <volume name="TestRunModuleVolume_component0">
+      <volume name="LDMXTaggerModuleVolume_component0">
         <materialref ref="Silicon" />
-        <solidref ref="TestRunModuleVolume_component0Box" />
+        <solidref ref="LDMXTaggerModuleVolume_component0Box" />
         <physvol>
-          <volumeref ref="TestRunModuleVolume_component0Sensor0" />
-          <positionref ref="TestRunModuleVolume_component0Sensor0Position" />
-          <rotationref ref="TestRunModuleVolume_component0Sensor0Rotation" />
+          <volumeref ref="LDMXTaggerModuleVolume_component0Sensor0" />
+          <positionref ref="LDMXTaggerModuleVolume_component0Sensor0Position" />
+          <rotationref ref="LDMXTaggerModuleVolume_component0Sensor0Rotation" />
           <physvolid field_name="sensor" value="0" />
         </physvol>
       </volume>
-      <volume name="TestRunModuleVolume_component1">
+      <volume name="LDMXTaggerModuleVolume_component1">
         <materialref ref="Carbon" />
-        <solidref ref="TestRunModuleVolume_component1Box" />
+        <solidref ref="LDMXTaggerModuleVolume_component1Box" />
       </volume>
-      <volume name="TestRunModuleVolume">
+      <volume name="LDMXTaggerModuleVolume">
         <materialref ref="Vacuum" />
-        <solidref ref="TestRunModuleBox" />
+        <solidref ref="LDMXTaggerModuleBox" />
         <physvol>
-          <volumeref ref="TestRunModuleVolume_component0" />
-          <positionref ref="TestRunModuleVolume_component0_position" />
-          <rotationref ref="TestRunModuleVolume_component0_rotation" />
+          <volumeref ref="LDMXTaggerModuleVolume_component0" />
+          <positionref ref="LDMXTaggerModuleVolume_component0_position" />
+          <rotationref ref="LDMXTaggerModuleVolume_component0_rotation" />
           <physvolid field_name="component" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume_component1" />
-          <positionref ref="TestRunModuleVolume_component1_position" />
-          <rotationref ref="TestRunModuleVolume_component1_rotation" />
+          <volumeref ref="LDMXTaggerModuleVolume_component1" />
+          <positionref ref="LDMXTaggerModuleVolume_component1_position" />
+          <rotationref ref="LDMXTaggerModuleVolume_component1_rotation" />
           <physvolid field_name="component" value="1" />
         </physvol>
+        <visref ref="TaggerTrackerVis" />
+      </volume>
+      <volume name="TargetModuleVolume_component0">
+        <materialref ref="Tungsten" />
+        <solidref ref="TargetModuleVolume_component0Box" />
+      </volume>
+      <volume name="TargetModuleVolume">
+        <materialref ref="Vacuum" />
+        <solidref ref="TargetModuleBox" />
+        <physvol>
+          <volumeref ref="TargetModuleVolume_component0" />
+          <positionref ref="TargetModuleVolume_component0_position" />
+          <rotationref ref="TargetModuleVolume_component0_rotation" />
+          <physvolid field_name="component" value="0" />
+        </physvol>
+        <visref ref="TargetVis" />
+      </volume>
+      <volume name="ScoringModuleVolume_component0Sensor0">
+        <materialref ref="Vacuum" />
+        <solidref ref="ScoringModuleVolume_component0Sensor0Box" />
+        <sdref ref="EcalScoring" />
+      </volume>
+      <volume name="ScoringModuleVolume_component0">
+        <materialref ref="Vacuum" />
+        <solidref ref="ScoringModuleVolume_component0Box" />
+        <physvol>
+          <volumeref ref="ScoringModuleVolume_component0Sensor0" />
+          <positionref ref="ScoringModuleVolume_component0Sensor0Position" />
+          <rotationref ref="ScoringModuleVolume_component0Sensor0Rotation" />
+          <physvolid field_name="sensor" value="0" />
+        </physvol>
+      </volume>
+      <volume name="ScoringModuleVolume">
+        <materialref ref="Vacuum" />
+        <solidref ref="ScoringModuleBox" />
+        <physvol>
+          <volumeref ref="ScoringModuleVolume_component0" />
+          <positionref ref="ScoringModuleVolume_component0_position" />
+          <rotationref ref="ScoringModuleVolume_component0_rotation" />
+          <physvolid field_name="component" value="0" />
+        </physvol>
+        <visref ref="EcalScoringVis" />
+      </volume>
+      <volume name="LDMXTrackerModuleVolume_component0Sensor0">
+        <materialref ref="Silicon" />
+        <solidref ref="LDMXTrackerModuleVolume_component0Sensor0Box" />
+        <sdref ref="RecoilTracker" />
+      </volume>
+      <volume name="LDMXTrackerModuleVolume_component0">
+        <materialref ref="Silicon" />
+        <solidref ref="LDMXTrackerModuleVolume_component0Box" />
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume_component0Sensor0" />
+          <positionref ref="LDMXTrackerModuleVolume_component0Sensor0Position" />
+          <rotationref ref="LDMXTrackerModuleVolume_component0Sensor0Rotation" />
+          <physvolid field_name="sensor" value="0" />
+        </physvol>
+      </volume>
+      <volume name="LDMXTrackerModuleVolume_component1">
+        <materialref ref="Carbon" />
+        <solidref ref="LDMXTrackerModuleVolume_component1Box" />
+      </volume>
+      <volume name="LDMXTrackerModuleVolume">
+        <materialref ref="Vacuum" />
+        <solidref ref="LDMXTrackerModuleBox" />
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume_component0" />
+          <positionref ref="LDMXTrackerModuleVolume_component0_position" />
+          <rotationref ref="LDMXTrackerModuleVolume_component0_rotation" />
+          <physvolid field_name="component" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume_component1" />
+          <positionref ref="LDMXTrackerModuleVolume_component1_position" />
+          <rotationref ref="LDMXTrackerModuleVolume_component1_rotation" />
+          <physvolid field_name="component" value="1" />
+        </physvol>
+        <visref ref="RecoilTrackerVis" />
+      </volume>
+      <volume name="Ecal_layerType0_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType0_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType0_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType0_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType0_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType0_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType0_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType0_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType0_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType0_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType0">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType0_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice0" />
+          <positionref ref="Ecal_layerType0_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice1" />
+          <positionref ref="Ecal_layerType0_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice2" />
+          <positionref ref="Ecal_layerType0_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice3" />
+          <positionref ref="Ecal_layerType0_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice4" />
+          <positionref ref="Ecal_layerType0_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice5" />
+          <positionref ref="Ecal_layerType0_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice6" />
+          <positionref ref="Ecal_layerType0_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType0_slice7" />
+          <positionref ref="Ecal_layerType0_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType1_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType1_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType1_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType1_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType1_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType1_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType1_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType1_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType1_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType1_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType1_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType1_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType1">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType1_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType1_slice0" />
+          <positionref ref="Ecal_layerType1_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType1_slice1" />
+          <positionref ref="Ecal_layerType1_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType1_slice2" />
+          <positionref ref="Ecal_layerType1_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType1_slice3" />
+          <positionref ref="Ecal_layerType1_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType1_slice4" />
+          <positionref ref="Ecal_layerType1_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType1_slice5" />
+          <positionref ref="Ecal_layerType1_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType2_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType2_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType2_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType2_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType2_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType2_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType2_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType2_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType2_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType2_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType2">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType2_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice0" />
+          <positionref ref="Ecal_layerType2_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice1" />
+          <positionref ref="Ecal_layerType2_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice2" />
+          <positionref ref="Ecal_layerType2_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice3" />
+          <positionref ref="Ecal_layerType2_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice4" />
+          <positionref ref="Ecal_layerType2_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice5" />
+          <positionref ref="Ecal_layerType2_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice6" />
+          <positionref ref="Ecal_layerType2_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2_slice7" />
+          <positionref ref="Ecal_layerType2_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType3_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType3_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType3_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType3_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType3_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType3_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType3_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType3_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType3_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType3_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType3_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType3_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType3">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType3_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType3_slice0" />
+          <positionref ref="Ecal_layerType3_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType3_slice1" />
+          <positionref ref="Ecal_layerType3_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType3_slice2" />
+          <positionref ref="Ecal_layerType3_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType3_slice3" />
+          <positionref ref="Ecal_layerType3_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType3_slice4" />
+          <positionref ref="Ecal_layerType3_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType3_slice5" />
+          <positionref ref="Ecal_layerType3_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType4_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType4_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType4_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType4_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType4_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType4_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType4_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType4_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType4_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType4_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType4">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType4_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice0" />
+          <positionref ref="Ecal_layerType4_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice1" />
+          <positionref ref="Ecal_layerType4_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice2" />
+          <positionref ref="Ecal_layerType4_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice3" />
+          <positionref ref="Ecal_layerType4_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice4" />
+          <positionref ref="Ecal_layerType4_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice5" />
+          <positionref ref="Ecal_layerType4_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice6" />
+          <positionref ref="Ecal_layerType4_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4_slice7" />
+          <positionref ref="Ecal_layerType4_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType5_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType5_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType5_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType5_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType5_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType5_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType5_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType5_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType5_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType5_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType5_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType5_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType5_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType5_slice0" />
+          <positionref ref="Ecal_layerType5_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType5_slice1" />
+          <positionref ref="Ecal_layerType5_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType5_slice2" />
+          <positionref ref="Ecal_layerType5_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType5_slice3" />
+          <positionref ref="Ecal_layerType5_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType5_slice4" />
+          <positionref ref="Ecal_layerType5_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType5_slice5" />
+          <positionref ref="Ecal_layerType5_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType6_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType6_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType6_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType6_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType6_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType6_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType6_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType6_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType6_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType6_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType6">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType6_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice0" />
+          <positionref ref="Ecal_layerType6_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice1" />
+          <positionref ref="Ecal_layerType6_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice2" />
+          <positionref ref="Ecal_layerType6_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice3" />
+          <positionref ref="Ecal_layerType6_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice4" />
+          <positionref ref="Ecal_layerType6_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice5" />
+          <positionref ref="Ecal_layerType6_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice6" />
+          <positionref ref="Ecal_layerType6_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6_slice7" />
+          <positionref ref="Ecal_layerType6_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType7_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType7_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType7_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType7_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType7_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType7_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType7_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType7_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType7_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType7_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType7_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType7_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType7">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType7_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType7_slice0" />
+          <positionref ref="Ecal_layerType7_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType7_slice1" />
+          <positionref ref="Ecal_layerType7_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType7_slice2" />
+          <positionref ref="Ecal_layerType7_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType7_slice3" />
+          <positionref ref="Ecal_layerType7_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType7_slice4" />
+          <positionref ref="Ecal_layerType7_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType7_slice5" />
+          <positionref ref="Ecal_layerType7_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType8_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType8_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType8_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType8_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType8_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType8_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType8_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType8_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType8_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType8_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType8">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType8_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice0" />
+          <positionref ref="Ecal_layerType8_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice1" />
+          <positionref ref="Ecal_layerType8_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice2" />
+          <positionref ref="Ecal_layerType8_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice3" />
+          <positionref ref="Ecal_layerType8_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice4" />
+          <positionref ref="Ecal_layerType8_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice5" />
+          <positionref ref="Ecal_layerType8_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice6" />
+          <positionref ref="Ecal_layerType8_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8_slice7" />
+          <positionref ref="Ecal_layerType8_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType9_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType9_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType9_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType9_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType9_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType9_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType9_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType9_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType9_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType9_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType9_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType9_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType9">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType9_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType9_slice0" />
+          <positionref ref="Ecal_layerType9_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType9_slice1" />
+          <positionref ref="Ecal_layerType9_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType9_slice2" />
+          <positionref ref="Ecal_layerType9_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType9_slice3" />
+          <positionref ref="Ecal_layerType9_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType9_slice4" />
+          <positionref ref="Ecal_layerType9_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType9_slice5" />
+          <positionref ref="Ecal_layerType9_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType10_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType10_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType10_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType10_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType10_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType10_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType10_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType10_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType10_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType10_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType10">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType10_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice0" />
+          <positionref ref="Ecal_layerType10_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice1" />
+          <positionref ref="Ecal_layerType10_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice2" />
+          <positionref ref="Ecal_layerType10_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice3" />
+          <positionref ref="Ecal_layerType10_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice4" />
+          <positionref ref="Ecal_layerType10_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice5" />
+          <positionref ref="Ecal_layerType10_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice6" />
+          <positionref ref="Ecal_layerType10_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10_slice7" />
+          <positionref ref="Ecal_layerType10_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType11_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType11_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType11_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType11_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType11_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType11_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType11_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType11_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType11_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType11_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType11_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType11_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType11">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType11_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType11_slice0" />
+          <positionref ref="Ecal_layerType11_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType11_slice1" />
+          <positionref ref="Ecal_layerType11_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType11_slice2" />
+          <positionref ref="Ecal_layerType11_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType11_slice3" />
+          <positionref ref="Ecal_layerType11_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType11_slice4" />
+          <positionref ref="Ecal_layerType11_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType11_slice5" />
+          <positionref ref="Ecal_layerType11_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType12_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType12_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType12_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType12_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType12_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType12_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType12_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType12_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType12_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType12_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType12">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType12_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice0" />
+          <positionref ref="Ecal_layerType12_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice1" />
+          <positionref ref="Ecal_layerType12_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice2" />
+          <positionref ref="Ecal_layerType12_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice3" />
+          <positionref ref="Ecal_layerType12_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice4" />
+          <positionref ref="Ecal_layerType12_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice5" />
+          <positionref ref="Ecal_layerType12_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice6" />
+          <positionref ref="Ecal_layerType12_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12_slice7" />
+          <positionref ref="Ecal_layerType12_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType13_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType13_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType13_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType13_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType13_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType13_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType13_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType13_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType13_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType13_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType13_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType13_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType13">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType13_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType13_slice0" />
+          <positionref ref="Ecal_layerType13_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType13_slice1" />
+          <positionref ref="Ecal_layerType13_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType13_slice2" />
+          <positionref ref="Ecal_layerType13_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType13_slice3" />
+          <positionref ref="Ecal_layerType13_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType13_slice4" />
+          <positionref ref="Ecal_layerType13_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType13_slice5" />
+          <positionref ref="Ecal_layerType13_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType14_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType14_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType14_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType14_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType14_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType14_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType14_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType14_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType14_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType14_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType14">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType14_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice0" />
+          <positionref ref="Ecal_layerType14_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice1" />
+          <positionref ref="Ecal_layerType14_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice2" />
+          <positionref ref="Ecal_layerType14_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice3" />
+          <positionref ref="Ecal_layerType14_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice4" />
+          <positionref ref="Ecal_layerType14_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice5" />
+          <positionref ref="Ecal_layerType14_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice6" />
+          <positionref ref="Ecal_layerType14_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14_slice7" />
+          <positionref ref="Ecal_layerType14_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType15_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType15_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType15_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType15_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType15_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType15_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType15_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType15_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType15_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType15_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType15_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType15_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType15">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType15_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType15_slice0" />
+          <positionref ref="Ecal_layerType15_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType15_slice1" />
+          <positionref ref="Ecal_layerType15_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType15_slice2" />
+          <positionref ref="Ecal_layerType15_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType15_slice3" />
+          <positionref ref="Ecal_layerType15_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType15_slice4" />
+          <positionref ref="Ecal_layerType15_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType15_slice5" />
+          <positionref ref="Ecal_layerType15_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType16_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType16_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType16_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType16_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType16_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType16_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType16_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType16_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType16_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType16_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType16">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType16_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice0" />
+          <positionref ref="Ecal_layerType16_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice1" />
+          <positionref ref="Ecal_layerType16_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice2" />
+          <positionref ref="Ecal_layerType16_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice3" />
+          <positionref ref="Ecal_layerType16_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice4" />
+          <positionref ref="Ecal_layerType16_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice5" />
+          <positionref ref="Ecal_layerType16_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice6" />
+          <positionref ref="Ecal_layerType16_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16_slice7" />
+          <positionref ref="Ecal_layerType16_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType17_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType17_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType17_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType17_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType17_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType17_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType17_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType17_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType17_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType17_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType17_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType17_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType17">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType17_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType17_slice0" />
+          <positionref ref="Ecal_layerType17_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType17_slice1" />
+          <positionref ref="Ecal_layerType17_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType17_slice2" />
+          <positionref ref="Ecal_layerType17_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType17_slice3" />
+          <positionref ref="Ecal_layerType17_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType17_slice4" />
+          <positionref ref="Ecal_layerType17_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType17_slice5" />
+          <positionref ref="Ecal_layerType17_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType18_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType18_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType18_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType18_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType18_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType18_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType18_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType18_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType18_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType18_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType18">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType18_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice0" />
+          <positionref ref="Ecal_layerType18_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice1" />
+          <positionref ref="Ecal_layerType18_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice2" />
+          <positionref ref="Ecal_layerType18_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice3" />
+          <positionref ref="Ecal_layerType18_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice4" />
+          <positionref ref="Ecal_layerType18_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice5" />
+          <positionref ref="Ecal_layerType18_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice6" />
+          <positionref ref="Ecal_layerType18_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18_slice7" />
+          <positionref ref="Ecal_layerType18_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType19_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType19_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType19_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType19_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType19_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType19_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType19_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType19_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType19_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType19_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType19_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType19_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType19">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType19_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType19_slice0" />
+          <positionref ref="Ecal_layerType19_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType19_slice1" />
+          <positionref ref="Ecal_layerType19_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType19_slice2" />
+          <positionref ref="Ecal_layerType19_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType19_slice3" />
+          <positionref ref="Ecal_layerType19_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType19_slice4" />
+          <positionref ref="Ecal_layerType19_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType19_slice5" />
+          <positionref ref="Ecal_layerType19_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType20_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType20_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType20_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType20_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType20_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType20_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType20_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType20_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType20_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType20_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType20">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType20_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice0" />
+          <positionref ref="Ecal_layerType20_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice1" />
+          <positionref ref="Ecal_layerType20_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice2" />
+          <positionref ref="Ecal_layerType20_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice3" />
+          <positionref ref="Ecal_layerType20_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice4" />
+          <positionref ref="Ecal_layerType20_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice5" />
+          <positionref ref="Ecal_layerType20_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice6" />
+          <positionref ref="Ecal_layerType20_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20_slice7" />
+          <positionref ref="Ecal_layerType20_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType21_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType21_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType21_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType21_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType21_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType21_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType21_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType21_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType21_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType21_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType21_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType21_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType21">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType21_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType21_slice0" />
+          <positionref ref="Ecal_layerType21_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType21_slice1" />
+          <positionref ref="Ecal_layerType21_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType21_slice2" />
+          <positionref ref="Ecal_layerType21_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType21_slice3" />
+          <positionref ref="Ecal_layerType21_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType21_slice4" />
+          <positionref ref="Ecal_layerType21_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType21_slice5" />
+          <positionref ref="Ecal_layerType21_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType22_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType22_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType22_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType22_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType22_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType22_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType22_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType22_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType22_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType22_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType22">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType22_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice0" />
+          <positionref ref="Ecal_layerType22_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice1" />
+          <positionref ref="Ecal_layerType22_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice2" />
+          <positionref ref="Ecal_layerType22_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice3" />
+          <positionref ref="Ecal_layerType22_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice4" />
+          <positionref ref="Ecal_layerType22_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice5" />
+          <positionref ref="Ecal_layerType22_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice6" />
+          <positionref ref="Ecal_layerType22_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22_slice7" />
+          <positionref ref="Ecal_layerType22_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType23_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType23_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType23_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType23_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType23_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType23_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType23_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType23_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType23_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType23_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType23_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType23_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType23">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType23_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType23_slice0" />
+          <positionref ref="Ecal_layerType23_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType23_slice1" />
+          <positionref ref="Ecal_layerType23_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType23_slice2" />
+          <positionref ref="Ecal_layerType23_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType23_slice3" />
+          <positionref ref="Ecal_layerType23_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType23_slice4" />
+          <positionref ref="Ecal_layerType23_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType23_slice5" />
+          <positionref ref="Ecal_layerType23_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType24_slice0">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType24_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice1">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType24_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice2">
+        <materialref ref="Tungsten" />
+        <solidref ref="Ecal_layerType24_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice3">
+        <materialref ref="CFMix" />
+        <solidref ref="Ecal_layerType24_slice3_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice4">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType24_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType24_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice6">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType24_slice6_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType24_slice7">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType24_slice7_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType24">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType24_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice0" />
+          <positionref ref="Ecal_layerType24_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice1" />
+          <positionref ref="Ecal_layerType24_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice2" />
+          <positionref ref="Ecal_layerType24_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice3" />
+          <positionref ref="Ecal_layerType24_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice4" />
+          <positionref ref="Ecal_layerType24_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice5" />
+          <positionref ref="Ecal_layerType24_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice6" />
+          <positionref ref="Ecal_layerType24_slice6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24_slice7" />
+          <positionref ref="Ecal_layerType24_slice7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="7" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_layerType25_slice0">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType25_slice0_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType25_slice1">
+        <materialref ref="Copper" />
+        <solidref ref="Ecal_layerType25_slice1_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType25_slice2">
+        <materialref ref="WCu" />
+        <solidref ref="Ecal_layerType25_slice2_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType25_slice3">
+        <materialref ref="Silicon" />
+        <solidref ref="Ecal_layerType25_slice3_box" />
+        <sdref ref="Ecal" />
+        <visref ref="EcalSensorVis" />
+      </volume>
+      <volume name="Ecal_layerType25_slice4">
+        <materialref ref="FR4" />
+        <solidref ref="Ecal_layerType25_slice4_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType25_slice5">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType25_slice5_box" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="Ecal_layerType25">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_layerType25_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType25_slice0" />
+          <positionref ref="Ecal_layerType25_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType25_slice1" />
+          <positionref ref="Ecal_layerType25_slice1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType25_slice2" />
+          <positionref ref="Ecal_layerType25_slice2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType25_slice3" />
+          <positionref ref="Ecal_layerType25_slice3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType25_slice4" />
+          <positionref ref="Ecal_layerType25_slice4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType25_slice5" />
+          <positionref ref="Ecal_layerType25_slice5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="5" />
+        </physvol>
+        <visref ref="EcalLayerVis" />
+      </volume>
+      <volume name="Ecal_envelope">
+        <materialref ref="Air" />
+        <solidref ref="Ecal_box" />
+        <physvol>
+          <volumeref ref="Ecal_layerType0" />
+          <positionref ref="Ecal_layer0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType1" />
+          <positionref ref="Ecal_layer1_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType2" />
+          <positionref ref="Ecal_layer2_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType3" />
+          <positionref ref="Ecal_layer3_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType4" />
+          <positionref ref="Ecal_layer4_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType5" />
+          <positionref ref="Ecal_layer5_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType6" />
+          <positionref ref="Ecal_layer6_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType7" />
+          <positionref ref="Ecal_layer7_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="7" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType8" />
+          <positionref ref="Ecal_layer8_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="8" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType9" />
+          <positionref ref="Ecal_layer9_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="9" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType10" />
+          <positionref ref="Ecal_layer10_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="10" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType11" />
+          <positionref ref="Ecal_layer11_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="11" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType12" />
+          <positionref ref="Ecal_layer12_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="12" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType13" />
+          <positionref ref="Ecal_layer13_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="13" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType14" />
+          <positionref ref="Ecal_layer14_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="14" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType15" />
+          <positionref ref="Ecal_layer15_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="15" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType16" />
+          <positionref ref="Ecal_layer16_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="16" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType17" />
+          <positionref ref="Ecal_layer17_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="17" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType18" />
+          <positionref ref="Ecal_layer18_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="18" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType19" />
+          <positionref ref="Ecal_layer19_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="19" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType20" />
+          <positionref ref="Ecal_layer20_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="20" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType21" />
+          <positionref ref="Ecal_layer21_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="21" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType22" />
+          <positionref ref="Ecal_layer22_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="22" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType23" />
+          <positionref ref="Ecal_layer23_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="23" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType24" />
+          <positionref ref="Ecal_layer24_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="24" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_layerType25" />
+          <positionref ref="Ecal_layer25_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="25" />
+        </physvol>
+        <visref ref="EcalDetVis" />
       </volume>
       <volume name="tracking_volume">
         <materialref ref="TrackingMaterial" />
         <solidref ref="tracking_cylinder" />
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer1_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer1_module0_rotation" />
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer1_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer1_module0_rotation" />
           <physvolid field_name="system" value="1" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="1" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer1_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer1_module1_rotation" />
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer2_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer2_module0_rotation" />
           <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="2" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer3_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer3_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="3" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer4_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer4_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="4" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer5_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer5_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="5" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer6_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer6_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="6" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer7_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer7_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="7" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer8_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer8_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="8" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer9_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer9_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer10_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer10_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer11_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer11_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="11" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer12_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer12_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="12" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer13_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer13_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="13" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTaggerModuleVolume" />
+          <positionref ref="TaggerTracker_LDMXTaggerModule_layer14_module0_position" />
+          <rotationref ref="TaggerTracker_LDMXTaggerModule_layer14_module0_rotation" />
+          <physvolid field_name="system" value="1" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="14" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="TargetModuleVolume" />
+          <positionref ref="Target_TargetModule_layer1_module0_position" />
+          <rotationref ref="Target_TargetModule_layer1_module0_rotation" />
+          <physvolid field_name="system" value="10" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="1" />
-          <physvolid field_name="module" value="1" />
+          <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer2_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer2_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer1_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer1_module0_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="1" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer2_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer2_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="2" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer2_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer2_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="2" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer3_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer3_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer3_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer3_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="3" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer3_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer3_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="3" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer4_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer4_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer4_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer4_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="4" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer4_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer4_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="4" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer5_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer5_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer5_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer5_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="5" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer5_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer5_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="5" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer6_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer6_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer6_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer6_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="6" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer6_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer6_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="6" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer7_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer7_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer7_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer7_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="7" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer7_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer7_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="7" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer8_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer8_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer8_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer8_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="8" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer8_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer8_module1_rotation" />
-          <physvolid field_name="system" value="1" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="8" />
-          <physvolid field_name="module" value="1" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer9_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer9_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="9" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer9_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer9_module1_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module1_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module1_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="9" />
           <physvolid field_name="module" value="1" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer10_module0_position" />
-          <rotationref ref="Tracker_TestRunModule_layer10_module0_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module2_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module2_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module3_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module3_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module4_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module4_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module5_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module5_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="5" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module0_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module0_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="10" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
-          <volumeref ref="TestRunModuleVolume" />
-          <positionref ref="Tracker_TestRunModule_layer10_module1_position" />
-          <rotationref ref="Tracker_TestRunModule_layer10_module1_rotation" />
-          <physvolid field_name="system" value="1" />
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module1_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module1_rotation" />
+          <physvolid field_name="system" value="2" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="10" />
           <physvolid field_name="module" value="1" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module2_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module2_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="2" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module3_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module3_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="3" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module4_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module4_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="4" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module5_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module5_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="5" />
         </physvol>
         <regionref ref="TrackingRegion" />
         <visref ref="TrackingVis" />
@@ -381,6 +3530,21 @@
           <positionref ref="identity_pos" />
           <rotationref ref="identity_rot" />
         </physvol>
+        <physvol>
+          <volumeref ref="ScoringModuleVolume" />
+          <positionref ref="EcalScoring_ScoringModule_layer1_module0_position" />
+          <rotationref ref="EcalScoring_ScoringModule_layer1_module0_rotation" />
+          <physvolid field_name="system" value="3" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="1" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
+          <volumeref ref="Ecal_envelope" />
+          <positionref ref="Ecal_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="system" value="4" />
+        </physvol>
         <visref ref="WorldVis" />
       </volume>
     </structure>
@@ -389,7 +3553,7 @@
     </setup>
   </gdml>
   <fields>
-    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="452.2" dx="228.6" dy="76.2" dz="462.2" bx="0.0" by="-0.5" bz="0.0" />
+    <field_map_3d name="LDMXDipoleFieldMap3D" lunit="mm" funit="tesla" filename="fieldmap/209acm2_5kg_corrected_unfolded_scaled_1.04545.dat" xoffset="0.0" yoffset="0.0" zoffset="0.0" />
   </fields>
 </lcdd>
 
