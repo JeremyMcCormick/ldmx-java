@@ -1,2 +1,6 @@
-*/target
-*/*.jar
+target
+*.jar
+.classpath
+.project
+.settings
+*.slcio
