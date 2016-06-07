@@ -4,7 +4,7 @@
     <packaging>pom</packaging>
     <parent>
         <groupId>org.ldmx</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>ldmx-parent</artifactId>
         <relativePath>parent/pom.xml</relativePath>
         <version>1.0-SNAPSHOT</version>
     </parent>
