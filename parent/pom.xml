@@ -8,6 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <hpsJavaVersion>3.10-SNAPSHOT</hpsJavaVersion>
     </properties>
     <repositories>
         <repository>
@@ -27,11 +28,18 @@
             <url>http://srs.slac.stanford.edu/nexus/content/groups/lcsim-maven2-public/</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>freehep-maven-plugin-repo</id>
+            <name>Freehep Plugin Repository</name>
+            <url>http://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>org.hps</groupId>
             <artifactId>hps-distribution</artifactId>
-            <version>3.9-SNAPSHOT</version>
+            <version>${hpsJavaVersion}</version>
             <type>pom</type>
         </dependency>
     </dependencies>
