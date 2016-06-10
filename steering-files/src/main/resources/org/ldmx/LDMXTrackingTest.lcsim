@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lcsim xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+       xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+   <execute>
+       <driver name="TrackerDigi"/>
+       <driver name="HelicalTrackHitDriver"/>              
+       <driver name="TrackerRecon"/>
+       <driver name="LCIODriver"/>
+    </execute>    
+    <control>
+        <numberOfEvents>100</numberOfEvents>
+    </control>
+    <drivers>
+        
+        <driver name="TrackerDigi" type="org.hps.recon.tracking.TrackerDigiDriver">
+			<subdetectorName>RecoilTracker</subdetectorName>
+            <readoutCollectionName>RecoilTrackerHits</readoutCollectionName>                        
+			<rawTrackerHitOutputCollectionName>RecoilTracker_RawTrackerHits</rawTrackerHitOutputCollectionName>
+			<stripHitOutputCollectionName>RecoilTracker_TrackerHits</stripHitOutputCollectionName>
+            <debug>true</debug>
+		</driver>
+
+        <driver name="HelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <collection>RecoilTracker_TrackerHits</collection>
+            <debug>true</debug>
+        </driver>
+		        
+        <driver name="TrackerRecon" type="org.hps.recon.tracking.TrackerReconDriver">
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <trackCollectionName>RecoilTracker_Tracks</trackCollectionName>
+            <strategyResource>/org/ldmx/tracking/strategies/LDMXTestStrategies.xml</strategyResource>
+            <rejectUncorrectedHits>>false</rejectUncorrectedHits>            
+            <debug>true</debug>
+        </driver>     
+        					
+		<driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
+		    <outputFilePath>ldmx_tracking_test</outputFilePath>
+		</driver>
+        
+    </drivers>
+</lcsim>
