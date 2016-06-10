@@ -12,7 +12,7 @@
         <dependency>
             <groupId>org.hps</groupId>
             <artifactId>hps-tracking</artifactId>
-            <version>3.9-SNAPSHOT</version>
+            <version>${hpsJavaVersion}</version>
         </dependency>
     </dependencies>
 </project>
