@@ -35,7 +35,7 @@
         </driver>     
                             
         <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
-        <outputFilePath>ldmx_tracking_test</outputFilePath>
+            <outputFilePath>ldmx_tracking_test</outputFilePath>
         </driver>
         
     </drivers>
