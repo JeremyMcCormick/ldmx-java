@@ -12,6 +12,8 @@
         <module>parent</module>
         <module>code</module>
         <module>detector-data</module>
+        <module>steering-files</module>
+        <module>plugin</module>
         <module>distribution</module>
     </modules>
 </project>
