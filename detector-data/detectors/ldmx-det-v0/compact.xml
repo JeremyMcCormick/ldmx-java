@@ -21,7 +21,7 @@
         <!-- tracking region parameters -->
         <constant name="tracking_region_radius" value="50*cm"/>
         <constant name="tracking_region_min" value="0*cm"/>
-        <constant name="tracking_region_zmax" value="60*cm-0.001*mm"/>
+        <constant name="tracking_region_zmax" value="60*cm"/>
 
         <!-- tracker module dimensions -->
         <constant name="tracker_module_length" value="80*mm"/>
@@ -125,7 +125,7 @@
 
     <detectors>
 
-        <detector id="10" name="Target" type="HPSTracker2" readout="DummyTargetHits">
+        <detector id="10" name="Target" type="HPSTracker2" readout="DummyTargetHits" insideTrackingVolume="true">
             <module name="TargetModule" vis="TargetVis">
                 <box x="target_dim_x" y="target_dim_y"/>
                 <module_component thickness="target_thickness" material="Tungsten" sensitive="false"/>
@@ -135,7 +135,7 @@
             </layer>
         </detector>
 
-        <detector id="1" name="TaggerTracker" type="HPSTracker2" readout="TaggerTrackerHits" combineHits="true">
+        <detector id="1" name="TaggerTracker" type="HPSTracker2" readout="TaggerTrackerHits" combineHits="true" insideTrackingVolume="true">
 
             <module name="LDMXTaggerModule" vis="TaggerTrackerVis">
                 <box x="tracker_module_length" y="tracker_module_width"/>
@@ -211,7 +211,7 @@
 
         </detector>
 
-        <detector id="2" name="RecoilTracker" type="HPSTracker2" readout="RecoilTrackerHits" combineHits="true">
+        <detector id="2" name="RecoilTracker" type="HPSTracker2" readout="RecoilTrackerHits" combineHits="true" insideTrackingVolume="true">
 
             <module name="LDMXTrackerModule" vis="RecoilTrackerVis">
                 <box x="tracker_module_length" y="tracker_module_width"/>
@@ -299,7 +299,7 @@
             </layer>
         </detector>
 
-        <detector id="4" name="Ecal" type="TestBeamCalorimeter" readout="EcalHits" vis="EcalDetVis">
+        <detector id="4" name="Ecal" type="TestBeamCalorimeter" readout="EcalHits" vis="EcalDetVis" insideTrackingVolume="false">
 
             <dimensions x="60*cm" y="30*cm"/>
 
@@ -622,8 +622,9 @@
     </readouts>
 
     <fields>
+        <field type="BoxDipole" name="AnalyzingDipole" x="0.0" y="0.0" z="0.0" bx="0.0" by="-1.5" bz="0.0" dx="50.0*cm" dy="50.0*cm" dz="60.0*cm"/>
         <!-- 18D36 field map from HPS with no offset -->
-        <field type="FieldMap3D" name="LDMXDipoleFieldMap3D" filename="fieldmap/209acm2_5kg_corrected_unfolded_scaled_1.04545.dat" xoffset="0.0*cm" yoffset="0.0*cm" zoffset="0.0*cm"/>
+        <!-- <field type="FieldMap3D" name="LDMXDipoleFieldMap3D" filename="fieldmap/209acm2_5kg_corrected_unfolded_scaled_1.04545.dat" xoffset="0.0*cm" yoffset="0.0*cm" zoffset="0.0*cm"/>  -->
     </fields>
 
 </lccdd>
