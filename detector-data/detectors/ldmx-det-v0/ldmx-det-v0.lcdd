@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="GeomConverter" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="1425109260" />
+    <generator name="GeomConverter" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="4255916008" />
     <author name="NONE" />
     <comment>This is the first draft for an LDMX detector including the tagger and recoil trackers, the Tungsten target, and the ECal. The 18D36 field map is used with no offset; the center of the coordinate system is defined by the center of this magnetic field region. Tracker geometry is from Tim Nelson, and ECal geometry was derived the layers_plain.csv spreadsheet defining the detailed layering. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
@@ -154,7 +154,7 @@
       <constant name="ecal_scoring_thickness" value="0.001" />
       <constant name="target_dim_y" value="35.0" />
       <constant name="tracker_sensor_length" value="78.0" />
-      <constant name="tracking_region_zmax" value="599.999" />
+      <constant name="tracking_region_zmax" value="600.0" />
       <constant name="target_dim_x" value="95.0" />
       <position name="LDMXTaggerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.9999999999999999" unit="mm" />
       <rotation name="LDMXTaggerModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
@@ -3553,7 +3553,7 @@
     </setup>
   </gdml>
   <fields>
-    <field_map_3d name="LDMXDipoleFieldMap3D" lunit="mm" funit="tesla" filename="fieldmap/209acm2_5kg_corrected_unfolded_scaled_1.04545.dat" xoffset="0.0" yoffset="0.0" zoffset="0.0" />
+    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="0.0" dx="500.0" dy="500.0" dz="600.0" bx="0.0" by="-1.5" bz="0.0" />
   </fields>
 </lcdd>
 
