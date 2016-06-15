@@ -4,7 +4,8 @@
     <execute>
         <driver name="EventMarkerDriver" />
         <driver name="LdmxTrackerSetup"  />
-        <driver name="SimpleLdmxReadout"  />
+        <driver name="SimpleLdmxReadout" />
+        <driver name="CleanupDriver"      />
     </execute>    
     <drivers>
         <driver name="EventMarkerDriver" type="org.lcsim.job.EventMarkerDriver" >
@@ -17,7 +18,8 @@
             <enablePileupCut>false</enablePileupCut>
             <rawTrackerHitCollectionName>TaggerRawTrackerHits</rawTrackerHitCollectionName>
             <readout>TaggerTrackerHits</readout>
-            <verbosity>5</verbosity>
+            <verbosity>1</verbosity>
         </driver>
+        <driver name="CleanupDriver" type="org.lcsim.recon.tracking.digitization.sisim.config.ReadoutCleanupDriver" />
     </drivers>
 </lcsim>
