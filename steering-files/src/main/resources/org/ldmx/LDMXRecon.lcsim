@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lcsim xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+       xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+    <execute>
+        <driver name="EventMarkerDriver" />
+        <driver name="LdmxTrackerSetup"  />
+        <driver name="SimpleLdmxReadout"  />
+    </execute>    
+    <drivers>
+        <driver name="EventMarkerDriver" type="org.lcsim.job.EventMarkerDriver" >
+            <eventInterval>1</eventInterval>
+        </driver>
+        <driver name="LdmxTrackerSetup" type="org.ldmx.detector.LdmxTrackerSetup"   />
+        <driver name="SimpleLdmxReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
+            <noPileup>true</noPileup>
+            <subdetectorName>TaggerTracker</subdetectorName>
+            <enablePileupCut>false</enablePileupCut>
+            <rawTrackerHitCollectionName>TaggerRawTrackerHits</rawTrackerHitCollectionName>
+            <readout>TaggerTrackerHits</readout>
+            <verbosity>5</verbosity>
+        </driver>
+    </drivers>
+</lcsim>
