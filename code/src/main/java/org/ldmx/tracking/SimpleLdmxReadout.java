@@ -190,6 +190,7 @@ public class SimpleLdmxReadout extends TriggerableDriver {
     public void process(EventHeader event) {
         super.process(event);
 
+        LOGGER.fine("Running readout simulation.");
         List<StripHit> stripHits = doSiSimulation();
 
         if (!noPileup) {
@@ -246,7 +247,7 @@ public class SimpleLdmxReadout extends TriggerableDriver {
                     shape.setParameters(channel, (HpsSiSensor) sensor);
                     signal[sampleN] += amplitude * shape.getAmplitudePeakNorm(time);//add the pulse to the pedestal
                     samples[sampleN] = (short) Math.round(signal[sampleN]);
-                    if (verbosity >= 1) {
+                    if (verbosity > 1) {
                         System.out.println("\t\tMaking samples: sample#" + sampleN + " has " + samples[sampleN] + " ADC counts");
                     }
                 }
@@ -276,7 +277,9 @@ public class SimpleLdmxReadout extends TriggerableDriver {
         List<StripHit> stripHits = new ArrayList<StripHit>();
 
         for (SiSensor sensor : sensors) {
-
+            
+            LOGGER.fine("Processing hits on sensor " + sensor.toString());
+            
             // Set the sensor to be used in the charge deposition simulation
             siSimulation.setSensor(sensor);
 
@@ -300,6 +303,8 @@ public class SimpleLdmxReadout extends TriggerableDriver {
                     // Loop over all sensor channels
                     for (Integer channel : electrodeDataCol.keySet()) {
 
+                        LOGGER.fine("Processing channel " + channel);
+                        
                         // Get the electrode data for this channel
                         SiElectrodeData electrodeData = electrodeDataCol.get(channel);
                         Set<SimTrackerHit> simHits = electrodeData.getSimulatedHits();
@@ -312,14 +317,17 @@ public class SimpleLdmxReadout extends TriggerableDriver {
                         }
                         time /= simHits.size();
                         time += ClockSingleton.getTime();
-
+                        LOGGER.fine("Hit time: " + time);
+                        
                         // Get the charge in units of electrons
                         double charge = electrodeData.getCharge();
+                        LOGGER.fine("Hit charge: " + charge);
 
                         double resistorValue = 100; // Ohms
                         double inputStageGain = 1.5;
                         // FIXME: This should use the gains instead
                         double amplitude = (charge / LdmxConstants.MIP) * resistorValue * inputStageGain * Math.pow(2, 14) / 2000;
+                        LOGGER.fine("Hit amplitude: " + amplitude);
 
                         stripHits.add(new StripHit(sensor, channel, amplitude, time, simHits));
                     }
@@ -328,6 +336,7 @@ public class SimpleLdmxReadout extends TriggerableDriver {
             // Clear the sensors of all deposited charge
             siSimulation.clearReadout();
         }
+        LOGGER.fine("Total strip hits: " + stripHits.size());
         return stripHits;
     }
 
