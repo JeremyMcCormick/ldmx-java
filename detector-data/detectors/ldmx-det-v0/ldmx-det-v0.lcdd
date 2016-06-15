@@ -2,9 +2,9 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="GeomConverter" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="1425109260" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="2114684790" />
     <author name="NONE" />
-    <comment>This is the first draft for an LDMX detector including the tagger and recoil trackers, the Tungsten target, and the ECal. The 18D36 field map is used with no offset; the center of the coordinate system is defined by the center of this magnetic field region. Tracker geometry is from Tim Nelson, and ECal geometry was derived the layers_plain.csv spreadsheet defining the detailed layering. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
+    <comment>This is the first draft for an LDMX detector including the tagger and recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
   <iddict>
     <idspec name="TaggerTrackerHits" length="46">
@@ -94,13 +94,13 @@
       <color R="1.0" G="0.95" B="0.5" alpha="1.0" />
     </vis>
     <vis name="TargetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
-      <color R="0.5" G="0.54" B="0.54" alpha="0.8" />
+      <color R="0.5" G="0.5" B="0.5" alpha="0.0" />
     </vis>
     <vis name="InvisibleWithDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
       <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
     </vis>
     <vis name="EcalScoringVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
-      <color R="0.67" G="0.84" B="0.9" alpha="1.0" />
+      <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
     <vis name="WorldVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
       <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
@@ -114,91 +114,102 @@
       <rotation name="identity_rot" x="0.0" y="0.0" z="0.0" unit="radian" />
       <rotation name="reflect_rot" x="3.141592653589793" y="0.0" z="0.0" unit="radian" />
       <position name="identity_pos" x="0.0" y="0.0" z="0.0" unit="mm" />
-      <constant name="ecal_dim_x" value="300.0" />
-      <constant name="tagger_layer6_z" value="292.5" />
-      <constant name="world_side" value="5000.0" />
-      <constant name="tagger_layer1_z" value="-207.5" />
-      <constant name="ecal_dim_y" value="600.0" />
-      <constant name="tracker_layer5_z" value="490.0" />
-      <constant name="tracking_region_radius" value="500.0" />
-      <constant name="tagger_layer3_z" value="-7.5" />
-      <constant name="tagger_layer4_z" value="92.5" />
-      <constant name="tracker_sensor_gap" value="1.0" />
-      <constant name="tracker_sensor_width" value="38.0" />
-      <constant name="tracker_layer6_z" value="580.0" />
+      <constant name="tagger_layer6_z" value="192.5" />
+      <constant name="tagger_layer1_z" value="-307.5" />
+      <constant name="tagger_layer6_x" value="-0.938" />
+      <constant name="tagger_layer3_z" value="-107.5" />
+      <constant name="tagger_layer3_x" value="-9.657" />
+      <constant name="tagger_layer2_x" value="-14.758" />
+      <constant name="tagger_layer4_z" value="-7.5" />
+      <constant name="tagger_layer4_x" value="-5.342" />
       <constant name="target_thickness" value="0.35" />
+      <constant name="tagger_layer5_x" value="-2.723" />
       <constant name="ecal_total_thickness" value="289.0" />
       <constant name="ecal_sensor_thickness" value="0.30000000000000004" />
-      <constant name="ecal_face_z" value="600.0" />
-      <constant name="tagger_layer5_z" value="192.5" />
-      <constant name="tracker_layer1_z" value="407.5" />
-      <constant name="target_z" value="400.0" />
-      <constant name="tracker_layer4_z" value="452.5" />
-      <constant name="tracker_layer3_z" value="437.5" />
-      <constant name="ecal_scoring_z" value="599.998" />
+      <constant name="tracker_sensor_overlap" value="2.0" />
+      <constant name="tracker_layer1_z" value="307.5" />
+      <constant name="tagger_layer5_z" value="92.5" />
+      <constant name="ecal_face_z" value="200.0" />
+      <constant name="target_z" value="0.0" />
+      <constant name="ecal_scoring_z" value="199.0" />
+      <constant name="tracker_layer2_z" value="322.5" />
+      <constant name="tracking_region_z" value="-300.0" />
+      <constant name="tracker_stereo_angle" value="0.1" />
+      <constant name="tracker_module_sep" value="3.0" />
+      <constant name="tracking_region_min" value="0.0" />
+      <constant name="tagger_layer2_z" value="-207.5" />
+      <constant name="target_dim_y" value="35.0" />
+      <constant name="tagger_layer1_x" value="-20.874" />
+      <constant name="target_dim_x" value="95.0" />
+      <constant name="world_side" value="5000.0" />
+      <constant name="ecal_dim_x" value="300.0" />
+      <constant name="z_offset" value="-300.0" />
+      <constant name="tracker_layer5_z" value="390.0" />
+      <constant name="ecal_dim_y" value="600.0" />
+      <constant name="tracking_region_radius" value="250.0" />
+      <constant name="tracker_sensor_gap" value="1.0" />
+      <constant name="tracker_layer6_z" value="480.0" />
+      <constant name="tracker_sensor_width" value="48.0" />
+      <constant name="tracker_layer4_z" value="352.5" />
+      <constant name="tracker_layer3_z" value="337.5" />
       <constant name="tracker_module_length" value="80.0" />
       <constant name="tracker_cf_thickness" value="0.2" />
-      <constant name="tracker_layer2_z" value="422.5" />
       <constant name="world_y" value="5000.0" />
-      <constant name="tracker_module_width" value="50.0" />
       <constant name="world_z" value="5000.0" />
-      <constant name="tracker_stereo_angle" value="0.1" />
+      <constant name="tracker_module_width" value="50.0" />
       <constant name="tracker_si_thickness" value="0.32" />
-      <constant name="tracker_module_sep" value="3.0" />
       <constant name="world_x" value="5000.0" />
-      <constant name="tagger_layer7_z" value="392.5" />
+      <constant name="tagger_layer7_z" value="292.5" />
+      <constant name="tagger_layer7_x" value="-0.065" />
       <constant name="ecal_scoring_dim_x" value="300.0" />
       <constant name="ecal_scoring_dim_y" value="600.0" />
-      <constant name="tracking_region_min" value="0.0" />
-      <constant name="tagger_layer2_z" value="-107.5" />
-      <constant name="ecal_scoring_thickness" value="0.001" />
-      <constant name="target_dim_y" value="35.0" />
+      <constant name="ecal_scoring_thickness" value="0.1" />
       <constant name="tracker_sensor_length" value="78.0" />
-      <constant name="tracking_region_zmax" value="599.999" />
-      <constant name="target_dim_x" value="95.0" />
+      <constant name="tracking_region_zmax" value="485.0" />
+      <position name="tracking_region_pos" x="0.0" y="0.0" z="-300.0" unit="mm" />
       <position name="LDMXTaggerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.9999999999999999" unit="mm" />
       <rotation name="LDMXTaggerModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXTaggerModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="LDMXTaggerModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXTaggerModuleVolume_component1_position" x="0.0" y="0.0" z="0.16000000000000014" unit="mm" />
       <rotation name="LDMXTaggerModuleVolume_component1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer1_module0_position" x="0.0" y="0.0" z="-210.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer1_module0_position" x="-20.874" y="0.0" z="-310.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer2_module0_position" x="0.0" y="0.0" z="-204.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer2_module0_position" x="-20.874" y="0.0" z="-304.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer2_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer3_module0_position" x="0.0" y="0.0" z="-110.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer3_module0_position" x="-14.758" y="0.0" z="-210.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer3_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer4_module0_position" x="0.0" y="0.0" z="-104.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer4_module0_position" x="-14.758" y="0.0" z="-204.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer4_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer5_module0_position" x="0.0" y="0.0" z="-10.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer5_module0_position" x="-9.657" y="0.0" z="-110.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer5_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer6_module0_position" x="0.0" y="0.0" z="-4.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer6_module0_position" x="-9.657" y="0.0" z="-104.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer6_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer7_module0_position" x="0.0" y="0.0" z="89.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer7_module0_position" x="-5.342" y="0.0" z="-10.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer7_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer8_module0_position" x="0.0" y="0.0" z="95.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer8_module0_position" x="-5.342" y="0.0" z="-4.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer8_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer9_module0_position" x="0.0" y="0.0" z="189.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer9_module0_position" x="-2.723" y="0.0" z="89.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer9_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer10_module0_position" x="0.0" y="0.0" z="195.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer10_module0_position" x="-2.723" y="0.0" z="95.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer10_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer11_module0_position" x="0.0" y="0.0" z="289.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer11_module0_position" x="-0.938" y="0.0" z="189.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer11_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer12_module0_position" x="0.0" y="0.0" z="295.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer12_module0_position" x="-0.938" y="0.0" z="195.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer12_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer13_module0_position" x="0.0" y="0.0" z="389.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer13_module0_position" x="-0.065" y="0.0" z="289.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer13_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="TaggerTracker_LDMXTaggerModule_layer14_module0_position" x="0.0" y="0.0" z="395.5" unit="mm" />
+      <position name="TaggerTracker_LDMXTaggerModule_layer14_module0_position" x="-0.065" y="0.0" z="295.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer14_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
       <position name="TargetModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="TargetModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="400.0" unit="mm" />
+      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="Target_TargetModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="ScoringModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="ScoringModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="ScoringModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="ScoringModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="EcalScoring_ScoringModule_layer1_module0_position" x="0.0" y="0.0" z="599.998" unit="mm" />
+      <position name="EcalScoring_ScoringModule_layer1_module0_position" x="0.0" y="0.0" z="199.0" unit="mm" />
       <rotation name="EcalScoring_ScoringModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXTrackerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.9999999999999999" unit="mm" />
       <rotation name="LDMXTrackerModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
@@ -206,47 +217,63 @@
       <rotation name="LDMXTrackerModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXTrackerModuleVolume_component1_position" x="0.0" y="0.0" z="0.16000000000000014" unit="mm" />
       <rotation name="LDMXTrackerModuleVolume_component1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer1_module0_position" x="0.0" y="0.0" z="404.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer1_module0_position" x="0.0" y="0.0" z="304.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer2_module0_position" x="0.0" y="0.0" z="410.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer2_module0_position" x="0.0" y="0.0" z="310.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer2_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer3_module0_position" x="0.0" y="0.0" z="419.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer3_module0_position" x="0.0" y="0.0" z="319.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer3_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer4_module0_position" x="0.0" y="0.0" z="425.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer4_module0_position" x="0.0" y="0.0" z="325.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer4_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer5_module0_position" x="0.0" y="0.0" z="434.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer5_module0_position" x="0.0" y="0.0" z="334.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer5_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer6_module0_position" x="0.0" y="0.0" z="440.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer6_module0_position" x="0.0" y="0.0" z="340.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer6_module0_rotation" x="0.0" y="0.0" z="0.1" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer7_module0_position" x="0.0" y="0.0" z="449.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer7_module0_position" x="0.0" y="0.0" z="349.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer7_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer8_module0_position" x="0.0" y="0.0" z="455.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer8_module0_position" x="0.0" y="0.0" z="355.5" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer8_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer9_module0_position" x="48.0" y="40.0" z="491.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module0_position" x="96.0" y="40.0" z="391.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer9_module1_position" x="0.0" y="40.0" z="489.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module1_position" x="48.0" y="40.0" z="389.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer9_module2_position" x="-48.0" y="40.0" z="491.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module2_position" x="0.0" y="40.0" z="391.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module2_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer9_module3_position" x="48.0" y="-40.0" z="491.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module3_position" x="-48.0" y="40.0" z="389.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module3_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer9_module4_position" x="0.0" y="-40.0" z="489.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module4_position" x="-96.0" y="40.0" z="391.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module4_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer9_module5_position" x="-48.0" y="-40.0" z="491.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module5_position" x="96.0" y="-40.0" z="391.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module5_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer10_module0_position" x="48.0" y="40.0" z="581.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module6_position" x="48.0" y="-40.0" z="389.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module6_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module7_position" x="0.0" y="-40.0" z="391.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module7_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module8_position" x="-48.0" y="-40.0" z="389.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module8_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer9_module9_position" x="-96.0" y="-40.0" z="391.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer9_module9_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module0_position" x="96.0" y="40.0" z="481.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer10_module1_position" x="0.0" y="40.0" z="579.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module1_position" x="48.0" y="40.0" z="479.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module1_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer10_module2_position" x="-48.0" y="40.0" z="581.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module2_position" x="0.0" y="40.0" z="481.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module2_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer10_module3_position" x="48.0" y="-40.0" z="581.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module3_position" x="-48.0" y="40.0" z="479.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module3_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer10_module4_position" x="0.0" y="-40.0" z="579.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module4_position" x="-96.0" y="40.0" z="481.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module4_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="RecoilTracker_LDMXTrackerModule_layer10_module5_position" x="-48.0" y="-40.0" z="581.0" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module5_position" x="96.0" y="-40.0" z="481.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module5_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="Ecal_position" x="0.0" y="0.0" z="744.5" unit="mm" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module6_position" x="48.0" y="-40.0" z="479.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module6_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module7_position" x="0.0" y="-40.0" z="481.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module7_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module8_position" x="-48.0" y="-40.0" z="479.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module8_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="RecoilTracker_LDMXTrackerModule_layer10_module9_position" x="-96.0" y="-40.0" z="481.0" unit="mm" />
+      <rotation name="RecoilTracker_LDMXTrackerModule_layer10_module9_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="Ecal_position" x="0.0" y="0.0" z="344.5" unit="mm" />
       <position name="Ecal_layerType0_slice0_position" x="0.0" y="0.0" z="-3.9000000000000004" unit="mm" />
       <position name="Ecal_layerType0_slice1_position" x="0.0" y="0.0" z="-3.4000000000000004" unit="mm" />
       <position name="Ecal_layerType0_slice2_position" x="0.0" y="0.0" z="-2.1500000000000004" unit="mm" />
@@ -547,16 +574,16 @@
       <tube name="tracking_cylinder" deltaphi="6.283185307179586" rmin="0.0" rmax="tracking_region_radius" z="2*tracking_region_zmax" />
       <box name="LDMXTaggerModuleBox" x="50.0" y="80.0" z="2.32" />
       <box name="LDMXTaggerModuleVolume_component0Box" x="50.0" y="80.0" z="0.32" />
-      <box name="LDMXTaggerModuleVolume_component0Sensor0Box" x="38.0" y="78.0" z="0.32" />
+      <box name="LDMXTaggerModuleVolume_component0Sensor0Box" x="48.0" y="78.0" z="0.32" />
       <box name="LDMXTaggerModuleVolume_component1Box" x="50.0" y="80.0" z="2.0" />
       <box name="TargetModuleBox" x="35.0" y="95.0" z="0.35" />
       <box name="TargetModuleVolume_component0Box" x="35.0" y="95.0" z="0.35" />
-      <box name="ScoringModuleBox" x="600.0" y="300.0" z="0.001" />
-      <box name="ScoringModuleVolume_component0Box" x="600.0" y="300.0" z="0.001" />
-      <box name="ScoringModuleVolume_component0Sensor0Box" x="600.0" y="300.0" z="0.001" />
+      <box name="ScoringModuleBox" x="600.0" y="300.0" z="0.1" />
+      <box name="ScoringModuleVolume_component0Box" x="600.0" y="300.0" z="0.1" />
+      <box name="ScoringModuleVolume_component0Sensor0Box" x="600.0" y="300.0" z="0.1" />
       <box name="LDMXTrackerModuleBox" x="50.0" y="80.0" z="2.32" />
       <box name="LDMXTrackerModuleVolume_component0Box" x="50.0" y="80.0" z="0.32" />
-      <box name="LDMXTrackerModuleVolume_component0Sensor0Box" x="38.0" y="78.0" z="0.32" />
+      <box name="LDMXTrackerModuleVolume_component0Sensor0Box" x="48.0" y="78.0" z="0.32" />
       <box name="LDMXTrackerModuleVolume_component1Box" x="50.0" y="80.0" z="2.0" />
       <box name="Ecal_box" x="600.0" y="300.0" z="288.99999999999994" />
       <box name="Ecal_layerType0_box" x="600.0" y="300.0" z="8.3" />
@@ -3467,6 +3494,42 @@
         </physvol>
         <physvol>
           <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module6_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module6_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module7_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module7_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="7" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module8_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module8_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="8" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer9_module9_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer9_module9_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="9" />
+          <physvolid field_name="module" value="9" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
           <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module0_position" />
           <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module0_rotation" />
           <physvolid field_name="system" value="2" />
@@ -3519,6 +3582,42 @@
           <physvolid field_name="layer" value="10" />
           <physvolid field_name="module" value="5" />
         </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module6_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module6_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="6" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module7_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module7_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="7" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module8_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module8_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="8" />
+        </physvol>
+        <physvol>
+          <volumeref ref="LDMXTrackerModuleVolume" />
+          <positionref ref="RecoilTracker_LDMXTrackerModule_layer10_module9_position" />
+          <rotationref ref="RecoilTracker_LDMXTrackerModule_layer10_module9_rotation" />
+          <physvolid field_name="system" value="2" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="10" />
+          <physvolid field_name="module" value="9" />
+        </physvol>
         <regionref ref="TrackingRegion" />
         <visref ref="TrackingVis" />
       </volume>
@@ -3527,7 +3626,7 @@
         <solidref ref="world_box" />
         <physvol>
           <volumeref ref="tracking_volume" />
-          <positionref ref="identity_pos" />
+          <positionref ref="tracking_region_pos" />
           <rotationref ref="identity_rot" />
         </physvol>
         <physvol>
@@ -3553,7 +3652,7 @@
     </setup>
   </gdml>
   <fields>
-    <field_map_3d name="LDMXDipoleFieldMap3D" lunit="mm" funit="tesla" filename="fieldmap/209acm2_5kg_corrected_unfolded_scaled_1.04545.dat" xoffset="0.0" yoffset="0.0" zoffset="0.0" />
+    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-407.5" dx="500.0" dy="500.0" dz="305.0" bx="0.0" by="-1.5" bz="0.0" />
   </fields>
 </lcdd>
 

@@ -8,10 +8,10 @@
        <driver name="LCIODriver"/>
     </execute>    
     <control>
-        <numberOfEvents>100</numberOfEvents>
+        <numberOfEvents>1000</numberOfEvents>
     </control>
     <drivers>
-        
+            
         <driver name="TrackerDigi" type="org.hps.recon.tracking.TrackerDigiDriver">
             <subdetectorName>RecoilTracker</subdetectorName>
             <readoutCollectionName>RecoilTrackerHits</readoutCollectionName>                        
@@ -20,9 +20,11 @@
             <debug>true</debug>
         </driver>
 
-        <driver name="HelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
+        <driver name="HelicalTrackHitDriver" type="org.ldmx.tracking.HelicalTrackHitDriver">
             <subdetectorName>RecoilTracker</subdetectorName>
             <collection>RecoilTracker_TrackerHits</collection>
+            <stereoLayers>1 2 3 4 5 6 7 8</stereoLayers>
+            <axialOnlyLayers>9 10</axialOnlyLayers>
             <debug>true</debug>
         </driver>
                 

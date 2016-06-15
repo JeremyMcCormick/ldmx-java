@@ -3,10 +3,8 @@
     <info name="ldmx-det-v0">
         <comment>
             This is the first draft for an LDMX detector including the tagger and recoil trackers, the Tungsten target,
-            and the ECal.  The 18D36 field map is used with no offset; the center of the coordinate system is defined by
-            the center of this magnetic field region.  Tracker geometry is from Tim Nelson, and ECal geometry was derived
-            the layers_plain.csv spreadsheet defining the detailed layering.  The HGCAL_LDMX github project was used for
-            additional information about the ECal including material definitions.
+            and the ECal.  Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet.
+            The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.
         </comment>
     </info>
 
@@ -19,37 +17,49 @@
         <constant name="world_z" value="world_side"/>
 
         <!-- tracking region parameters -->
-        <constant name="tracking_region_radius" value="50*cm"/>
-        <constant name="tracking_region_min" value="0*cm"/>
-        <constant name="tracking_region_zmax" value="60*cm-0.001*mm"/>
+        <constant name="tracking_region_radius" value="250*mm"/>
+        <constant name="tracking_region_min" value="0"/>
+        <constant name="tracking_region_zmax" value="485.0*mm"/>
+        <constant name="tracking_region_z" value="-300*mm"/>
+        <constant name="z_offset" value="tracking_region_z"/>
 
         <!-- tracker module dimensions -->
         <constant name="tracker_module_length" value="80*mm"/>
         <constant name="tracker_module_width" value="50*mm"/>
 
         <!-- tracker sensor dimensions -->
-        <constant name="tracker_sensor_gap" value="1.0*mm"/>
-        <constant name="tracker_sensor_length" value="8*cm - tracker_sensor_gap*2"/>
-        <constant name="tracker_sensor_width" value="4*cm - tracker_sensor_gap*2"/>
+        <constant name="tracker_sensor_gap" value="1*mm"/>
+        <constant name="tracker_sensor_length" value="tracker_module_length - tracker_sensor_gap*2"/>
+        <constant name="tracker_sensor_width" value="tracker_module_width - tracker_sensor_gap*2"/>
         <constant name="tracker_si_thickness" value="0.032*cm"/>
         <constant name="tracker_cf_thickness" value="0.02*cm"/>
+        <constant name="tracker_sensor_overlap" value="2.0*mm"/>     
+                
+        <!-- Recoil Tracker layer Z positions relative to target -->
+        <constant name="tracker_layer1_z" value="7.5*mm - z_offset"/>
+        <constant name="tracker_layer2_z" value="22.5*mm - z_offset"/>
+        <constant name="tracker_layer3_z" value="37.5*mm - z_offset"/>
+        <constant name="tracker_layer4_z" value="52.5*mm - z_offset"/>
+        <constant name="tracker_layer5_z" value="90*mm - z_offset"/>
+        <constant name="tracker_layer6_z" value="180.0*mm - z_offset"/>
         
-        <!-- Recoil Tracker layer positions -->
-        <constant name="tracker_layer1_z" value="407.5*mm"/>
-        <constant name="tracker_layer2_z" value="422.5*mm"/>
-        <constant name="tracker_layer3_z" value="437.5*mm"/>
-        <constant name="tracker_layer4_z" value="452.5*mm"/>
-        <constant name="tracker_layer5_z" value="490*mm"/>
-        <constant name="tracker_layer6_z" value="580.0*mm"/>
+        <!-- Tagger Tracker layer Z positions relative to target --> 
+        <constant name="tagger_layer1_z" value="-607.5*mm - z_offset"/>
+        <constant name="tagger_layer2_z" value="-507.5*mm - z_offset"/>
+        <constant name="tagger_layer3_z" value="-407.5*mm - z_offset"/>
+        <constant name="tagger_layer4_z" value="-307.5*mm - z_offset"/>
+        <constant name="tagger_layer5_z" value="-207.5*mm - z_offset"/>
+        <constant name="tagger_layer6_z" value="-107.5*mm - z_offset"/>
+        <constant name="tagger_layer7_z" value="-7.5*mm - z_offset"/>
         
-        <!-- Tagger Tracker layer positions -->
-        <constant name="tagger_layer1_z" value="-207.5*mm"/>
-        <constant name="tagger_layer2_z" value="-107.5*mm"/>
-        <constant name="tagger_layer3_z" value="-7.5*mm"/>
-        <constant name="tagger_layer4_z" value="92.5*mm"/>
-        <constant name="tagger_layer5_z" value="192.5*mm"/>
-        <constant name="tagger_layer6_z" value="292.5*mm"/>
-        <constant name="tagger_layer7_z" value="392.5*mm"/>
+        <!-- Tagger Tracker layer X positions --> 
+        <constant name="tagger_layer1_x" value="-20.874*mm"/>
+        <constant name="tagger_layer2_x" value="-14.758*mm"/>
+        <constant name="tagger_layer3_x" value="-9.657*mm"/>
+        <constant name="tagger_layer4_x" value="-5.342*mm"/>
+        <constant name="tagger_layer5_x" value="-2.723*mm"/>
+        <constant name="tagger_layer6_x" value="-0.938*mm"/>
+        <constant name="tagger_layer7_x" value="-0.065*mm"/>
                 
         <!-- separation between module stereo pairs -->
         <constant name="tracker_module_sep" value="3*mm"/>
@@ -58,23 +68,23 @@
         <constant name="tracker_stereo_angle" value="0.1*radian"/>
         
         <!-- ECal -->
-        <constant name="ecal_face_z" value="600*mm"/>
+        <constant name="ecal_face_z" value="20.0*cm"/>
         <constant name="ecal_sensor_thickness" value="(0.1*3)*mm"/>
         <constant name="ecal_total_thickness" value="289.0*mm"/>
         <constant name="ecal_dim_x" value="30*cm"/>
         <constant name="ecal_dim_y" value="60*cm"/>
         
         <!-- ECal scoring -->
-        <constant name="ecal_scoring_z" value="ecal_face_z - 0.002*mm"/>
+        <constant name="ecal_scoring_z" value="ecal_face_z - 1.0*mm"/>
         <constant name="ecal_scoring_dim_x" value="30*cm"/>
         <constant name="ecal_scoring_dim_y" value="60*cm"/>
-        <constant name="ecal_scoring_thickness" value="0.001*mm"/>
+        <constant name="ecal_scoring_thickness" value="0.1*mm"/>
         
         <!-- target measurements -->
         <constant name="target_dim_x" value="9.5*cm"/>
         <constant name="target_dim_y" value="3.5*cm"/>
         <constant name="target_thickness" value="0.35*mm"/>
-        <constant name="target_z" value="400.0*mm"/>
+        <constant name="target_z" value="0.0*mm"/>
 
     </define>
 
@@ -115,17 +125,17 @@
 
     <display>
         <vis name="TaggerTrackerVis" r="0.8" g="0.67" b="0.0" alpha="1.0" showDaughters="false"/>
-        <vis name="TargetVis" r="0.5" g="0.54" b="0.54" alpha="0.8" showDaughters="false"/>
+        <vis name="TargetVis" r="0.5" g="0.50" b="0.50" alpha="0.0" showDaughters="false"/>
         <vis name="RecoilTrackerVis" r="0.74" g="0.71" b="0.41" alpha="1.0" showDaughters="false"/>
-        <vis name="EcalScoringVis" r="0.67" g="0.84" b="0.9" alpha="1.0" showDaughters="false"/>
+        <vis name="EcalScoringVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="false"/>
         <vis name="EcalSensorVis" r="1.0" g="0.95" b="0.5" alpha="1.0"/>
         <vis name="EcalLayerVis" r="1.0" g="1.0" b="1.0" alpha="0.0" showDaughters="true"/>
         <vis name="EcalDetVis" r="1.0" g="1.0" b="1.0" alpha="0.0" showDaughters="true"/>
     </display>
 
     <detectors>
-
-        <detector id="10" name="Target" type="HPSTracker2" readout="DummyTargetHits">
+ 
+        <detector id="10" name="Target" type="HPSTracker2" readout="DummyTargetHits" insideTrackingVolume="true">
             <module name="TargetModule" vis="TargetVis">
                 <box x="target_dim_x" y="target_dim_y"/>
                 <module_component thickness="target_thickness" material="Tungsten" sensitive="false"/>
@@ -133,9 +143,9 @@
             <layer id="1">
                 <module_placement name="TargetModule" id="0" x="0.0" y="0.0" z="target_z" rx="0" ry="0" rz="0"/>
             </layer>
-        </detector>
+        </detector>        
 
-        <detector id="1" name="TaggerTracker" type="HPSTracker2" readout="TaggerTrackerHits" combineHits="true">
+        <detector id="1" name="TaggerTracker" type="HPSTracker2" readout="TaggerTrackerHits" combineHits="true" insideTrackingVolume="true">
 
             <module name="LDMXTaggerModule" vis="TaggerTrackerVis">
                 <box x="tracker_module_length" y="tracker_module_width"/>
@@ -147,71 +157,71 @@
             
             <!-- layer 1 axial -->
             <layer id="1">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer1_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer1_x" y="0.0" z="tagger_layer1_z - tracker_module_sep"/>
             </layer>
             <!-- layer 1 stereo -->
             <layer id="2">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer1_z + tracker_module_sep" rz="tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer1_x" y="0.0" z="tagger_layer1_z + tracker_module_sep" rz="tracker_stereo_angle"/>
             </layer>
             
             <!-- layer 2 axial -->
             <layer id="3">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer2_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer2_x" y="0.0" z="tagger_layer2_z - tracker_module_sep"/>
             </layer>
             <!-- layer 2 stereo -->
             <layer id="4">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer2_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer2_x" y="0.0" z="tagger_layer2_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
             </layer>
             
             <!-- layer 3 axial -->
             <layer id="5">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer3_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer3_x" y="0.0" z="tagger_layer3_z - tracker_module_sep"/>
             </layer>
             <!-- layer 3 stereo -->
             <layer id="6">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer3_z + tracker_module_sep" rz="tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer3_x" y="0.0" z="tagger_layer3_z + tracker_module_sep" rz="tracker_stereo_angle"/>
             </layer>
             
             <!-- layer 4 axial -->
             <layer id="7">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer4_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer4_x" y="0.0" z="tagger_layer4_z - tracker_module_sep"/>
             </layer>
             <!-- layer 4 stereo -->
             <layer id="8">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer4_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer4_x" y="0.0" z="tagger_layer4_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
             </layer>
             
             <!-- layer 5 axial -->
             <layer id="9">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer5_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer5_x" y="0.0" z="tagger_layer5_z - tracker_module_sep"/>
             </layer>
             <!-- layer 5 stereo -->
             <layer id="10">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer5_z + tracker_module_sep" rz="tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer5_x" y="0.0" z="tagger_layer5_z + tracker_module_sep" rz="tracker_stereo_angle"/>
             </layer>
             
             <!-- layer 6 axial -->
             <layer id="11">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer6_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer6_x" y="0.0" z="tagger_layer6_z - tracker_module_sep"/>
             </layer>
             <!-- layer 6 stereo -->
             <layer id="12">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer6_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer6_x" y="0.0" z="tagger_layer6_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
             </layer>
             
             <!-- layer 6 axial -->
             <layer id="13">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer7_z - tracker_module_sep"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer7_x" y="0.0" z="tagger_layer7_z - tracker_module_sep"/>
             </layer>
             <!-- layer 6 stereo -->
             <layer id="14">
-                <module_placement name="LDMXTaggerModule" id="0" x="0.0" y="0.0" z="tagger_layer7_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
+                <module_placement name="LDMXTaggerModule" id="0" x="tagger_layer7_x" y="0.0" z="tagger_layer7_z + tracker_module_sep" rz="-tracker_stereo_angle"/>
             </layer>
 
 
         </detector>
 
-        <detector id="2" name="RecoilTracker" type="HPSTracker2" readout="RecoilTrackerHits" combineHits="true">
+        <detector id="2" name="RecoilTracker" type="HPSTracker2" readout="RecoilTrackerHits" combineHits="true" insideTrackingVolume="true">
 
             <module name="LDMXTrackerModule" vis="RecoilTrackerVis">
                 <box x="tracker_module_length" y="tracker_module_width"/>
@@ -261,34 +271,42 @@
             <layer id="9">
             
                 <!-- top modules -->
-                <module_placement name="LDMXTrackerModule" id="0" x="tracker_module_width - 2.0*mm" y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="1" x="0.0" y="tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="2" x="-tracker_module_width + 2.0*mm" y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="0" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)"  y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="1" x="tracker_module_width - tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="2" x="0" y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="3" x="-tracker_module_width + tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="4" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
                 
                 <!-- bottom modules -->
-                <module_placement name="LDMXTrackerModule" id="3" x="tracker_module_width - 2.0*mm" y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="4" x="0.0" y="-tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="5" x="-tracker_module_width + 2.0*mm" y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-
+                <module_placement name="LDMXTrackerModule" id="5" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)"  y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="6" x="tracker_module_width - tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="7" x="0" y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="8" x="-tracker_module_width + tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="9" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                            
             </layer>
             
             <!-- layer 6 -->
             <layer id="10">
-            
+                        
                 <!-- top modules -->
-                <module_placement name="LDMXTrackerModule" id="0" x="tracker_module_width - 2.0*mm" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="1" x="0.0" y="tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="2" x="-tracker_module_width + 2.0*mm" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="0" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="1" x="tracker_module_width - tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="2" x="0" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="3" x="-tracker_module_width + tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="4" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
                 
                 <!-- bottom modules -->
-                <module_placement name="LDMXTrackerModule" id="3" x="tracker_module_width - 2.0*mm" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="4" x="0.0" y="-tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="5" x="-tracker_module_width + 2.0*mm" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="5" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="6" x="tracker_module_width - tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="7" x="0" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="8" x="-tracker_module_width + tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule" id="9" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>            
 
-            </layer>
+            </layer>            
 
         </detector>
-
+ 
         <detector id="3" name="EcalScoring" type="HPSTracker2" readout="EcalScoringHits" insideTrackingVolume="false">
             <module name="ScoringModule" vis="EcalScoringVis">
                 <box x="ecal_scoring_dim_x" y="ecal_scoring_dim_y"/>
@@ -297,15 +315,14 @@
             <layer id="1">
                 <module_placement name="ScoringModule" id="0" x="0" y="0" z="ecal_scoring_z" rx="0" ry="0" rz="0"/>
             </layer>
-        </detector>
+        </detector>        
 
-        <detector id="4" name="Ecal" type="TestBeamCalorimeter" readout="EcalHits" vis="EcalDetVis">
+        <detector id="4" name="Ecal" type="TestBeamCalorimeter" readout="EcalHits" vis="EcalDetVis" insideTrackingVolume="false">
 
             <dimensions x="60*cm" y="30*cm"/>
 
             <position z="ecal_face_z + ecal_total_thickness/2"/>
                         
-            <!-- layer 0 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -317,7 +334,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 1 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="0.6"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -327,7 +343,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>            
             
-            <!-- layer 2 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -339,7 +354,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 3 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="0.6"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -349,7 +363,26 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 4 -->
+            <layer repeat="1" vis="EcalLayerVis">
+                <slice material="Copper" thickness="0.5"/>
+                <slice material="CFMix" thickness="0.5"/>
+                <slice material="Tungsten" thickness="2.0"/>
+                <slice material="CFMix" thickness="0.5"/>
+                <slice material="Copper" thickness="0.5"/>
+                <slice material="Air" thickness="2.0"/>
+                <slice material="FR4" thickness="2.0"/>
+                <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
+            </layer>
+                        
+            <layer repeat="1" vis="EcalLayerVis">
+                <slice material="WCu" thickness="0.6"/>
+                <slice material="Copper" thickness="6.0"/>
+                <slice material="WCu" thickness="0.6"/>
+                <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
+                <slice material="FR4" thickness="2.0"/>
+                <slice material="Air" thickness="2.0"/>
+            </layer>
+            
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -361,7 +394,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 5 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="0.6"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -371,29 +403,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 6 -->
-            <layer repeat="1" vis="EcalLayerVis">
-                <slice material="Copper" thickness="0.5"/>
-                <slice material="CFMix" thickness="0.5"/>
-                <slice material="Tungsten" thickness="2.0"/>
-                <slice material="CFMix" thickness="0.5"/>
-                <slice material="Copper" thickness="0.5"/>
-                <slice material="Air" thickness="2.0"/>
-                <slice material="FR4" thickness="2.0"/>
-                <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
-            </layer>
-            
-            <!-- layer 7 -->
-            <layer repeat="1" vis="EcalLayerVis">
-                <slice material="WCu" thickness="0.6"/>
-                <slice material="Copper" thickness="6.0"/>
-                <slice material="WCu" thickness="0.6"/>
-                <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
-                <slice material="FR4" thickness="2.0"/>
-                <slice material="Air" thickness="2.0"/>
-            </layer>
-            
-            <!-- layer 8 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -405,7 +414,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 9 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="1.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -415,7 +423,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 10 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -427,7 +434,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 11 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="1.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -437,7 +443,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 12 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -449,7 +454,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 13 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="1.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -459,7 +463,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 14 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -471,7 +474,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 15 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="1.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -481,7 +483,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 16 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -493,7 +494,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 17 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="1.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -503,7 +503,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 18 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -515,7 +514,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 19 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="2.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -525,7 +523,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 20 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -537,7 +534,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 21 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="2.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -547,7 +543,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 22 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -559,7 +554,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 23 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="2.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -569,7 +563,6 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
             
-            <!-- layer 24 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="Copper" thickness="0.5"/>
                 <slice material="CFMix" thickness="0.5"/>
@@ -581,7 +574,6 @@
                 <slice material="Silicon" thickness="ecal_sensor_thickness" sensitive="yes" vis="EcalSensorVis"/>
             </layer>
             
-            <!-- layer 25 -->
             <layer repeat="1" vis="EcalLayerVis">
                 <slice material="WCu" thickness="2.2"/>
                 <slice material="Copper" thickness="6.0"/>
@@ -622,8 +614,7 @@
     </readouts>
 
     <fields>
-        <!-- 18D36 field map from HPS with no offset -->
-        <field type="FieldMap3D" name="LDMXDipoleFieldMap3D" filename="fieldmap/209acm2_5kg_corrected_unfolded_scaled_1.04545.dat" xoffset="0.0*cm" yoffset="0.0*cm" zoffset="0.0*cm"/>
+        <field type="BoxDipole" name="AnalyzingDipole" x="0.0" y="0.0" z="-407.5" bx="0.0" by="-1.5" bz="0.0" dx="50.0*cm" dy="50.0*cm" dz="305.0*mm"/>
     </fields>
 
 </lccdd>
