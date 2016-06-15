@@ -2,17 +2,21 @@
 <lcsim xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
        xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
     <execute>
-        <driver name="EventMarkerDriver" />
-        <driver name="LdmxTrackerSetup"  />
-        <driver name="SimpleTaggerReadout" />
-        <driver name="SimpleRecoilReadout" />
-        <driver name="CleanupDriver"      />
+        <driver name="EventMarkerDriver"    />
+        <driver name="LdmxTrackerSetup"     />
+        <driver name="SimpleTaggerReadout"  />
+        <driver name="SimpleRecoilReadout"  />
+        <driver name="LCIODriver"           />
+        <driver name="CleanupDriver"        />
     </execute>    
     <drivers>
+
         <driver name="EventMarkerDriver" type="org.lcsim.job.EventMarkerDriver" >
             <eventInterval>500</eventInterval>
         </driver>
+
         <driver name="LdmxTrackerSetup" type="org.ldmx.detector.LdmxTrackerSetup"   />
+        
         <driver name="SimpleTaggerReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
             <noPileup>true</noPileup>
             <subdetectorName>TaggerTracker</subdetectorName>
@@ -21,6 +25,7 @@
             <readout>TaggerTrackerHits</readout>
             <verbosity>0</verbosity>
         </driver>
+        
         <driver name="SimpleRecoilReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
             <noPileup>true</noPileup>
             <subdetectorName>RecoilTracker</subdetectorName>
@@ -29,6 +34,12 @@
             <readout>RecoilTrackerHits</readout>
             <verbosity>0</verbosity>
         </driver>
+        
+        <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
+            <outputFilePath>ldmx_readout_sim</outputFilePath>
+        </driver>
+        
         <driver name="CleanupDriver" type="org.lcsim.recon.tracking.digitization.sisim.config.ReadoutCleanupDriver" />
+    
     </drivers>
 </lcsim>
