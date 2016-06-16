@@ -24,16 +24,25 @@
         <constant name="z_offset" value="tracking_region_z"/>
 
         <!-- tracker module dimensions -->
-        <constant name="tracker_module_length" value="80*mm"/>
-        <constant name="tracker_module_width" value="50*mm"/>
+        <constant name="tracker_module_length" value="100.0*mm"/>
+        <constant name="tracker_module_width" value="40.34*mm"/>
+        
+        <!-- dimensions for axial only modules in layers 5 & 6 of Recoil Tracker -->
+        <constant name="tracker_module2_length" value="80*mm"/>
+        <constant name="tracker_module2_width" value="50*mm"/>
+        
+        <!-- half the Z separation of axial only modules in layers 5 & 6 of Recoil Tracker -->
+        <constant name="tracker_zclear" value="1.0*mm"/>
 
         <!-- tracker sensor dimensions -->
         <constant name="tracker_sensor_gap" value="1*mm"/>
         <constant name="tracker_sensor_length" value="tracker_module_length - tracker_sensor_gap*2"/>
         <constant name="tracker_sensor_width" value="tracker_module_width - tracker_sensor_gap*2"/>
+        <constant name="tracker_sensor2_length" value="tracker_module2_length - tracker_sensor_gap*2"/>
+        <constant name="tracker_sensor2_width" value="tracker_module2_width - tracker_sensor_gap*2"/>
         <constant name="tracker_si_thickness" value="0.032*cm"/>
         <constant name="tracker_cf_thickness" value="0.02*cm"/>
-        <constant name="tracker_sensor_overlap" value="2.0*mm"/>     
+        <constant name="tracker_sensor_overlap" value="2.0*mm"/>        
                 
         <!-- Recoil Tracker layer Z positions relative to target -->
         <constant name="tracker_layer1_z" value="7.5*mm - z_offset"/>
@@ -152,7 +161,7 @@
                 <module_component thickness="tracker_si_thickness" material="Silicon" sensitive="true">
                     <dimensions x="tracker_sensor_length" y="tracker_sensor_width"/>
                 </module_component>
-                <module_component thickness="tracker_cf_thickness*cm" material="Carbon" sensitive="false"/>
+                <module_component thickness="tracker_cf_thickness" material="Carbon" sensitive="false"/>
             </module>
             
             <!-- layer 1 axial -->
@@ -228,7 +237,15 @@
                 <module_component thickness="tracker_si_thickness" material="Silicon" sensitive="true">
                     <dimensions x="tracker_sensor_length" y="tracker_sensor_width"/>
                 </module_component>
-                <module_component thickness="tracker_cf_thickness*cm" material="Carbon" sensitive="false"/>
+                <module_component thickness="tracker_cf_thickness" material="Carbon" sensitive="false"/>
+            </module>
+            
+            <module name="LDMXTrackerModule2" vis="RecoilTrackerVis">
+                <box x="tracker_module2_length" y="tracker_module2_width"/>
+                <module_component thickness="tracker_si_thickness" material="Silicon" sensitive="true">
+                    <dimensions x="tracker_sensor2_length" y="tracker_sensor2_width"/>
+                </module_component>
+                <module_component thickness="tracker_cf_thickness" material="Carbon" sensitive="false"/>
             </module>
             
             <!-- layer 1 axial -->
@@ -271,18 +288,18 @@
             <layer id="9">
             
                 <!-- top modules -->
-                <module_placement name="LDMXTrackerModule" id="0" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)"  y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="1" x="tracker_module_width - tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="2" x="0" y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="3" x="-tracker_module_width + tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="4" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule2" id="0" x="(tracker_module2_width * 2) - (tracker_sensor_overlap * 2)"  y="tracker_module2_length/2" z="tracker_layer5_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="1" x="tracker_module2_width - tracker_sensor_overlap" y="tracker_module2_length/2" z="tracker_layer5_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="2" x="0" y="tracker_module2_length/2" z="tracker_layer5_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="3" x="-tracker_module2_width + tracker_sensor_overlap" y="tracker_module2_length/2" z="tracker_layer5_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="4" x="-(tracker_module2_width * 2) + (tracker_sensor_overlap * 2)" y="tracker_module2_length/2" z="tracker_layer5_z + tracker_zclear"/>
                 
                 <!-- bottom modules -->
-                <module_placement name="LDMXTrackerModule" id="5" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)"  y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="6" x="tracker_module_width - tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="7" x="0" y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="8" x="-tracker_module_width + tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer5_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="9" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="-tracker_module_length/2" z="tracker_layer5_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule2" id="5" x="(tracker_module2_width * 2) - (tracker_sensor_overlap * 2)"  y="-tracker_module2_length/2" z="tracker_layer5_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="6" x="tracker_module2_width - tracker_sensor_overlap" y="-tracker_module2_length/2" z="tracker_layer5_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="7" x="0" y="-tracker_module2_length/2" z="tracker_layer5_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="8" x="-tracker_module2_width + tracker_sensor_overlap" y="-tracker_module2_length/2" z="tracker_layer5_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="9" x="-(tracker_module2_width * 2) + (tracker_sensor_overlap * 2)" y="-tracker_module2_length/2" z="tracker_layer5_z + tracker_zclear"/>
                             
             </layer>
             
@@ -290,18 +307,18 @@
             <layer id="10">
                         
                 <!-- top modules -->
-                <module_placement name="LDMXTrackerModule" id="0" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="1" x="tracker_module_width - tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="2" x="0" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="3" x="-tracker_module_width + tracker_sensor_overlap" y="tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="4" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
+                <module_placement name="LDMXTrackerModule2" id="0" x="(tracker_module2_width * 2) - (tracker_sensor_overlap * 2)" y="tracker_module2_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="1" x="tracker_module2_width - tracker_sensor_overlap" y="tracker_module2_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="2" x="0" y="tracker_module2_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="3" x="-tracker_module2_width + tracker_sensor_overlap" y="tracker_module2_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="4" x="-(tracker_module2_width * 2) + (tracker_sensor_overlap * 2)" y="tracker_module2_length/2" z="tracker_layer6_z + tracker_zclear"/>
                 
                 <!-- bottom modules -->
-                <module_placement name="LDMXTrackerModule" id="5" x="(tracker_module_width * 2) - (tracker_sensor_overlap * 2)" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="6" x="tracker_module_width - tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="7" x="0" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="8" x="-tracker_module_width + tracker_sensor_overlap" y="-tracker_module_length/2" z="tracker_layer6_z - 1.0*mm"/>
-                <module_placement name="LDMXTrackerModule" id="9" x="-(tracker_module_width * 2) + (tracker_sensor_overlap * 2)" y="-tracker_module_length/2" z="tracker_layer6_z + 1.0*mm"/>            
+                <module_placement name="LDMXTrackerModule2" id="5" x="(tracker_module2_width * 2) - (tracker_sensor_overlap * 2)" y="-tracker_module2_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="6" x="tracker_module2_width - tracker_sensor_overlap" y="-tracker_module2_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="7" x="0" y="-tracker_module2_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="8" x="-tracker_module2_width + tracker_sensor_overlap" y="-tracker_module2_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXTrackerModule2" id="9" x="-(tracker_module2_width * 2) + (tracker_sensor_overlap * 2)" y="-tracker_module2_length/2" z="tracker_layer6_z + tracker_zclear"/>            
 
             </layer>            
 

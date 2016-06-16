@@ -16,8 +16,8 @@
         <resources>
             <j2se minVersion="1.7" />
             <application minVersion="3.0.0" />
-            <depends plugin="org.lcsim" minVersion="3.1.0" />
+            <depends plugin="org.lcsim" minVersion="3.6" />
         </resources>
-        <plugin-desc class="org.ldmx.plugin.DummyPlugin" />
+        <plugin-desc class="org.ldmx.plugin.LDMXPlugin" />
     </plugin>
 </plugins>
