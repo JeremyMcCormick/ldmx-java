@@ -2,8 +2,8 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="2297891805" />
-    <author name="NONE" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="2550854580" />
+    <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
   <iddict>
@@ -93,7 +93,7 @@
     <vis name="EcalSensorVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
       <color R="1.0" G="0.95" B="0.5" alpha="1.0" />
     </vis>
-    <vis name="TargetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
+    <vis name="TargetVis" line_style="unbroken" drawing_style="solid" show_daughters="false" visible="true">
       <color R="0.5" G="0.5" B="0.5" alpha="0.0" />
     </vis>
     <vis name="InvisibleWithDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
@@ -131,7 +131,7 @@
       <constant name="ecal_face_z" value="200.0" />
       <constant name="tracker_layer1_z" value="307.5" />
       <constant name="tagger_layer5_z" value="92.5" />
-      <constant name="target_z" value="0.0" />
+      <constant name="target_z" value="300.0" />
       <constant name="recoil_l5_6_sensor_length" value="78.0" />
       <constant name="ecal_scoring_z" value="199.0" />
       <constant name="recoil_l1_4_module_width" value="40.34" />
@@ -214,7 +214,7 @@
       <rotation name="TaggerTracker_LDMXTaggerModule_layer14_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
       <position name="TargetModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="TargetModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="300.0" unit="mm" />
       <rotation name="Target_TargetModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="ScoringModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <rotation name="ScoringModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />

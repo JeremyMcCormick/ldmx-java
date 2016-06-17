@@ -1,6 +1,6 @@
 <lccdd xmlns:compact="http://www.lcsim.org/schemas/compact/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/compact/1.0/compact.xsd">
 
-    <info name="ldmx-det-v0">
+    <info name="ldmx-det-v0" author="Jeremy McCormick, Tim Nelson, Omar Moreno">
         <comment>
             This is the first draft for an LDMX detector including the Tagger
             and Recoil trackers, the Tungsten target, and the ECal.  Tracker
@@ -119,7 +119,7 @@
         <constant name="target_dim_x" value="9.5*cm"/>
         <constant name="target_dim_y" value="3.5*cm"/>
         <constant name="target_thickness" value="0.35*mm"/>
-        <constant name="target_z" value="0.0*mm"/>
+        <constant name="target_z" value="0.0*mm - z_offset"/>
 
     </define>
 
@@ -160,7 +160,7 @@
 
     <display>
         <vis name="TaggerTrackerVis" r="0.8" g="0.67" b="0.0" alpha="1.0" showDaughters="false"/>
-        <vis name="TargetVis" r="0.5" g="0.50" b="0.50" alpha="0.0" showDaughters="false"/>
+        <vis name="TargetVis" r="0.5" g="0.5" b="0.5" alpha="0.0" drawingStyle="solid" showDaughters="false"/>
         <vis name="RecoilTrackerVis" r="0.74" g="0.71" b="0.41" alpha="1.0" showDaughters="false"/>
         <vis name="EcalScoringVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="false"/>
         <vis name="EcalSensorVis" r="1.0" g="0.95" b="0.5" alpha="1.0"/>
@@ -358,7 +358,7 @@
             <layer id="1">
                 <module_placement name="ScoringModule" id="0" x="0" y="0" z="ecal_scoring_z" rx="0" ry="0" rz="0"/>
             </layer>
-        </detector>        
+        </detector>
 
         <detector id="4" name="Ecal" type="TestBeamCalorimeter" readout="EcalHits" vis="EcalDetVis" insideTrackingVolume="false">
 
