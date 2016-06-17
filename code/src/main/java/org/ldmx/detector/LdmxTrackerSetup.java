@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.lcsim.geometry.Detector;
 import org.lcsim.util.Driver;
+import org.lcsim.detector.tracker.silicon.ChargeCarrier;
 import org.lcsim.detector.tracker.silicon.HpsSiSensor;
 
 /**
@@ -63,10 +64,13 @@ public class LdmxTrackerSetup extends Driver {
 
             // Reset possible existing conditions data on sensor.
             sensor.reset();
+           
+            // Get the total number of readout strips that this sensor contains
+            double totalChannels = sensor.getReadoutElectrodes(ChargeCarrier.HOLE).getNCells(); 
             
             // Loop through all of the sensor channels and set some default 
             // conditions.
-            for (int channelNumber = 0; channelNumber < HpsSiSensor.STRIPS_PER_SENSOR; channelNumber++) {
+            for (int channelNumber = 0; channelNumber < totalChannels; channelNumber++) {
                 
                 // Set the channel baseline and noise
                 sensor.setPedestal(channelNumber, CHANNEL_BASELINE);
