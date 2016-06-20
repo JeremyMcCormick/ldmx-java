@@ -68,7 +68,7 @@
         <!-- tracker sensor dimensions -->
         <constant name="tracker_si_thickness" value="0.032*cm"/>
         <constant name="tracker_cf_thickness" value="0.02*cm"/>
-        <constant name="tracker_sensor_overlap" value="2.0*mm"/>     
+        <constant name="tracker_sensor_overlap" value="2.0*mm"/>
                 
         <!-- Recoil Tracker layer Z positions relative to target -->
         <constant name="tracker_layer1_z" value="7.5*mm - z_offset"/>
@@ -310,41 +310,37 @@
                 <module_placement name="LDMXRecoilL14Module" id="0" x="0.0" y="0.0" z="tracker_layer4_z + tracker_module_sep" rz="0.0 - tracker_stereo_angle"/>
             </layer>
             
-            <!-- layer 5 -->
+            <!-- layer 5 axial-only which is 3 sensors wide -->
             <layer id="9">
             
                 <!-- top modules -->
-                <module_placement name="LDMXRecoilL56Module" id="0" x="(recoil_l5_6_module_width * 2) - (tracker_sensor_overlap * 2)"  y="recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
                 <module_placement name="LDMXRecoilL56Module" id="1" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="recoil_l5_6_module_length/2" z="tracker_layer5_z - tracker_zclear"/>
                 <module_placement name="LDMXRecoilL56Module" id="2" x="0" y="recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
                 <module_placement name="LDMXRecoilL56Module" id="3" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="recoil_l5_6_module_length/2" z="tracker_layer5_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="4" x="-(recoil_l5_6_module_width * 2) + (tracker_sensor_overlap * 2)" y="recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
                 
                 <!-- bottom modules -->
-                <module_placement name="LDMXRecoilL56Module" id="5" x="(recoil_l5_6_module_width * 2) - (tracker_sensor_overlap * 2)"  y="-recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="6" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="7" x="0" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="8" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="9" x="-(recoil_l5_6_module_width * 2) + (tracker_sensor_overlap * 2)" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="4" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z - tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="5" x="0" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="6" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer5_z - tracker_zclear"/>
                             
             </layer>
             
-            <!-- layer 6 -->
+            <!-- layer 6 axial-only which is 5 sensors wide -->
             <layer id="10">
                         
                 <!-- top modules -->
-                <module_placement name="LDMXRecoilL56Module" id="0" x="(recoil_l5_6_module_width * 2) - (tracker_sensor_overlap * 2)" y="recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="1" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="2" x="0" y="recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="3" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="4" x="-(recoil_l5_6_module_width * 2) + (tracker_sensor_overlap * 2)" y="recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="1" x="(recoil_l5_6_module_width * 2) - (tracker_sensor_overlap * 2)" y="recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="2" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="3" x="0" y="recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="4" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="5" x="-(recoil_l5_6_module_width * 2) + (tracker_sensor_overlap * 2)" y="recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
                 
                 <!-- bottom modules -->
-                <module_placement name="LDMXRecoilL56Module" id="5" x="(recoil_l5_6_module_width * 2) - (tracker_sensor_overlap * 2)" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="6" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="7" x="0" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="8" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
-                <module_placement name="LDMXRecoilL56Module" id="9" x="-(recoil_l5_6_module_width * 2) + (tracker_sensor_overlap * 2)" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>            
+                <module_placement name="LDMXRecoilL56Module" id="6" x="(recoil_l5_6_module_width * 2) - (tracker_sensor_overlap * 2)" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="7" x="recoil_l5_6_module_width - tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="8" x="0" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="9" x="-recoil_l5_6_module_width + tracker_sensor_overlap" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z - tracker_zclear"/>
+                <module_placement name="LDMXRecoilL56Module" id="10" x="-(recoil_l5_6_module_width * 2) + (tracker_sensor_overlap * 2)" y="-recoil_l5_6_module_length/2" z="tracker_layer6_z + tracker_zclear"/>            
 
             </layer>            
 
