@@ -6,6 +6,10 @@
         <driver name="LdmxTrackerSetup"     />
         <driver name="SimpleTaggerReadout"  />
         <driver name="SimpleRecoilReadout"  />
+        <driver name="RawTrackerHitFitterDriver" />
+        <!-- <driver name="TrackerHitDriver"/>
+         <driver name="HelicalTrackHitDriver"/> -->
+        <!-- <driver name="TrackReconDriver"/> --> 
         <driver name="LCIODriver"           />
         <driver name="CleanupDriver"        />
     </execute>    
@@ -34,7 +38,27 @@
             <readout>RecoilTrackerHits</readout>
             <verbosity>0</verbosity>
         </driver>
-        
+
+        <driver name="RawTrackerHitFitterDriver" type="org.ldmx.tracking.RawTrackerHitFitterDriver">
+            <fitAlgorithm>Analytic</fitAlgorithm>
+            <useTimestamps>false</useTimestamps>
+            <correctTimeOffset>false</correctTimeOffset>
+            <correctT0Shift>false</correctT0Shift>
+            <useTruthTime>true</useTruthTime>
+            <subtractTOF>false</subtractTOF>
+            <subtractTriggerTime>false</subtractTriggerTime>
+            <correctChanT0>false</correctChanT0>
+            <debug>false</debug>
+            <rawHitCollectionName>TaggerTrackerHits</rawHitCollectionName>
+            <fitCollectionName>TaggerShapeFitParameters</fitCollectionName>
+            <fittedHitCollectionName>TaggerFitterRawTrackerHits</fittedHitCollectionName>
+        </driver>
+
+        <driver name="TrackerHitDriver" type="org.ldmx.tracking.DataTrackerHitDriver">
+            <subdetectorName>TaggerTracker</subdetectorName>
+            <debug>true</debug>
+        </driver>
+
         <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
             <outputFilePath>ldmx_readout_sim</outputFilePath>
         </driver>
