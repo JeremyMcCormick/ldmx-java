@@ -68,12 +68,13 @@
             <subdetectorName>TaggerTracker</subdetectorName>
         </driver>
 
-        <driver name="TrackReconDriver" type="org.hps.recon.tracking.TrackerReconDriver">
+        <driver name="TrackReconDriver" type="org.ldmx.tracking.TrackerReconDriver">
             <trackCollectionName>Tracks</trackCollectionName>
             <strategyResource>/org/ldmx/tracking/strategies/TaggerStrategies.xml</strategyResource>
             <debug>true</debug>
             <subdetectorName>TaggerTracker</subdetectorName>
             <applySectorBinning>false</applySectorBinning>
+            <skipChecks>true</skipChecks>
         </driver>                
 
         <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
