@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lcsim xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"  xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+    <inputFiles>
+        <!-- single electrons on SLAC NFS -->
+        <file>/nfs/slac/g/hps3/users/jeremym/ldmx-scratch/e-_4GeV_SLIC-v05-00-00_Geant4-v10-01-02_QGSP_BERT_ldmx-det-v0.slcio</file>
+    </inputFiles>
+    <execute>
+        <driver name="SimAnalysis"/>
+        <driver name="AidaSave"/>
+        <driver name="RootSave"/>
+    </execute>
+    <control>
+        <numberOfEvents>10000</numberOfEvents>
+    </control>
+    <drivers>
+        <driver name="SimAnalysis" type="org.ldmx.analysis.SimAnalysisDriver"/>
+        <driver name="AidaSave" type="org.lcsim.job.AidaSaveDriver">
+            <outputFileName>ldmx_sim_anal.aida</outputFileName>
+        </driver>
+        <driver name="RootSave" type="org.lcsim.job.AidaSaveDriver">
+            <outputFileName>ldmx_sim_anal.root</outputFileName>
+        </driver>
+    </drivers>
+</lcsim>
