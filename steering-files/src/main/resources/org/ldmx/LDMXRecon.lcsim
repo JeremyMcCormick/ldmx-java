@@ -7,9 +7,9 @@
         <driver name="SimpleTaggerReadout"  />
         <driver name="SimpleRecoilReadout"  />
         <driver name="RawTrackerHitFitterDriver" />
-        <!-- <driver name="TrackerHitDriver"/>
-         <driver name="HelicalTrackHitDriver"/> -->
-        <!-- <driver name="TrackReconDriver"/> --> 
+        <driver name="TrackerHitDriver"/>
+        <driver name="HelicalTrackHitDriver"/>
+        <driver name="TrackReconDriver"/>  
         <driver name="LCIODriver"           />
         <driver name="CleanupDriver"        />
     </execute>    
@@ -40,7 +40,7 @@
         </driver>
 
         <driver name="RawTrackerHitFitterDriver" type="org.ldmx.tracking.RawTrackerHitFitterDriver">
-            <fitAlgorithm>Analytic</fitAlgorithm>
+            <fitAlgorithm>Linear</fitAlgorithm>
             <useTimestamps>false</useTimestamps>
             <correctTimeOffset>false</correctTimeOffset>
             <correctT0Shift>false</correctT0Shift>
@@ -49,15 +49,32 @@
             <subtractTriggerTime>false</subtractTriggerTime>
             <correctChanT0>false</correctChanT0>
             <debug>false</debug>
-            <rawHitCollectionName>TaggerTrackerHits</rawHitCollectionName>
+            <rawHitCollectionName>TaggerRawTrackerHits</rawHitCollectionName>
             <fitCollectionName>TaggerShapeFitParameters</fitCollectionName>
-            <fittedHitCollectionName>TaggerFitterRawTrackerHits</fittedHitCollectionName>
+            <fittedHitCollectionName>TaggerFittedRawTrackerHits</fittedHitCollectionName>
         </driver>
 
         <driver name="TrackerHitDriver" type="org.ldmx.tracking.DataTrackerHitDriver">
             <subdetectorName>TaggerTracker</subdetectorName>
             <debug>true</debug>
         </driver>
+		
+		<driver name="HelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
+            <debug>true</debug>
+            <clusterTimeCut>12.0</clusterTimeCut>
+            <maxDt>16.0</maxDt>
+            <clusterAmplitudeCut>-99</clusterAmplitudeCut>
+            <clusterTimeCut>-99</clusterTimeCut>
+            <subdetectorName>TaggerTracker</subdetectorName>
+        </driver>
+
+        <driver name="TrackReconDriver" type="org.hps.recon.tracking.TrackerReconDriver">
+            <trackCollectionName>Tracks</trackCollectionName>
+            <strategyResource>/org/ldmx/tracking/strategies/TaggerStrategies.xml</strategyResource>
+            <debug>true</debug>
+            <subdetectorName>TaggerTracker</subdetectorName>
+            <applySectorBinning>false</applySectorBinning>
+        </driver>                
 
         <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
             <outputFilePath>ldmx_readout_sim</outputFilePath>
