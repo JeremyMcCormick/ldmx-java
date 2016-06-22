@@ -6,8 +6,6 @@ import hep.physics.vec.Hep3Vector;
 import hep.physics.vec.VecOp;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +17,6 @@ import org.lcsim.detector.IDetectorElement;
 import org.lcsim.detector.ITransform3D;
 import org.lcsim.detector.converter.compact.subdetector.HpsTracker2;
 import org.lcsim.detector.converter.compact.subdetector.SvtStereoLayer;
-import org.lcsim.detector.tracker.silicon.DopedSilicon;
 import org.lcsim.detector.tracker.silicon.HpsSiSensor;
 import org.lcsim.event.EventHeader;
 import org.lcsim.event.LCRelation;
@@ -41,97 +38,47 @@ import org.lcsim.recon.tracking.digitization.sisim.TrackerHitType;
 /**
  * Copied from {@link org.hps.recon.tracking.HelicalTrackerHitDriver} in HPS Java so it 
  * can be hacked up.
+ * 
+ * @author jeremym
  */
 public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTrackHitDriver {
 
-    private boolean _debug = false;
-    private double _clusterTimeCut = -99; // if negative, don't cut..otherwise,
-    // dt cut time in ns
-    private double maxDt = -99; // max time difference between the two hits in a cross
-    private double clusterAmplitudeCut = -99; // cluster amplitude cut
-    private String _subdetectorName = "Tracker";
-    private final Map<String, String> _stereomap = new HashMap<String, String>();
+    private boolean debug = false;
+    private String subdetectorName = "Tracker";
+    private final Map<String, String> stereoMap = new HashMap<String, String>();
     private List<SvtStereoLayer> stereoLayers = null;
     private List<HpsSiSensor> axialOnlySensors = null;
-    private final List<String> _colnames = new ArrayList<String>();
-    private boolean _doTransformToTracking = true;
-    private boolean _saveAxialHits = false;
-    private final String _axialname = "AxialTrackHits";
-    private final String _axialmcrelname = "AxialTrackHitsMCRelations";
+    private final List<String> collectionNames = new ArrayList<String>();
+    private boolean doTransformToTracking = true;
+    private final String axialName = "AxialTrackHits";
+    private final String axialMcrelName = "AxialTrackHitsMCRelations";
     private List<Integer> stereoLayerList = null;
     private List<Integer> axialLayerList = null;
     
     private Map<Integer, List<HpsSiSensor>> sensorLayerMap = new HashMap<Integer, List<HpsSiSensor>>();
 
-    /**
-     * Default Ctor
-     */
     public HelicalTrackHitDriver() {
         _crosser.setMaxSeparation(20.0);
         _crosser.setTolerance(0.1);
         _crosser.setEpsParallel(0.013);
-        _colnames.add("StripClusterer_SiTrackerHitStrip1D");
+        collectionNames.add("StripClusterer_SiTrackerHitStrip1D");
     }
     
-    public void setStereoLayers(int[] stereoLayers) {
-        if (stereoLayers == null) {
-            throw new IllegalArgumentException("The pairs array points to null.");
-        }
-        if (stereoLayers.length == 0) {
-            throw new IllegalArgumentException("The pairs array is empty.");
-        }
-        if (stereoLayers.length < 2) {
-            throw new IllegalArgumentException("The pairs array does not have enough data.");
-        }
-        if (stereoLayers.length % 2 != 0) {
-            throw new IllegalArgumentException("The pairs array does not have an even number of elements.");
-        }
-        for (int i = 0; i < stereoLayers.length - 1; i += 2) {
-            System.out.println("axial lyr " + stereoLayers[i] + " will be paired with stereo lyr " + stereoLayers[i + 1]);
-        }
-        stereoLayerList = new ArrayList<Integer>();
-        for (int stereoLayer : stereoLayers) {
-            stereoLayerList.add(stereoLayer);
-        }
+    public void addCollection(String colname) {
+        collectionNames.add(colname);
+    }
+
+    public void setCollection(String colname) {
+        collectionNames.clear();
+        this.addCollection(colname);
     }
     
-    public void setAxialOnlyLayers(int[] axialOnlyLayers) {
-        this.axialLayerList = new ArrayList<Integer>();
-        for (int axialLayer : axialOnlyLayers) {
-            axialLayerList.add(axialLayer);
-        }
-    }
-
-    /**
-     *
-     * @param dtCut
-     */
-    public void setClusterTimeCut(double dtCut) {
-        this._clusterTimeCut = dtCut;
-    }
-
-    public void setMaxDt(double maxDt) {
-        this.maxDt = maxDt;
-    }
-
-    public void setClusterAmplitudeCut(double clusterAmplitudeCut) {
-        this.clusterAmplitudeCut = clusterAmplitudeCut;
-    }
-
-    /**
-     *
-     * @param subdetectorName
-     */
     public void setSubdetectorName(String subdetectorName) {
-        this._subdetectorName = subdetectorName;
+        this.subdetectorName = subdetectorName;
     }
 
-    /**
-     *
-     * @param debug
-     */
     public void setDebug(boolean debug) {
-        this._debug = debug;
+        this.debug = debug;
     }
 
     public void setEpsParallel(double eps) {
@@ -142,62 +89,59 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
         this._crosser.setEpsStereoAngle(eps);
     }
 
-    /**
-     *
-     * @param trans
-     */
     public void setTransformToTracking(boolean trans) {
-        this._doTransformToTracking = trans;
+        this.doTransformToTracking = trans;
     }
 
-    public void setSaveAxialHits(boolean save) {
-        _saveAxialHits = save;
-    }
-
-    /**
-     *
-     * @param stripHitsCollectionName
-     */
-    public void setStripHitsCollectionName(String stripHitsCollectionName) {
-        HitRelationName(stripHitsCollectionName);
-    }
-
-    /**
-     *
-     * @param helicalTrackHitRelationsCollectionName
-     */
     public void setHelicalTrackHitRelationsCollectionName(String helicalTrackHitRelationsCollectionName) {
         HitRelationName(helicalTrackHitRelationsCollectionName);
     }
 
-    /**
-     *
-     * @param helicalTrackMCRelationsCollectionName
-     */
     public void setHelicalTrackMCRelationsCollectionName(String helicalTrackMCRelationsCollectionName) {
         MCRelationName(helicalTrackMCRelationsCollectionName);
     }
 
-    /**
-     *
-     * @param outputHitCollectionName
-     */
     public void setOutputHitCollectionName(String outputHitCollectionName) {
         OutputCollection(outputHitCollectionName);
     }
     
-    private Map<Integer, List<HpsSiSensor>> makeSensorMap(List<HpsSiSensor> sensors) {
-        Map<Integer, List<HpsSiSensor>> sensorMap = new HashMap<Integer, List<HpsSiSensor>>();
-        for (HpsSiSensor sensor : sensors) {
-            final int sensorLayer = sensor.getLayerNumber();
-            if (!sensorMap.containsKey(sensorLayer)) {
-                sensorMap.put(sensorLayer, new ArrayList<HpsSiSensor>());
-            }
-            sensorMap.get(sensorLayer).add(sensor);
-        }        
-        return sensorMap;
+    public void setStereoLayers(int[] stereoLayers) {
+        if (stereoLayers == null) {
+            throw new IllegalArgumentException("The stereoLayers array points to null.");
+        }
+        if (stereoLayers.length == 0) {
+            throw new IllegalArgumentException("The stereoLayers array is empty.");
+        }
+        if (stereoLayers.length < 2) {
+            throw new IllegalArgumentException("The stereoLayers array does not have enough data.");
+        }
+        if (stereoLayers.length % 2 != 0) {
+            throw new IllegalArgumentException("The stereoLayers array does not have an even number of elements.");
+        }
+        /*
+        for (int i = 0; i < stereoLayers.length - 1; i += 2) {
+            System.out.println("axial layer = " + stereoLayers[i] + "; stereo layer = " + stereoLayers[i + 1]);
+        }
+        */
+        stereoLayerList = new ArrayList<Integer>();
+        for (int stereoLayer : stereoLayers) {
+            stereoLayerList.add(stereoLayer);
+        }
     }
-
+    
+    public void setAxialOnlyLayers(int[] axialOnlyLayers) {
+        if (axialOnlyLayers == null) {
+            throw new IllegalArgumentException("The axialOnlyLayers array points to null.");
+        }
+        if (axialOnlyLayers.length == 0) {
+            throw new IllegalArgumentException("The axialOnlyLayers array is empty.");
+        }
+        this.axialLayerList = new ArrayList<Integer>();
+        for (int axialLayer : axialOnlyLayers) {
+            axialLayerList.add(axialLayer);
+        }
+    }
+    
     @Override
     public void process(EventHeader event) {
 
@@ -218,16 +162,16 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
         
         // Loop over the input collection names we want to make hits out of
         // ...for HPS, probably this is just a single one...
-        for (String _colname : this._colnames) {
+        for (String _colname : this.collectionNames) {
             if (!event.hasCollection(SiTrackerHit.class, _colname)) {
-                if (_debug) {
+                if (debug) {
                     System.out.println("Event: " + event.getRunNumber() + " does not contain the collection " + _colname);
                 }
                 continue;
             }
             // Get the list of SiTrackerHits for this collection
             List<SiTrackerHit> hitlist = event.get(SiTrackerHit.class, _colname);
-            if (_debug) {
+            if (debug) {
                 System.out.printf("%s: found %d SiTrackerHits\n", this.getClass().getSimpleName(), hitlist.size());
             }
             Map<HelicalTrackStrip, SiTrackerHitStrip1D> stripmap = new HashMap<HelicalTrackStrip, SiTrackerHitStrip1D>();
@@ -237,14 +181,6 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                     // Cast the hit as a 1D strip hit and find the
                     // identifier for the detector/layer combo
                     SiTrackerHitStrip1D h = (SiTrackerHitStrip1D) hit;
-                    if (clusterAmplitudeCut > 0 && h.getdEdx() / DopedSilicon.ENERGY_EHPAIR < clusterAmplitudeCut) {
-                        System.out.println("cut on cluster amplitude");
-                        continue;
-                    }
-                    if (_clusterTimeCut > 0 && Math.abs(h.getTime()) > _clusterTimeCut) {
-                        System.out.println("cut on cluster time");
-                        continue;
-                    }
 
                     // Create a HelicalTrackStrip for this hit
                     HelicalTrackStrip strip = makeDigiStrip(h);
@@ -259,7 +195,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                     // Map a reference back to the hit needed to create
                     // the stereo hit LC relations
                     stripmap.put(strip, h);
-                    if (_debug) {
+                    if (debug) {
                         System.out.printf("%s: added strip org %s layer %d\n", this.getClass().getSimpleName(), strip.origin().toString(), strip.layer());
                     }
                                                            
@@ -293,7 +229,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
 
                 // This hit should be a on a stereo pair!
                 // With our detector setup, when is this not true?
-                if (!_stereomap.containsKey(id) && !_stereomap.containsValue(id)) {
+                if (!stereoMap.containsKey(id) && !stereoMap.containsValue(id)) {
                     System.out.println("skipping hit not from a stereo layer!");
                     //throw new RuntimeException(this.getClass().getSimpleName() + ": this " + id
                     //        + " was not among the stereo modules!");
@@ -312,19 +248,19 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                 lyrhits.add(strip);
             }
 
-            if (_debug) {
+            if (debug) {
                 System.out.printf("%s: Create stereo hits from %d strips \n", this.getClass().getSimpleName(),
                         striplistmap.size());
             }
 
             // Loop over the stereo layer pairs
             // TODO: Change this so that it makes use of StereoPairs
-            for (String id1 : _stereomap.keySet()) {
+            for (String id1 : stereoMap.keySet()) {
                 
                 // Get the second layer
-                String id2 = _stereomap.get(id1);
+                String id2 = stereoMap.get(id1);
 
-                if (_debug) {
+                if (debug) {
                     System.out.printf("%s: Form stereo hits from sensor id %s with %d hits and %s with %d hits\n", this
                             .getClass().getSimpleName(), id1, striplistmap.get(id1) == null ? 0 : striplistmap.get(id1)
                             .size(), id2, striplistmap.get(id2) == null ? 0 : striplistmap.get(id2).size());
@@ -336,10 +272,6 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
 
             for (Iterator<HelicalTrackCross> iter = helicalTrackCrosses.listIterator(); iter.hasNext();) {
                 HelicalTrackCross cross = iter.next();
-                if (maxDt > 0 && Math.abs(cross.getStrips().get(0).time() - cross.getStrips().get(1).time()) > maxDt) {
-                    iter.remove();
-                    continue;
-                }
                 if (cross.getMCParticles() != null) {
                     for (MCParticle mcp : cross.getMCParticles()) {
                         mcrelations.add(new MyLCRelation((HelicalTrackHit) cross, mcp));
@@ -348,19 +280,19 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                 for (HelicalTrackStrip strip : cross.getStrips()) {
                     hitrelations.add(new MyLCRelation(cross, stripmap.get(strip)));
                 }
-                if (_debug) {
+                if (debug) {
                     System.out.printf("%s: cross at %.2f,%.2f,%.2f \n", this.getClass().getSimpleName(), cross.getPosition()[0], cross.getPosition()[1], cross.getPosition()[2]);
                 }
             }
 
             stereoCrosses.addAll(helicalTrackCrosses);
 
-            if (_debug) {
+            if (debug) {
                 System.out.printf("%s: added %d stereo hits from %s collection \n", this.getClass().getSimpleName(), helicalTrackCrosses.size(), _colname);
             }
         } // End of loop over collection names
 
-        if (_debug) {
+        if (debug) {
             System.out.printf("%s: totally added %d stereo hits:\n", this.getClass().getSimpleName(), stereoCrosses.size());
             for (HelicalTrackCross cross : stereoCrosses) {
                 System.out.printf("%s: %.2f,%.2f,%.2f \n", this.getClass().getSimpleName(), cross.getPosition()[0], cross.getPosition()[1], cross.getPosition()[2]);
@@ -380,25 +312,25 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
             event.put(_mcrelname, mcrelations, LCRelation.class, 0);
         }
         
-        /*
-        if (_saveAxialHits) {
-            event.put(_axialname, axialhits, HelicalTrackHit.class, 0);
-            if (hittomc != null) {
-                event.put(_axialmcrelname, axialmcrelations, LCRelation.class, 0);
-                System.out.println(this.getClass().getSimpleName() + " : number of " + _axialmcrelname + " found = " + axialmcrelations.size());
-            }
+        if (doTransformToTracking) {
+            addRotatedHitsToEvent(event, stereoCrosses, hittomc != null);            
+            addRotated2DHitsToEvent(event, axialhits); // ????           
         }
-        */
-        if (_doTransformToTracking) {
-            addRotatedHitsToEvent(event, stereoCrosses, hittomc != null);
-            if (_saveAxialHits) {
-                addRotated2DHitsToEvent(event, axialhits);
+    }
+    
+    private Map<Integer, List<HpsSiSensor>> makeSensorMap(List<HpsSiSensor> sensors) {
+        Map<Integer, List<HpsSiSensor>> sensorMap = new HashMap<Integer, List<HpsSiSensor>>();
+        for (HpsSiSensor sensor : sensors) {
+            final int sensorLayer = sensor.getLayerNumber();
+            if (!sensorMap.containsKey(sensorLayer)) {
+                sensorMap.put(sensorLayer, new ArrayList<HpsSiSensor>());
             }
-        }
-    } // Process()
+            sensorMap.get(sensorLayer).add(sensor);
+        }        
+        return sensorMap;
+    }
 
-    private RelationalTable createHelicalTrackHitMCRelations(EventHeader event) {
-        List<LCRelation> mcrelations = new ArrayList<LCRelation>();
+    private RelationalTable<?,?> createHelicalTrackHitMCRelations(EventHeader event) {
         RelationalTable hittomc = null;
         if (event.hasCollection(LCRelation.class, "SVTTrueHitRelations")) {
             hittomc = new BaseRelationalTable(RelationalTable.Mode.ONE_TO_MANY, RelationalTable.Weighting.UNWEIGHTED);
@@ -412,21 +344,12 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
         return hittomc;
     }
     
-    public void addCollection(String colname) {
-        _colnames.add(colname);
-    }
-
-    public void setCollection(String colname) {
-        _colnames.clear();
-        this.addCollection(colname);
-    }
-
     private String makeID(String detname, int lyr) {
         return detname + lyr;
     }
 
-    public void setStereoPair(String detname, int lyr1, int lyr2) {
-        this._stereomap.put(this.makeID(detname, lyr1), this.makeID(detname, lyr2));
+    private void setStereoPair(String detname, int lyr1, int lyr2) {
+        this.stereoMap.put(this.makeID(detname, lyr1), this.makeID(detname, lyr2));
     }
     
     /**
@@ -436,7 +359,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
      */
     private void defineLayers(Detector detector) {
         
-        HpsTracker2 subdetDe = ((HpsTracker2) detector.getSubdetector(this._subdetectorName).getDetectorElement());
+        HpsTracker2 subdetDe = ((HpsTracker2) detector.getSubdetector(this.subdetectorName).getDetectorElement());
         List<HpsSiSensor> sensors = subdetDe.findDescendants(HpsSiSensor.class);
                 
         // map sensors to their geometric layers for quick lookup
@@ -469,7 +392,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                         + svtStereoLayer.getStereoSensor().getName());
                 
                 // set stereo pair mapping
-                this.setStereoPair(this._subdetectorName, axialLayer, stereoLayer);
+                this.setStereoPair(this.subdetectorName, axialLayer, stereoLayer);
                 
                 // increment stereo layer number
                 stereoLayerNumber++;
@@ -490,19 +413,10 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
         }
     }
 
-    @Override
-    protected void detectorChanged(Detector detector) {
-
-        // Get the collection of stereo layers from the detector
-        //stereoLayers = ((HpsTracker2) detector.getSubdetector(this._subdetectorName).getDetectorElement()).getStereoPairs();
-        
+    protected void detectorChanged(Detector detector) {        
         defineLayers(detector); 
     }
 
-    /*
-     *  Make  HelicalTrack2DHits from SiTrackerHitStrip1D...note that these HelicalTrack2DHits
-     *  are defined in org.hps.recon.tracking.axial (not the lcsim class)
-     */
     private HelicalTrack2DHit makeDigiAxialHit(SiTrackerHitStrip1D h) {
 
         double z1 = h.getHitSegment().getEndPoint().x();
@@ -529,7 +443,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
         Hep3Vector u = global.getMeasuredCoordinate();
         Hep3Vector v = global.getUnmeasuredCoordinate();
 
-        if (_debug) {
+        if (debug) {
             System.out.println(this.getClass().getSimpleName() + ": makeDigiStrip: org " + org.toString() + " and u " + u.toString() + " v " + v.toString());
         }
 
@@ -558,7 +472,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
             // Okay when MC info not present.
         }
 
-        if (_debug) {
+        if (debug) {
             System.out.println(this.getClass().getSimpleName() + ": makeDigiStrip: produced HelicalTrackStrip with origin " + strip.origin().toString() + " and u " + strip.u().toString() + " v " + strip.v().toString() + " w " + strip.w().toString());
         }
 
@@ -595,7 +509,7 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                     newstrip.addMCParticle(p);
                 }
                 rotatedstriphits.add(newstrip);
-                if (_debug) {
+                if (debug) {
                     System.out.printf("%s: adding rotated strip with origin %s and u %s v %s w %s \n", getClass().toString(), newstrip.origin().toString(), newstrip.u().toString(), newstrip.v().toString(), newstrip.w().toString());
                 }
             }
@@ -608,7 +522,6 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                 throw new RuntimeException("no rotated cross was created!?");
             }
             HelicalTrackCross newhit = newhits.get(0);
-            //HelicalTrackCross newhit = new HelicalTrackCross(rotatedstriphits.get(0), rotatedstriphits.get(1));
             for (MCParticle mcp : cross.getMCParticles()) {
                 newhit.addMCParticle(mcp);
             }
@@ -656,15 +569,11 @@ public class HelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.HelicalTra
                 mcrelations.add(new MyLCRelation(newhit, mcp));
             }
         }
-        if (_debug) {
-            System.out.println(this.getClass().getSimpleName() + ": " + _axialname + " size = " + rotatedhits.size());
-            System.out.println(this.getClass().getSimpleName() + ": " + _axialmcrelname + " size = " + mcrelations.size());
+        if (debug) {
+            System.out.println(this.getClass().getSimpleName() + ": " + axialName + " size = " + rotatedhits.size());
+            System.out.println(this.getClass().getSimpleName() + ": " + axialMcrelName + " size = " + mcrelations.size());
         }
-        event.put("Rotated" + _axialname, rotatedhits, HelicalTrackHit.class, 0);
-        event.put("Rotated" + _axialmcrelname, mcrelations, LCRelation.class, 0);
-    }
-
-    public void saveAxial2DHits(boolean saveThem) {
-        _saveAxialHits = saveThem;
+        event.put("Rotated" + axialName, rotatedhits, HelicalTrackHit.class, 0);
+        event.put("Rotated" + axialMcrelName, mcrelations, LCRelation.class, 0);
     }
 }
