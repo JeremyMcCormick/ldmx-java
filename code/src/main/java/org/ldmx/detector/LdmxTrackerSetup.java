@@ -39,7 +39,7 @@ public class LdmxTrackerSetup extends Driver {
     private static final double CHANNEL_T0_SHIFT = 0; 
     
     /** Shaper fit parameters */
-    private static final double[] SHAPER_FIT_PARAMETERS = new double[]{2000, 50, 10, 20};
+    private static final double[] SHAPER_FIT_PARAMETERS = new double[]{2500, -10, 35, 10};
     
     protected void detectorChanged(Detector detector) { 
         
