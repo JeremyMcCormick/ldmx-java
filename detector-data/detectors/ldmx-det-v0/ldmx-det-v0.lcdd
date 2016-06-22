@@ -2,12 +2,12 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="4040868481" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="2620952350" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
   <iddict>
-    <idspec name="TaggerTrackerHits" length="46">
+    <idspec name="DummyTargetHits" length="46">
       <idfield signed="false" label="system" length="6" start="0" />
       <idfield signed="false" label="barrel" length="3" start="6" />
       <idfield signed="false" label="layer" length="4" start="9" />
@@ -25,6 +25,13 @@
       <idfield signed="true" label="side" length="2" start="32" />
       <idfield signed="false" label="strip" length="12" start="34" />
     </idspec>
+    <idspec name="EcalHits" length="64">
+      <idfield signed="false" label="system" length="3" start="0" />
+      <idfield signed="false" label="barrel" length="2" start="3" />
+      <idfield signed="false" label="layer" length="7" start="5" />
+      <idfield signed="true" label="x" length="16" start="32" />
+      <idfield signed="true" label="y" length="16" start="48" />
+    </idspec>
     <idspec name="RecoilTrackerHits" length="46">
       <idfield signed="false" label="system" length="6" start="0" />
       <idfield signed="false" label="barrel" length="3" start="6" />
@@ -34,7 +41,7 @@
       <idfield signed="true" label="side" length="2" start="32" />
       <idfield signed="false" label="strip" length="12" start="34" />
     </idspec>
-    <idspec name="DummyTargetHits" length="46">
+    <idspec name="TaggerTrackerHits" length="46">
       <idfield signed="false" label="system" length="6" start="0" />
       <idfield signed="false" label="barrel" length="3" start="6" />
       <idfield signed="false" label="layer" length="4" start="9" />
@@ -43,27 +50,20 @@
       <idfield signed="true" label="side" length="2" start="32" />
       <idfield signed="false" label="strip" length="12" start="34" />
     </idspec>
-    <idspec name="EcalHits" length="64">
-      <idfield signed="false" label="system" length="3" start="0" />
-      <idfield signed="false" label="barrel" length="2" start="3" />
-      <idfield signed="false" label="layer" length="7" start="5" />
-      <idfield signed="true" label="x" length="16" start="32" />
-      <idfield signed="true" label="y" length="16" start="48" />
-    </idspec>
   </iddict>
   <sensitive_detectors>
+    <tracker name="Target" ecut="0.0" eunit="MeV" verbose="0" hits_collection="DummyTargetHits">
+      <idspecref ref="DummyTargetHits" />
+    </tracker>
     <tracker name="TaggerTracker" ecut="0.0" eunit="MeV" verbose="0" hits_collection="TaggerTrackerHits">
       <idspecref ref="TaggerTrackerHits" />
     </tracker>
-    <tracker name="Target" ecut="0.0" eunit="MeV" verbose="0" hits_collection="DummyTargetHits">
-      <idspecref ref="DummyTargetHits" />
+    <tracker name="RecoilTracker" ecut="0.0" eunit="MeV" verbose="0" hits_collection="RecoilTrackerHits">
+      <idspecref ref="RecoilTrackerHits" />
     </tracker>
     <tracker name="EcalScoring" ecut="0.0" eunit="MeV" verbose="0" hits_collection="EcalScoringHits">
       <idspecref ref="EcalScoringHits" />
       <hit_processor type="ScoringTrackerHitProcessor" />
-    </tracker>
-    <tracker name="RecoilTracker" ecut="0.0" eunit="MeV" verbose="0" hits_collection="RecoilTrackerHits">
-      <idspecref ref="RecoilTrackerHits" />
     </tracker>
     <calorimeter name="Ecal" ecut="0.0" eunit="MeV" verbose="0" hits_collection="EcalHits">
       <idspecref ref="EcalHits" />
@@ -75,32 +75,32 @@
     <region name="TrackingRegion" store_secondaries="true" kill_tracks="false" cut="10.0" lunit="mm" threshold="1.0" eunit="MeV" />
   </regions>
   <display>
+    <vis name="EcalLayerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
+    </vis>
+    <vis name="EcalScoringVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
+      <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
+    </vis>
+    <vis name="EcalDetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
+    </vis>
+    <vis name="InvisibleWithDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
+      <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
+    </vis>
+    <vis name="EcalSensorVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="1.0" G="0.95" B="0.5" alpha="1.0" />
+    </vis>
     <vis name="RecoilTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
       <color R="0.74" G="0.71" B="0.41" alpha="1.0" />
     </vis>
     <vis name="TaggerTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
       <color R="0.8" G="0.67" B="0.0" alpha="1.0" />
     </vis>
-    <vis name="InvisibleNoDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="false">
-      <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
-    </vis>
-    <vis name="EcalDetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
-    </vis>
-    <vis name="EcalLayerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
-    </vis>
-    <vis name="EcalSensorVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="1.0" G="0.95" B="0.5" alpha="1.0" />
-    </vis>
     <vis name="TargetVis" line_style="unbroken" drawing_style="solid" show_daughters="false" visible="true">
       <color R="0.5" G="0.5" B="0.5" alpha="0.0" />
     </vis>
-    <vis name="InvisibleWithDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
+    <vis name="InvisibleNoDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="false">
       <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
-    </vis>
-    <vis name="EcalScoringVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
-      <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
     <vis name="WorldVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
       <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
@@ -114,70 +114,74 @@
       <rotation name="identity_rot" x="0.0" y="0.0" z="0.0" unit="radian" />
       <rotation name="reflect_rot" x="3.141592653589793" y="0.0" z="0.0" unit="radian" />
       <position name="identity_pos" x="0.0" y="0.0" z="0.0" unit="mm" />
-      <constant name="tagger_layer6_z" value="192.5" />
-      <constant name="tagger_layer1_z" value="-307.5" />
-      <constant name="tagger_layer6_x" value="-0.938" />
-      <constant name="tagger_layer3_z" value="-107.5" />
-      <constant name="tagger_layer3_x" value="-9.657" />
-      <constant name="recoil_l5_6_module_length" value="80.0" />
-      <constant name="tagger_layer2_x" value="-14.758" />
-      <constant name="tagger_layer4_z" value="-7.5" />
-      <constant name="tagger_layer4_x" value="-5.342" />
-      <constant name="target_thickness" value="0.35" />
       <constant name="ecal_total_thickness" value="289.0" />
-      <constant name="tagger_layer5_x" value="-2.723" />
       <constant name="ecal_sensor_thickness" value="0.30000000000000004" />
-      <constant name="tracker_sensor_overlap" value="2.0" />
-      <constant name="ecal_face_z" value="200.0" />
-      <constant name="tracker_layer1_z" value="307.5" />
-      <constant name="tagger_layer5_z" value="92.5" />
-      <constant name="target_z" value="300.0" />
-      <constant name="recoil_l5_6_sensor_length" value="78.0" />
-      <constant name="ecal_scoring_z" value="199.0" />
-      <constant name="recoil_l1_4_module_width" value="40.34" />
-      <constant name="recoil_l5_6_si_thickness" value="0.32" />
-      <constant name="tracker_layer2_z" value="322.5" />
-      <constant name="tagger_module_width" value="40.34" />
-      <constant name="tracker_zclear" value="1.0" />
-      <constant name="tracker_stereo_angle" value="0.1" />
-      <constant name="tracking_region_z" value="-300.0" />
-      <constant name="tracker_module_sep" value="3.0" />
-      <constant name="tracking_region_min" value="0.0" />
-      <constant name="tagger_layer2_z" value="-207.5" />
-      <constant name="recoil_l5_6_module_width" value="50.0" />
+      <constant name="ecal_scoring_dim_x" value="300.0" />
       <constant name="target_dim_y" value="35.0" />
-      <constant name="recoil_l5_6_sensor_width" value="48.0" />
-      <constant name="recoil_l1_4_module_length" value="100.0" />
-      <constant name="tagger_layer1_x" value="-20.874" />
-      <constant name="tagger_sensor_length" value="98.33" />
-      <constant name="target_dim_x" value="95.0" />
-      <constant name="ecal_dim_x" value="300.0" />
-      <constant name="world_side" value="5000.0" />
+      <constant name="recoil_l1_4_module_width" value="40.34" />
       <constant name="z_offset" value="-300.0" />
-      <constant name="ecal_dim_y" value="600.0" />
+      <constant name="ecal_scoring_dim_y" value="600.0" />
+      <constant name="target_dim_x" value="95.0" />
+      <constant name="tagger_layer6_z" value="192.5" />
+      <constant name="tagger_layer2_z" value="-207.5" />
+      <constant name="tagger_layer4_x" value="-5.342" />
+      <constant name="tracker_module_sep" value="3.0" />
+      <constant name="tracker_si_thickness" value="0.32" />
+      <constant name="tagger_layer4_z" value="-7.5" />
+      <constant name="tagger_layer6_x" value="-0.938" />
+      <constant name="recoil_l5_6_si_thickness" value="0.32" />
+      <constant name="recoil_l1_4_sensor_width" value="38.3399" />
+      <constant name="tracker_cf_thickness" value="0.2" />
+      <constant name="tagger_sensor_length" value="98.33" />
+      <constant name="recoil_l5_6_module_length" value="80.0" />
+      <constant name="ecal_scoring_thickness" value="0.1" />
+      <constant name="tagger_layer2_x" value="-14.758" />
+      <constant name="tracking_region_min" value="0.0" />
+      <constant name="tracker_zclear" value="1.0" />
+      <constant name="tracker_sensor_overlap" value="2.0" />
+      <constant name="world_side" value="5000.0" />
+      <constant name="tagger_module_width" value="40.34" />
+      <constant name="tracker_layer1_z" value="307.5" />
+      <constant name="tracker_layer3_z" value="337.5" />
+      <constant name="tagger_si_thickness" value="0.32" />
       <constant name="tracker_layer5_z" value="390.0" />
+      <constant name="tracker_stereo_angle" value="0.1" />
+      <constant name="ecal_dim_x" value="300.0" />
+      <constant name="ecal_dim_y" value="600.0" />
+      <constant name="recoil_l5_6_module_width" value="50.0" />
+      <constant name="tracking_region_zmax" value="485.0" />
+      <constant name="tagger_layer5_z" value="92.5" />
+      <constant name="tagger_layer7_x" value="-0.065" />
+      <constant name="tagger_layer7_z" value="292.5" />
+      <constant name="tagger_layer1_z" value="-307.5" />
+      <constant name="tagger_layer3_x" value="-9.657" />
+      <constant name="tagger_layer3_z" value="-107.5" />
+      <constant name="tagger_layer5_x" value="-2.723" />
+      <constant name="recoil_l1_4_sensor_length" value="98.33" />
+      <constant name="recoil_l5_6_sensor_width" value="48.0" />
+      <constant name="recoil_l1_4_si_thickness" value="0.32" />
+      <constant name="ecal_face_z" value="200.0" />
+      <constant name="world_x" value="5000.0" />
+      <constant name="world_y" value="5000.0" />
+      <constant name="target_z" value="300.0" />
+      <constant name="world_z" value="5000.0" />
       <constant name="tracking_region_radius" value="250.0" />
+      <constant name="target_thickness" value="0.35" />
+      <constant name="tagger_sensor_width" value="38.3399" />
+      <constant name="tagger_layer1_x" value="-20.874" />
+      <constant name="recoil_l1_4_module_length" value="100.0" />
+      <constant name="tracking_region_z" value="-300.0" />
+      <constant name="recoil_l5_6_sensor_length" value="78.0" />
+      <constant name="tracker_layer2_z" value="322.5" />
+      <constant name="tracker_layer4_z" value="352.5" />
+      <constant name="ecal_scoring_z" value="199.0" />
       <constant name="tracker_layer6_z" value="480.0" />
       <constant name="tagger_module_length" value="100.0" />
-      <constant name="tracker_layer4_z" value="352.5" />
-      <constant name="tracker_layer3_z" value="337.5" />
-      <constant name="recoil_l1_4_si_thickness" value="0.32" />
-      <constant name="tracker_cf_thickness" value="0.2" />
-      <constant name="recoil_l1_4_sensor_width" value="38.3399" />
-      <constant name="world_y" value="5000.0" />
-      <constant name="world_z" value="5000.0" />
-      <constant name="tracker_si_thickness" value="0.32" />
-      <constant name="tagger_si_thickness" value="0.32" />
-      <constant name="world_x" value="5000.0" />
-      <constant name="tagger_layer7_z" value="292.5" />
-      <constant name="ecal_scoring_dim_x" value="300.0" />
-      <constant name="tagger_layer7_x" value="-0.065" />
-      <constant name="ecal_scoring_dim_y" value="600.0" />
-      <constant name="tagger_sensor_width" value="38.3399" />
-      <constant name="ecal_scoring_thickness" value="0.1" />
-      <constant name="tracking_region_zmax" value="485.0" />
-      <constant name="recoil_l1_4_sensor_length" value="98.33" />
       <position name="tracking_region_pos" x="0.0" y="0.0" z="-300.0" unit="mm" />
+      <position name="TargetModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="TargetModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="300.0" unit="mm" />
+      <rotation name="Target_TargetModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXTaggerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.1" unit="mm" />
       <rotation name="LDMXTaggerModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXTaggerModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
@@ -212,16 +216,6 @@
       <rotation name="TaggerTracker_LDMXTaggerModule_layer13_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="TaggerTracker_LDMXTaggerModule_layer14_module0_position" x="-0.065" y="0.0" z="295.5" unit="mm" />
       <rotation name="TaggerTracker_LDMXTaggerModule_layer14_module0_rotation" x="0.0" y="0.0" z="-0.1" unit="radian" />
-      <position name="TargetModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
-      <rotation name="TargetModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="Target_TargetModule_layer1_module0_position" x="0.0" y="0.0" z="300.0" unit="mm" />
-      <rotation name="Target_TargetModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="ScoringModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
-      <rotation name="ScoringModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="ScoringModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
-      <rotation name="ScoringModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
-      <position name="EcalScoring_ScoringModule_layer1_module0_position" x="0.0" y="0.0" z="199.0" unit="mm" />
-      <rotation name="EcalScoring_ScoringModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXRecoilL14ModuleVolume_component0_position" x="0.0" y="0.0" z="-0.1" unit="mm" />
       <rotation name="LDMXRecoilL14ModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="LDMXRecoilL14ModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
@@ -282,6 +276,12 @@
       <rotation name="RecoilTracker_LDMXRecoilL56Module_layer10_module9_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="RecoilTracker_LDMXRecoilL56Module_layer10_module10_position" x="-96.0" y="-40.0" z="481.0" unit="mm" />
       <rotation name="RecoilTracker_LDMXRecoilL56Module_layer10_module10_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="ScoringModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="ScoringModuleVolume_component0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="ScoringModuleVolume_component0Sensor0Position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <rotation name="ScoringModuleVolume_component0Sensor0Rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
+      <position name="EcalScoring_ScoringModule_layer1_module0_position" x="0.0" y="0.0" z="199.0" unit="mm" />
+      <rotation name="EcalScoring_ScoringModule_layer1_module0_rotation" x="0.0" y="0.0" z="0.0" unit="radian" />
       <position name="Ecal_position" x="0.0" y="0.0" z="344.5" unit="mm" />
       <position name="Ecal_layerType0_slice0_position" x="0.0" y="0.0" z="-3.9000000000000004" unit="mm" />
       <position name="Ecal_layerType0_slice1_position" x="0.0" y="0.0" z="-3.4000000000000004" unit="mm" />
@@ -581,15 +581,12 @@
     <solids>
       <box name="world_box" x="world_x" y="world_y" z="world_z" />
       <tube name="tracking_cylinder" deltaphi="6.283185307179586" rmin="0.0" rmax="tracking_region_radius" z="2*tracking_region_zmax" />
+      <box name="TargetModuleBox" x="35.0" y="95.0" z="0.35" />
+      <box name="TargetModuleVolume_component0Box" x="35.0" y="95.0" z="0.35" />
       <box name="LDMXTaggerModuleBox" x="40.34" y="100.0" z="0.52" />
       <box name="LDMXTaggerModuleVolume_component0Box" x="40.34" y="100.0" z="0.32" />
       <box name="LDMXTaggerModuleVolume_component0Sensor0Box" x="38.3399" y="98.33" z="0.32" />
       <box name="LDMXTaggerModuleVolume_component1Box" x="40.34" y="100.0" z="0.2" />
-      <box name="TargetModuleBox" x="35.0" y="95.0" z="0.35" />
-      <box name="TargetModuleVolume_component0Box" x="35.0" y="95.0" z="0.35" />
-      <box name="ScoringModuleBox" x="600.0" y="300.0" z="0.1" />
-      <box name="ScoringModuleVolume_component0Box" x="600.0" y="300.0" z="0.1" />
-      <box name="ScoringModuleVolume_component0Sensor0Box" x="600.0" y="300.0" z="0.1" />
       <box name="LDMXRecoilL14ModuleBox" x="40.34" y="100.0" z="0.52" />
       <box name="LDMXRecoilL14ModuleVolume_component0Box" x="40.34" y="100.0" z="0.32" />
       <box name="LDMXRecoilL14ModuleVolume_component0Sensor0Box" x="38.3399" y="98.33" z="0.32" />
@@ -598,6 +595,9 @@
       <box name="LDMXRecoilL56ModuleVolume_component0Box" x="50.0" y="80.0" z="0.32" />
       <box name="LDMXRecoilL56ModuleVolume_component0Sensor0Box" x="48.0" y="78.0" z="0.32" />
       <box name="LDMXRecoilL56ModuleVolume_component1Box" x="50.0" y="80.0" z="0.2" />
+      <box name="ScoringModuleBox" x="600.0" y="300.0" z="0.1" />
+      <box name="ScoringModuleVolume_component0Box" x="600.0" y="300.0" z="0.1" />
+      <box name="ScoringModuleVolume_component0Sensor0Box" x="600.0" y="300.0" z="0.1" />
       <box name="Ecal_box" x="600.0" y="300.0" z="288.99999999999994" />
       <box name="Ecal_layerType0_box" x="600.0" y="300.0" z="8.3" />
       <box name="Ecal_layerType0_slice0_box" x="600.0" y="300.0" z="0.5" />
@@ -809,6 +809,21 @@
       <box name="Ecal_layerType25_slice5_box" x="600.0" y="300.0" z="2.0" />
     </solids>
     <structure>
+      <volume name="TargetModuleVolume_component0">
+        <materialref ref="Tungsten" />
+        <solidref ref="TargetModuleVolume_component0Box" />
+      </volume>
+      <volume name="TargetModuleVolume">
+        <materialref ref="Vacuum" />
+        <solidref ref="TargetModuleBox" />
+        <physvol>
+          <volumeref ref="TargetModuleVolume_component0" />
+          <positionref ref="TargetModuleVolume_component0_position" />
+          <rotationref ref="TargetModuleVolume_component0_rotation" />
+          <physvolid field_name="component" value="0" />
+        </physvol>
+        <visref ref="TargetVis" />
+      </volume>
       <volume name="LDMXTaggerModuleVolume_component0Sensor0">
         <materialref ref="Silicon" />
         <solidref ref="LDMXTaggerModuleVolume_component0Sensor0Box" />
@@ -844,47 +859,6 @@
           <physvolid field_name="component" value="1" />
         </physvol>
         <visref ref="TaggerTrackerVis" />
-      </volume>
-      <volume name="TargetModuleVolume_component0">
-        <materialref ref="Tungsten" />
-        <solidref ref="TargetModuleVolume_component0Box" />
-      </volume>
-      <volume name="TargetModuleVolume">
-        <materialref ref="Vacuum" />
-        <solidref ref="TargetModuleBox" />
-        <physvol>
-          <volumeref ref="TargetModuleVolume_component0" />
-          <positionref ref="TargetModuleVolume_component0_position" />
-          <rotationref ref="TargetModuleVolume_component0_rotation" />
-          <physvolid field_name="component" value="0" />
-        </physvol>
-        <visref ref="TargetVis" />
-      </volume>
-      <volume name="ScoringModuleVolume_component0Sensor0">
-        <materialref ref="Vacuum" />
-        <solidref ref="ScoringModuleVolume_component0Sensor0Box" />
-        <sdref ref="EcalScoring" />
-      </volume>
-      <volume name="ScoringModuleVolume_component0">
-        <materialref ref="Vacuum" />
-        <solidref ref="ScoringModuleVolume_component0Box" />
-        <physvol>
-          <volumeref ref="ScoringModuleVolume_component0Sensor0" />
-          <positionref ref="ScoringModuleVolume_component0Sensor0Position" />
-          <rotationref ref="ScoringModuleVolume_component0Sensor0Rotation" />
-          <physvolid field_name="sensor" value="0" />
-        </physvol>
-      </volume>
-      <volume name="ScoringModuleVolume">
-        <materialref ref="Vacuum" />
-        <solidref ref="ScoringModuleBox" />
-        <physvol>
-          <volumeref ref="ScoringModuleVolume_component0" />
-          <positionref ref="ScoringModuleVolume_component0_position" />
-          <rotationref ref="ScoringModuleVolume_component0_rotation" />
-          <physvolid field_name="component" value="0" />
-        </physvol>
-        <visref ref="EcalScoringVis" />
       </volume>
       <volume name="LDMXRecoilL14ModuleVolume_component0Sensor0">
         <materialref ref="Silicon" />
@@ -957,6 +931,32 @@
           <physvolid field_name="component" value="1" />
         </physvol>
         <visref ref="RecoilTrackerVis" />
+      </volume>
+      <volume name="ScoringModuleVolume_component0Sensor0">
+        <materialref ref="Vacuum" />
+        <solidref ref="ScoringModuleVolume_component0Sensor0Box" />
+        <sdref ref="EcalScoring" />
+      </volume>
+      <volume name="ScoringModuleVolume_component0">
+        <materialref ref="Vacuum" />
+        <solidref ref="ScoringModuleVolume_component0Box" />
+        <physvol>
+          <volumeref ref="ScoringModuleVolume_component0Sensor0" />
+          <positionref ref="ScoringModuleVolume_component0Sensor0Position" />
+          <rotationref ref="ScoringModuleVolume_component0Sensor0Rotation" />
+          <physvolid field_name="sensor" value="0" />
+        </physvol>
+      </volume>
+      <volume name="ScoringModuleVolume">
+        <materialref ref="Vacuum" />
+        <solidref ref="ScoringModuleBox" />
+        <physvol>
+          <volumeref ref="ScoringModuleVolume_component0" />
+          <positionref ref="ScoringModuleVolume_component0_position" />
+          <rotationref ref="ScoringModuleVolume_component0_rotation" />
+          <physvolid field_name="component" value="0" />
+        </physvol>
+        <visref ref="EcalScoringVis" />
       </volume>
       <volume name="Ecal_layerType0_slice0">
         <materialref ref="Copper" />
@@ -3281,6 +3281,15 @@
         <materialref ref="TrackingMaterial" />
         <solidref ref="tracking_cylinder" />
         <physvol>
+          <volumeref ref="TargetModuleVolume" />
+          <positionref ref="Target_TargetModule_layer1_module0_position" />
+          <rotationref ref="Target_TargetModule_layer1_module0_rotation" />
+          <physvolid field_name="system" value="10" />
+          <physvolid field_name="barrel" value="0" />
+          <physvolid field_name="layer" value="1" />
+          <physvolid field_name="module" value="0" />
+        </physvol>
+        <physvol>
           <volumeref ref="LDMXTaggerModuleVolume" />
           <positionref ref="TaggerTracker_LDMXTaggerModule_layer1_module0_position" />
           <rotationref ref="TaggerTracker_LDMXTaggerModule_layer1_module0_rotation" />
@@ -3404,15 +3413,6 @@
           <physvolid field_name="system" value="1" />
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="14" />
-          <physvolid field_name="module" value="0" />
-        </physvol>
-        <physvol>
-          <volumeref ref="TargetModuleVolume" />
-          <positionref ref="Target_TargetModule_layer1_module0_position" />
-          <rotationref ref="Target_TargetModule_layer1_module0_rotation" />
-          <physvolid field_name="system" value="10" />
-          <physvolid field_name="barrel" value="0" />
-          <physvolid field_name="layer" value="1" />
           <physvolid field_name="module" value="0" />
         </physvol>
         <physvol>
@@ -3665,7 +3665,7 @@
     </setup>
   </gdml>
   <fields>
-    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-407.5" dx="500.0" dy="500.0" dz="305.0" bx="0.0" by="-1.5" bz="0.0" />
+    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-250.0" dx="500.0" dy="500.0" dz="450.0" bx="0.0" by="-1.5" bz="0.0" />
   </fields>
 </lcdd>
 

@@ -653,7 +653,7 @@
     </readouts>
 
     <fields>
-        <field type="BoxDipole" name="AnalyzingDipole" x="0.0" y="0.0" z="-407.5" bx="0.0" by="-1.5" bz="0.0" dx="50.0*cm" dy="50.0*cm" dz="305.0*mm"/>
+        <field type="BoxDipole" name="AnalyzingDipole" x="0.0" y="0.0" z="-250.0*mm" bx="0.0" by="-1.5" bz="0.0" dx="500.0*mm" dy="500.0*mm" dz="450.0*mm"/>
     </fields>
 
 </lccdd>
