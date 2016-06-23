@@ -5,7 +5,7 @@
     <Strategy name="TaggerTracker Seed 135">
         <!--Cutoffs-->
         <MinPT>0.100</MinPT>
-        <MinHits>3</MinHits>
+        <MinHits>6</MinHits>
         <MinConfirm>0</MinConfirm>
         <MaxDCA>100.0</MaxDCA>
         <MaxZ0>100.0</MaxZ0>
@@ -16,11 +16,10 @@
             <Layer type="Seed" layer_number="1" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Seed" layer_number="3" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Seed" layer_number="5" detector_name="TaggerTracker" be_flag="BARREL" />
-             <!--
             <Layer type="Confirm" layer_number="7" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Extend" layer_number="9" detector_name="TaggerTracker" be_flag="BARREL" />
-            <Layer type="Extend" layer_number="10" detector_name="TaggerTracker" be_flag="BARREL" />
-            -->
+            <Layer type="Extend" layer_number="11" detector_name="TaggerTracker" be_flag="BARREL" />
+            <Layer type="Extend" layer_number="13" detector_name="TaggerTracker" be_flag="BARREL" />
         </Layers>
     </Strategy>
 </StrategyList>
