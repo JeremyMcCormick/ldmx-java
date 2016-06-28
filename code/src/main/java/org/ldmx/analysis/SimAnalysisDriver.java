@@ -3,11 +3,9 @@ package org.ldmx.analysis;
 import static org.ldmx.EventConstants.ECAL;
 import static org.ldmx.EventConstants.ECAL_SCORING_SIM_HITS;
 import static org.ldmx.EventConstants.ECAL_SIM_HITS;
-import static org.ldmx.EventConstants.KeV;
 import static org.ldmx.EventConstants.MCPARTICLES;
-import static org.ldmx.EventConstants.MeV;
-import static org.ldmx.EventConstants.RECOIL_TRACKER;
-import static org.ldmx.EventConstants.RECOIL_TRACKER_SIM_HITS;
+import static org.ldmx.EventConstants.RECOIL;
+import static org.ldmx.EventConstants.RECOIL_SIM_HITS;
 import static org.ldmx.EventConstants.TAGGER;
 import static org.ldmx.EventConstants.TAGGER_SIM_HITS;
 import hep.aida.ICloud1D;
@@ -45,9 +43,14 @@ public class SimAnalysisDriver extends Driver {
     /* Constant to disable conversion of clouds to histograms. */
     private static final int NO_CONVERT = 999999999;
     
-    private static final int ELECTRON_PDGID = 11;
-    private static final int PHOTON_PDGID = 22;
+    /* some handy PDG IDs */
+    public static final int ELECTRON = 11;
+    public static final int PHOTON = 22;
     
+    /* unit conversion from GeV */
+    public static double MeV = 1000.0;
+    public static double KeV = 1000000.0;
+            
     private IHistogram1D ecalHitE;
     private IHistogram1D ecalHitTime;
     private IHistogram1D ecalTotE;
@@ -57,6 +60,8 @@ public class SimAnalysisDriver extends Driver {
     private IHistogram1D ecalLayerE;
     private IHistogram1D ecalLayer;
     private ICloud2D ecalLayerTime;
+    private List<IHistogram1D> ecalLayerHitTime;
+    private List<IHistogram1D> ecalLayerHitCount;
         
     private IHistogram1D recoilHitCount;
     private IHistogram1D recoilTime;
@@ -67,12 +72,13 @@ public class SimAnalysisDriver extends Driver {
     private ICloud2D recoilHitXZ;
     private ICloud2D recoilHitYZ;    
     private IHistogram1D recoilHitEdep;
-    private IHistogram1D recoilBackscatterHitCount;
+    private List<IHistogram1D> recoilLayerHitCount;
+    private List<IHistogram1D> recoilLayerHitTime;
     private List<ICloud2D> recoilLayerXY;
-    private List<ICloud2D> recoilLayerSensorXY;    
-    private List<ICloud1D> recoilLayerParticleOriginZ;
-    private List<ICloud1D> recoilLayerHitCount;
-        
+    private List<ICloud2D> recoilLayerSensorXY;
+    private List<IHistogram1D> recoilLayerEdep;
+    private ICloud2D recoilParticleEdep;
+           
     private IHistogram1D taggerHitCount;
     private IHistogram1D taggerTime;    
     private IHistogram1D taggerLayer;
@@ -81,8 +87,12 @@ public class SimAnalysisDriver extends Driver {
     private ICloud2D taggerHitYZ;   
     private ICloud2D taggerSensorXY;
     private IHistogram1D taggerHitEdep;
+    private List<IHistogram1D> taggerLayerHitCount;
+    private List<IHistogram1D> taggerLayerHitTime;
     private List<ICloud2D> taggerLayerXY;
     private List<ICloud2D> taggerLayerSensorXY;
+    private List<IHistogram1D> taggerLayerEdep;
+    private ICloud2D taggerParticleEdep;
     
     private IHistogram1D mcpCount;
     private ICloud2D mcpEndpoint;
@@ -97,10 +107,19 @@ public class SimAnalysisDriver extends Driver {
     private ICloud1D mcpDauOriginZ;
     private ICloud1D mcpElectronDauE;
     private ICloud1D mcpElectronDauCount;
-    private ICloud1D mcpPhotonDauCount;    
+    private ICloud1D mcpPhotonDauCount;
+    private ICloud1D mcpPhotonDauE;
     
     private ICloud2D ecalScoringXY;
     private IHistogram1D ecalScoringMomentumZ;
+    private IHistogram1D ecalScoringElectronCount;
+    private IHistogram1D ecalScoringPhotonCount;
+    private IHistogram1D ecalScoringElectronE;
+    private IHistogram1D ecalScoringPhotonE;
+    private IHistogram1D ecalScoringElectronMomentumZ;
+    private IHistogram1D ecalScoringPhotonMomentumZ;
+    private ICloud2D ecalScoringPrimaryXY;
+    private ICloud2D ecalScoringDauXY;
           
     private IDDecoder calID;
     private IDDecoder recoilID;
@@ -124,27 +143,28 @@ public class SimAnalysisDriver extends Driver {
         ecalLayerTime = PLOT.cloud2D("/" + ECAL_SIM_HITS + "/Layer vs Hit Time", NO_CONVERT);
         ecalLayerTime.annotation().addItem("xAxisLabel", "Layer Number");
         ecalLayerTime.annotation().addItem("yAxisLabel", "Time [ns]");
-        //ecalLayerTime.annotation().addItem("yAxisScale", "log");
         
         /* Recoil Tracker plots */
-        recoilHitCount = PLOT.histogram1D("/" + RECOIL_TRACKER_SIM_HITS + "/Hit Count", 100, 0., 100.);
-        recoilTime = PLOT.histogram1D("/" + RECOIL_TRACKER_SIM_HITS + "/Hit Time", 1000, 0., 10.);
+        recoilHitCount = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Hit Count", 100, 0., 100.);
+        recoilTime = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Hit Time", 1000, 0., 10.);
         recoilTime.annotation().addItem("xAxisLabel", "Time [ns]");
-        recoilXY = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Hit XY", NO_CONVERT);
+        recoilXY = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Hit XY", NO_CONVERT);
         recoilXY.annotation().addItem("xAxisLabel", "X [mm]");
         recoilXY.annotation().addItem("yAxisLabel", "Y [mm]");
-        recoilHitXZ = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Hit XZ", NO_CONVERT);
+        recoilHitXZ = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Hit XZ", NO_CONVERT);
         recoilHitXZ.annotation().addItem("xAxisLabel", "X [mm]");
         recoilHitXZ.annotation().addItem("yAxisLabel", "Z [mm]");
-        recoilHitYZ = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Hit YZ", NO_CONVERT);
+        recoilHitYZ = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Hit YZ", NO_CONVERT);
         recoilHitYZ.annotation().addItem("xAxisLabel", "Y [mm]");
         recoilHitYZ.annotation().addItem("yAxisLabel", "Z [mm]");
-        recoilLayerTime = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Layer vs Hit Time", NO_CONVERT);
+        recoilLayerTime = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Layer vs Hit Time", NO_CONVERT);
         recoilLayerTime.annotation().addItem("xAxisLabel", "Layer Number");
         recoilLayerTime.annotation().addItem("yAxisLabel", "Time [ns]");
-        recoilHitEdep = PLOT.histogram1D("/" + RECOIL_TRACKER_SIM_HITS + "/Hit Edep", 600, 0.0, 600.0);
+        recoilHitEdep = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Hit Edep", 600, 0.0, 600.0);
         recoilHitEdep.annotation().addItem("xAxisLabel", "Edep [KeV]");
-        recoilBackscatterHitCount = PLOT.histogram1D("/" + RECOIL_TRACKER_SIM_HITS + "/Backscatter Hit Count", 100, 0.0, 100.0);
+        recoilParticleEdep = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Particle E vs Edep", NO_CONVERT);
+        recoilParticleEdep.annotation().addItem("xAxisLabel", "Energy [GeV]");
+        recoilParticleEdep.annotation().addItem("yAxisLabel", "Energy [KeV]");
         
         /* Tagger plots */
         taggerHitCount = PLOT.histogram1D("/" + TAGGER_SIM_HITS + "/Hit Count", 100, 0., 100.);
@@ -160,6 +180,9 @@ public class SimAnalysisDriver extends Driver {
         taggerHitYZ.annotation().addItem("xAxisLabel", "Y [mm]");
         taggerHitYZ.annotation().addItem("yAxisLabel", "Z [mm]");
         taggerHitEdep = PLOT.histogram1D("/" + TAGGER_SIM_HITS + "/Hit Edep", 600, 0.0, 600.0);
+        taggerParticleEdep = PLOT.cloud2D("/" + TAGGER_SIM_HITS + "/Particle E vs Edep", NO_CONVERT);
+        taggerParticleEdep.annotation().addItem("xAxisLabel", "Energy [GeV]");
+        taggerParticleEdep.annotation().addItem("yAxisLabel", "Energy [KeV]");
         
         /* MCParticle plots */
         mcpCount = PLOT.histogram1D("/" + MCPARTICLES + "/MCParticle Count", 20, 0., 20.0);
@@ -189,13 +212,31 @@ public class SimAnalysisDriver extends Driver {
         mcpDauProdTime.annotation().addItem("xAxisLabel", "Time [ns]");
         mcpDauOriginZ = PLOT.cloud1D("/" + MCPARTICLES + "/Daughter Origin Z", NO_CONVERT);
         mcpDauOriginZ.annotation().addItem("xAxisLabel", "Z [mm]");
+        mcpPhotonDauE = PLOT.cloud1D("/" + MCPARTICLES + "/Photon Daughter Energy", NO_CONVERT);
+        mcpPhotonDauE.annotation().addItem("xAxisLabel", "Energy [GeV]");
         
         /* ECal scoring plane */
         ecalScoringXY = PLOT.cloud2D("/" + ECAL_SCORING_SIM_HITS + "/Hit XY", NO_CONVERT);
         ecalScoringXY.annotation().addItem("xAxisLabel", "X [mm]");
         ecalScoringXY.annotation().addItem("yAxisLabel", "Y [mm]");
-        ecalScoringMomentumZ = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/PZ", 80, 0.0, 4.0);
+        ecalScoringMomentumZ = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/PZ", 110, -5.5, 5.5);
         ecalScoringMomentumZ.annotation().addItem("xAxisLabel", "PZ [GeV]");
+        ecalScoringElectronCount = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/Electron Count", 50, -0.5, 50.5);
+        ecalScoringPhotonCount = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/Photon Count", 50, -0.5, 50.5);        
+        ecalScoringElectronE = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/Electron E", 100, -0.5, 4.5);
+        ecalScoringElectronE.annotation().addItem("xAxisLabel", "Energy [GeV]");        
+        ecalScoringPhotonE = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/Photon E", 100, -0.5, 4.5);
+        ecalScoringPhotonE.annotation().addItem("xAxisLabel", "Energy [GeV]");               
+        ecalScoringElectronMomentumZ = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/Electron PZ", 110, -5.5, 5.5);
+        ecalScoringElectronMomentumZ.annotation().addItem("xAxisLabel", "PZ [GeV]");
+        ecalScoringPhotonMomentumZ = PLOT.histogram1D("/" + ECAL_SCORING_SIM_HITS + "/Photon PZ", 110, -5.5, 5.5);
+        ecalScoringPhotonMomentumZ.annotation().addItem("xAxisLabel", "PZ [GeV]");
+        ecalScoringPrimaryXY = PLOT.cloud2D("/" + ECAL_SCORING_SIM_HITS + "/Primary XY", NO_CONVERT);
+        ecalScoringPrimaryXY.annotation().addItem("xAxisLabel", "X [mm]");
+        ecalScoringPrimaryXY.annotation().addItem("yAxisLabel", "Y [mm]");
+        ecalScoringDauXY = PLOT.cloud2D("/" + ECAL_SCORING_SIM_HITS + "/Dau XY", NO_CONVERT);
+        ecalScoringDauXY.annotation().addItem("xAxisLabel", "X [mm]");
+        ecalScoringDauXY.annotation().addItem("yAxisLabel", "Y [mm]");
     }
     
     public void detectorChanged(Detector detector) {
@@ -206,51 +247,67 @@ public class SimAnalysisDriver extends Driver {
         int nEcalLayers = ecal.getLayering().getLayerCount();        
         
         ecalLayerE = PLOT.histogram1D("/" + ECAL_SIM_HITS + "/Layer Energy", nEcalLayers, -0.5, ((double) nEcalLayers) - 0.5);
+        ecalLayer = PLOT.histogram1D("/" + ECAL_SIM_HITS + "/Layer Number", nEcalLayers, -0.5, ((double) nEcalLayers) - 0.5);
+        
         ecalLayerXY = new ArrayList<ICloud2D>();
+        ecalLayerHitTime = new ArrayList<IHistogram1D>();
+        ecalLayerHitCount = new ArrayList<IHistogram1D>();
         for (int i = 0; i < nEcalLayers; i++) { /* ecal layers numbered from 0 */
+            
             ICloud2D ecalLayerPlot = PLOT.cloud2D("/" + ECAL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : X vs Y", NO_CONVERT);
             ecalLayerPlot.annotation().addItem("xAxisLabel", "X [mm]");
             ecalLayerPlot.annotation().addItem("yAxisLabel", "Y [mm]");
             ecalLayerXY.add(ecalLayerPlot);
-        }        
-        ecalLayer = PLOT.histogram1D("/" + ECAL_SIM_HITS + "/Layer Number", nEcalLayers, -0.5, ((double) nEcalLayers) - 0.5);
-        //ecalLayerHitCount  = PLOT.histogram1D("/" + ECAL_SIM_HITS + "/Layer Hit Count", nEcalLayers, -0.5, ((double) nEcalLayers) - 0.5);
                         
+            IHistogram1D layerHitTimePlot = PLOT.histogram1D("/" + ECAL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Time", 50, -0.5, 500.5);
+            layerHitTimePlot.annotation().addItem("xAxisLabel", "Time [ns]");
+            ecalLayerHitTime.add(layerHitTimePlot);
+            
+            IHistogram1D layerHitCountPlot = PLOT.histogram1D("/" + ECAL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Count", 60, -0.5, 60.5);
+            layerHitCountPlot.annotation().addItem("xAxisLabel", "Hit Count");
+            ecalLayerHitCount.add(layerHitCountPlot);
+            
+        }               
+                                
         /* Recoil Tracker plot setup */
-        Subdetector recoilTracker = detector.getSubdetector(RECOIL_TRACKER);
+        Subdetector recoilTracker = detector.getSubdetector(RECOIL);
         int nRecoilLayers = recoilTracker.getDetectorElement().getChildren().size();
         recoilID = recoilTracker.getIDDecoder();
         
         recoilLayerXY = new ArrayList<ICloud2D>();
         recoilLayerSensorXY = new ArrayList<ICloud2D>();
-        recoilLayerParticleOriginZ = new ArrayList<ICloud1D>();
-        recoilLayerHitCount = new ArrayList<ICloud1D>();
+        recoilLayerHitTime = new ArrayList<IHistogram1D>();
+        recoilLayerHitCount = new ArrayList<IHistogram1D>();
+        recoilLayerEdep = new ArrayList<IHistogram1D>();
         for (int i = 1; i <= nRecoilLayers; i++) { /* tracker layers numbered from 1 */
             
             // XY layer plot in global coordinates
-            ICloud2D recoilLayerPlot = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : X vs Y", NO_CONVERT);
+            ICloud2D recoilLayerPlot = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : X vs Y", NO_CONVERT);
             recoilLayerPlot.annotation().addItem("xAxisLabel", "X [mm]");
             recoilLayerPlot.annotation().addItem("yAxisLabel", "Y [mm]");
             recoilLayerXY.add(recoilLayerPlot);
             
             // XY layer plot in sensor coordinates
-            ICloud2D recoilLayerSensorPlot = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Sensor X vs Y", NO_CONVERT);
+            ICloud2D recoilLayerSensorPlot = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Sensor X vs Y", NO_CONVERT);
             recoilLayerSensorPlot.annotation().addItem("xAxisLabel", "X [mm]");
             recoilLayerSensorPlot.annotation().addItem("yAxisLabel", "Y [mm]");
             recoilLayerSensorXY.add(recoilLayerSensorPlot);
+                        
+            IHistogram1D layerHitTime  = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Time", 110, -0.5, 10.5);
+            layerHitTime.annotation().addItem("xAxisLabel", "Time [ns]");
+            recoilLayerHitTime.add(layerHitTime);
             
-            // Z origin of particle that made hit in the layer
-            ICloud1D particleOriginZ = PLOT.cloud1D("/" + RECOIL_TRACKER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : MCParticle Origin Z", NO_CONVERT);
-            particleOriginZ.annotation().addItem("xAxisLabel", "Z [mm]");
-            recoilLayerParticleOriginZ.add(particleOriginZ);
-            
-            ICloud1D layerHitCount = PLOT.cloud1D("/" + RECOIL_TRACKER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Count", NO_CONVERT);
+            IHistogram1D layerHitCount  = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Count", 51, -0.5, 50.5);
             layerHitCount.annotation().addItem("xAxisLabel", "Hit Count");
             recoilLayerHitCount.add(layerHitCount);
+            
+            IHistogram1D layerEdep  = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Edep", 600, 0.0, 600);
+            layerEdep.annotation().addItem("xAxisLabel", "Energy [KeV]");
+            recoilLayerEdep.add(layerEdep);            
         }
         
-        recoilLayer = PLOT.histogram1D("/" + RECOIL_TRACKER_SIM_HITS + "/Layer Number", nRecoilLayers, 0.5, (nRecoilLayers + 0.5));        
-        recoilSensorXY = PLOT.cloud2D("/" + RECOIL_TRACKER_SIM_HITS + "/Sensor XY", NO_CONVERT);
+        recoilLayer = PLOT.histogram1D("/" + RECOIL_SIM_HITS + "/Layer Number", nRecoilLayers, 0.5, (nRecoilLayers + 0.5));        
+        recoilSensorXY = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Sensor XY", NO_CONVERT);
         
         /* Tagger Tracker plot setup */
         Subdetector tagger = detector.getSubdetector(TAGGER);
@@ -263,6 +320,9 @@ public class SimAnalysisDriver extends Driver {
         
         taggerLayerXY = new ArrayList<ICloud2D>();
         taggerLayerSensorXY = new ArrayList<ICloud2D>();
+        taggerLayerHitTime = new ArrayList<IHistogram1D>();
+        taggerLayerHitCount = new ArrayList<IHistogram1D>();
+        taggerLayerEdep = new ArrayList<IHistogram1D>();
         for (int i = 1; i <= nTaggerLayers; i++) { /* tracker layers numbered from 1 */
             
             // XY layer plot in global coordinates
@@ -276,6 +336,20 @@ public class SimAnalysisDriver extends Driver {
             taggerLayerSensorPlot.annotation().addItem("xAxisLabel", "X [mm]");
             taggerLayerSensorPlot.annotation().addItem("yAxisLabel", "Y [mm]");
             taggerLayerSensorXY.add(taggerLayerSensorPlot);
+            
+            // hit time by layer
+            IHistogram1D layerHitTime = PLOT.histogram1D("/" + TAGGER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Time", 110, -0.5, 10.5);
+            layerHitTime.annotation().addItem("xAxisLabel", "Time [ns]");
+            taggerLayerHitTime.add(layerHitTime);
+            
+            // hit count by layer
+            IHistogram1D layerHitCount  = PLOT.histogram1D("/" + TAGGER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Hit Count", 51, -0.5, 50.5);
+            layerHitCount.annotation().addItem("xAxisLabel", "Hit Count");
+            taggerLayerHitCount.add(layerHitCount);
+            
+            IHistogram1D layerEdep  = PLOT.histogram1D("/" + TAGGER_SIM_HITS + "/Layer " + String.format("%02d", i) + " : Edep", 600, 0.0, 600);
+            layerEdep.annotation().addItem("xAxisLabel", "Energy [KeV]");
+            taggerLayerEdep.add(layerEdep);
         }
     }
     
@@ -289,7 +363,7 @@ public class SimAnalysisDriver extends Driver {
         final List<SimCalorimeterHit> calHits = event.get(SimCalorimeterHit.class, ECAL_SIM_HITS);
         ecalHitCount.fill(calHits.size());
         Map<Integer, Double> ecalLayerEnergyMap = new HashMap<Integer, Double>();
-        //Map<Integer, Integer> ecalLayerHitCountMap = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> ecalLayerHitCountMap = new HashMap<Integer, Integer>();
         double totCalE = 0;
         for (SimCalorimeterHit calHit : calHits) {
                         
@@ -316,28 +390,29 @@ public class SimAnalysisDriver extends Driver {
             }
             ecalLayerEnergyMap.put(layer, ecalLayerEnergyMap.get(layer) + hitE);
             
-            //if (!ecalLayerHitCountMap.containsKey(layer)) {
-            //    ecalLayerHitCountMap.put(layer, 0);
-            //}
-            //ecalLayerHitCountMap.put(layer, ecalLayerHitCountMap.get(layer) + 1);
+            ecalLayerHitTime.get(layer).fill(time);
+            
+            if (!ecalLayerHitCountMap.containsKey(layer)) {
+                ecalLayerHitCountMap.put(layer, 0);
+            }
+            ecalLayerHitCountMap.put(layer, ecalLayerHitCountMap.get(layer) + 1);
         }
         
         for (Entry<Integer, Double> entry : ecalLayerEnergyMap.entrySet()) {
             ecalLayerE.fill(entry.getKey(), entry.getValue());
         }
         
-        //for (Entry<Integer, Integer> entry : ecalLayerHitCountMap.entrySet()) {
-        //    ecalLayerHitCount.fill(entry.getKey(), entry.getValue());
-        //
+        for (Entry<Integer, Integer> entry : ecalLayerHitCountMap.entrySet()) {
+            ecalLayerHitCount.get(entry.getKey()).fill(entry.getValue());
+        }
         
         ecalTotE.fill(totCalE);
         
         /**
          * Recoil Tracker plots
          */        
-        final List<SimTrackerHit> recoilHits = event.get(SimTrackerHit.class, RECOIL_TRACKER_SIM_HITS);
+        final List<SimTrackerHit> recoilHits = event.get(SimTrackerHit.class, RECOIL_SIM_HITS);
         recoilHitCount.fill(recoilHits.size());
-        int nBackscatterRecoilHits = 0;
         Map<Integer, Integer> recoilLayerHitCountMap = new HashMap<Integer, Integer>();
         for (SimTrackerHit recoilHit : recoilHits) {
             
@@ -349,6 +424,7 @@ public class SimAnalysisDriver extends Driver {
             double z = recoilHit.getPosition()[2];
             double time = recoilHit.getTime();
             double edep = recoilHit.getdEdx();
+            MCParticle mcp = recoilHit.getMCParticle();
            
             recoilHitEdep.fill(edep * KeV);
             recoilTime.fill(recoilHit.getTime());
@@ -357,34 +433,33 @@ public class SimAnalysisDriver extends Driver {
             Hep3Vector localPos = recoilHit.getDetectorElement().getGeometry().transformGlobalToLocal(globalPos);
             recoilLayerSensorXY.get(layer - 1).fill(localPos.x(), localPos.y());
             recoilSensorXY.fill(localPos.x(), localPos.y());
-            
-            recoilLayerParticleOriginZ.get(layer - 1).fill(recoilHit.getMCParticle().getOriginZ());
-            
+                        
             recoilLayerXY.get(layer - 1).fill(x, y);
+            recoilLayerEdep.get(layer - 1).fill(edep * KeV);
             recoilXY.fill(x, y);
             recoilHitXZ.fill(x, z);
             recoilHitYZ.fill(y, z);
             recoilLayer.fill(layer);
             recoilLayerTime.fill(layer, time);
-            
-            if (recoilHit.getMCParticle().getSimulatorStatus().isBackscatter()) {
-                ++nBackscatterRecoilHits;
-            }
-            
+                        
             if (!recoilLayerHitCountMap.containsKey(layer)) {
                 recoilLayerHitCountMap.put(layer, 0);
             }
             recoilLayerHitCountMap.put(layer, recoilLayerHitCountMap.get(layer) + 1);
+            
+            recoilLayerHitTime.get(layer - 1).fill(time);
+            
+            recoilParticleEdep.fill(mcp.getEnergy(), recoilHit.getdEdx() * KeV);
         }
+        
         for (Entry<Integer, Integer> entry : recoilLayerHitCountMap.entrySet()) {
             recoilLayerHitCount.get(entry.getKey() - 1).fill(entry.getValue());
         }
-        
-        recoilBackscatterHitCount.fill(nBackscatterRecoilHits);
-        
+               
         /**
          * Tagger Tracker plots
          */
+        Map<Integer, Integer> taggerLayerHitCountMap = new HashMap<Integer, Integer>();
         final List<SimTrackerHit> taggerHits = event.get(SimTrackerHit.class, TAGGER_SIM_HITS);
         taggerHitCount.fill(taggerHits.size());
         for (SimTrackerHit taggerHit : taggerHits) {
@@ -397,6 +472,7 @@ public class SimAnalysisDriver extends Driver {
             double z = taggerHit.getPosition()[2];
             double time = taggerHit.getTime();
             double edep = taggerHit.getdEdx();
+            MCParticle mcp = taggerHit.getMCParticle();
             
             taggerHitEdep.fill(edep * KeV);            
             taggerTime.fill(time);
@@ -405,12 +481,26 @@ public class SimAnalysisDriver extends Driver {
             Hep3Vector localPos = taggerHit.getDetectorElement().getGeometry().transformGlobalToLocal(globalPos);
             taggerLayerSensorXY.get(layer - 1).fill(localPos.x(), localPos.y());
             taggerSensorXY.fill(localPos.x(), localPos.y());
-                        
+                                    
             taggerLayerXY.get(layer - 1).fill(x, y);
+            taggerLayerEdep.get(layer - 1).fill(edep * KeV);
             taggerXY.fill(x, y);
             taggerHitXZ.fill(x, z);
             taggerHitYZ.fill(y, z);
             taggerLayer.fill(layer);
+            
+            taggerLayerHitTime.get(layer - 1).fill(time);
+            
+            if (!taggerLayerHitCountMap.containsKey(layer)) {
+                taggerLayerHitCountMap.put(layer, 0);
+            }
+            taggerLayerHitCountMap.put(layer, taggerLayerHitCountMap.get(layer) + 1);
+            
+            recoilParticleEdep.fill(mcp.getEnergy(), taggerHit.getdEdx() * KeV);
+        }
+        
+        for (Entry<Integer, Integer> entry : taggerLayerHitCountMap.entrySet()) {
+            taggerLayerHitCount.get(entry.getKey() - 1).fill(entry.getValue());
         }
         
         /**
@@ -431,10 +521,11 @@ public class SimAnalysisDriver extends Driver {
             if (!mcp.getParents().isEmpty()) {
                 mcpDauHitCount.fill(findHits(event.get(SimTrackerHit.class), mcp).size());
                 mcpDauProdTime.fill(mcp.getProductionTime());
-                if (mcp.getPDGID() == ELECTRON_PDGID) {
+                if (mcp.getPDGID() == ELECTRON) {
                     mcpElectronDauE.fill(mcp.getEnergy());
                     ++nElectronDau;
-                } else if (mcp.getPDGID() == PHOTON_PDGID) {
+                } else if (mcp.getPDGID() == PHOTON) {
+                    mcpPhotonDauE.fill(mcp.getEnergy());
                     ++nPhotonDau;
                 }
                 mcpDauOriginZ.fill(mcp.getOriginZ());
@@ -458,11 +549,42 @@ public class SimAnalysisDriver extends Driver {
          * ECal scoring plane
          */
         final List<SimTrackerHit> ecalScoringHits = event.get(SimTrackerHit.class, ECAL_SCORING_SIM_HITS);
+        
+        final Map<Integer, Integer> ecalScoringPdgCounts = new HashMap<Integer, Integer>();
+        ecalScoringPdgCounts.put(ELECTRON, 0);
+        ecalScoringPdgCounts.put(PHOTON, 0);        
         for (SimTrackerHit ecalScoringHit : ecalScoringHits) {
             double[] p = ecalScoringHit.getMomentum();
-            ecalScoringXY.fill(ecalScoringHit.getPosition()[0], ecalScoringHit.getPosition()[1]);
+            double[] startPoint = ecalScoringHit.getStartPoint();            
+            ecalScoringXY.fill(startPoint[0], startPoint[1]);
             ecalScoringMomentumZ.fill(p[2]);
+            
+            // Only secondary particles are counted for PZ and E plots (primary is ignored or plotted separately).
+            MCParticle mcp = ecalScoringHit.getMCParticle();
+            if (mcp.getParents().size() != 0) { /* secondary or daughter particle */
+                int pdgid = ecalScoringHit.getMCParticle().getPDGID();
+                if (ecalScoringPdgCounts.get(pdgid) == null) {
+                    ecalScoringPdgCounts.put(pdgid, 0);
+                }
+                ecalScoringPdgCounts.put(ecalScoringHit.getMCParticle().getPDGID(), ecalScoringPdgCounts.get(pdgid) + 1);
+                
+                if (pdgid == ELECTRON) {
+                    this.ecalScoringElectronE.fill(mcp.getEnergy());
+                    this.ecalScoringElectronMomentumZ.fill(ecalScoringHit.getMomentum()[2]);
+                } else if (pdgid == PHOTON) {
+                    this.ecalScoringPhotonE.fill(mcp.getEnergy());
+                    this.ecalScoringPhotonMomentumZ.fill(ecalScoringHit.getMomentum()[2]);
+                }
+                
+                ecalScoringDauXY.fill(startPoint[0], startPoint[0]);
+                
+            } else { /* primary particle */
+                this.ecalScoringPrimaryXY.fill(startPoint[0], startPoint[1]);
+            }
         }
+
+        ecalScoringElectronCount.fill(ecalScoringPdgCounts.get(ELECTRON));
+        ecalScoringPhotonCount.fill(ecalScoringPdgCounts.get(PHOTON));
     }
         
     private Collection<SimTrackerHit> findHits(List<List<SimTrackerHit>> hits, MCParticle particle) {
