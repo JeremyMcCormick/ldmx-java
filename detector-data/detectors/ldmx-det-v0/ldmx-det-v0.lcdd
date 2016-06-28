@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="2620952350" />
+    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="1890504907" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
@@ -129,12 +129,17 @@
       <constant name="tracker_si_thickness" value="0.32" />
       <constant name="tagger_layer4_z" value="-7.5" />
       <constant name="tagger_layer6_x" value="-0.938" />
+      <constant name="recoil_dipole_width" value="500.0" />
       <constant name="recoil_l5_6_si_thickness" value="0.32" />
       <constant name="recoil_l1_4_sensor_width" value="38.3399" />
+      <constant name="analyzing_dipole_width" value="457.2" />
       <constant name="tracker_cf_thickness" value="0.2" />
       <constant name="tagger_sensor_length" value="98.33" />
       <constant name="recoil_l5_6_module_length" value="80.0" />
+      <constant name="analyzing_dipole_x" value="0.0" />
       <constant name="ecal_scoring_thickness" value="0.1" />
+      <constant name="analyzing_dipole_y" value="0.0" />
+      <constant name="analyzing_dipole_z" value="-400.0" />
       <constant name="tagger_layer2_x" value="-14.758" />
       <constant name="tracking_region_min" value="0.0" />
       <constant name="tracker_zclear" value="1.0" />
@@ -142,7 +147,10 @@
       <constant name="world_side" value="5000.0" />
       <constant name="tagger_module_width" value="40.34" />
       <constant name="tracker_layer1_z" value="307.5" />
+      <constant name="recoil_dipole_z" value="128.6" />
+      <constant name="recoil_dipole_y" value="0.0" />
       <constant name="tracker_layer3_z" value="337.5" />
+      <constant name="recoil_dipole_x" value="0.0" />
       <constant name="tagger_si_thickness" value="0.32" />
       <constant name="tracker_layer5_z" value="390.0" />
       <constant name="tracker_stereo_angle" value="0.1" />
@@ -153,12 +161,15 @@
       <constant name="tagger_layer5_z" value="92.5" />
       <constant name="tagger_layer7_x" value="-0.065" />
       <constant name="tagger_layer7_z" value="292.5" />
+      <constant name="recoil_dipole_by" value="-0.75" />
       <constant name="tagger_layer1_z" value="-307.5" />
       <constant name="tagger_layer3_x" value="-9.657" />
       <constant name="tagger_layer3_z" value="-107.5" />
       <constant name="tagger_layer5_x" value="-2.723" />
       <constant name="recoil_l1_4_sensor_length" value="98.33" />
+      <constant name="recoil_dipole_length" value="142.79999999999998" />
       <constant name="recoil_l5_6_sensor_width" value="48.0" />
+      <constant name="analyzing_dipole_by" value="-1.5" />
       <constant name="recoil_l1_4_si_thickness" value="0.32" />
       <constant name="ecal_face_z" value="200.0" />
       <constant name="world_x" value="5000.0" />
@@ -169,13 +180,16 @@
       <constant name="target_thickness" value="0.35" />
       <constant name="tagger_sensor_width" value="38.3399" />
       <constant name="tagger_layer1_x" value="-20.874" />
+      <constant name="analyzing_dipole_length" value="914.4" />
       <constant name="recoil_l1_4_module_length" value="100.0" />
       <constant name="tracking_region_z" value="-300.0" />
+      <constant name="recoil_dipole_height" value="500.0" />
       <constant name="recoil_l5_6_sensor_length" value="78.0" />
       <constant name="tracker_layer2_z" value="322.5" />
       <constant name="tracker_layer4_z" value="352.5" />
       <constant name="ecal_scoring_z" value="199.0" />
       <constant name="tracker_layer6_z" value="480.0" />
+      <constant name="analyzing_dipole_height" value="157.20000000000002" />
       <constant name="tagger_module_length" value="100.0" />
       <position name="tracking_region_pos" x="0.0" y="0.0" z="-300.0" unit="mm" />
       <position name="TargetModuleVolume_component0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
@@ -3665,7 +3679,8 @@
     </setup>
   </gdml>
   <fields>
-    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-250.0" dx="500.0" dy="500.0" dz="450.0" bx="0.0" by="-1.5" bz="0.0" />
+    <box_dipole name="RecoilDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="128.6" dx="250.0" dy="250.0" dz="71.39999999999999" bx="0.0" by="-0.75" bz="0.0" />
+    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-400.0" dx="228.6" dy="78.60000000000001" dz="457.2" bx="0.0" by="-1.5" bz="0.0" />
   </fields>
 </lcdd>
 

@@ -1,4 +1,5 @@
-<lccdd xmlns:compact="http://www.lcsim.org/schemas/compact/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/compact/1.0/compact.xsd">
+<lccdd xmlns:compact="http://www.lcsim.org/schemas/compact/1.0" 
+       xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/compact/1.0/compact.xsd">
 
     <info name="ldmx-det-v0" author="Jeremy McCormick, Tim Nelson, Omar Moreno">
         <comment>
@@ -120,6 +121,24 @@
         <constant name="target_dim_y" value="3.5*cm"/>
         <constant name="target_thickness" value="0.35*mm"/>
         <constant name="target_z" value="0.0*mm - z_offset"/>
+
+        <!-- Analyzing dipole magnet dimensions and B-field -->
+        <constant name="analyzing_dipole_length" value="91.44*cm" />
+        <constant name="analyzing_dipole_width" value="45.72*cm" />
+        <constant name="analyzing_dipole_height" value="15.72*cm" />
+        <constant name="analyzing_dipole_x" value="0*cm" />
+        <constant name="analyzing_dipole_y" value="0*cm" />
+        <constant name="analyzing_dipole_z" value="-40*cm" />
+        <constant name="analyzing_dipole_by" value="-1.5" />
+
+        <!-- Recoil dipole magnet dimensions and B-field -->
+        <constant name="recoil_dipole_length" value="14.28*cm" />
+        <constant name="recoil_dipole_width" value="50*cm" />
+        <constant name="recoil_dipole_height" value="50*cm" />
+        <constant name="recoil_dipole_x" value="0*cm" />
+        <constant name="recoil_dipole_y" value="0*cm" />
+        <constant name="recoil_dipole_z" value="12.86*cm" />
+        <constant name="recoil_dipole_by" value="-0.75" />
 
     </define>
 
@@ -653,7 +672,15 @@
     </readouts>
 
     <fields>
-        <field type="BoxDipole" name="AnalyzingDipole" x="0.0" y="0.0" z="-250.0*mm" bx="0.0" by="-1.5" bz="0.0" dx="500.0*mm" dy="500.0*mm" dz="450.0*mm"/>
+        <field type="BoxDipole" name="AnalyzingDipole" 
+               x="analyzing_dipole_x"   y="analyzing_dipole_y"   z="analyzing_dipole_z"
+               dx="analyzing_dipole_width/2" dy="analyzing_dipole_height/2" dz="analyzing_dipole_length/2"
+               bx="0.0" by="analyzing_dipole_by" bz="0.0" /> 
+           
+        <field type="BoxDipole" name="RecoilDipole" 
+               x="recoil_dipole_x"   y="recoil_dipole_y"   z="recoil_dipole_z"
+               dx="recoil_dipole_width/2" dy="recoil_dipole_height/2" dz="recoil_dipole_length/2"
+               bx="0.0" by="recoil_dipole_by" bz="0.0" /> 
     </fields>
 
 </lccdd>
