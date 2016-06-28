@@ -27,13 +27,13 @@
         <constant name="tracking_region_z" value="-300*mm"/>
         <constant name="z_offset" value="tracking_region_z"/>
 
-		<!-- Tagger tracker module dimensions and additional material. -->
+        <!-- Tagger tracker module dimensions and additional material. -->
         <constant name="tagger_module_length" value="100.0*mm"/>
         <constant name="tagger_module_width" value="40.34*mm"/>
         
         <!-- 
-        	Tagger tracker sensor dimensions. Sensor width slightly less than
-        	38.44 mm so SiSim works.
+            Tagger tracker sensor dimensions. Sensor width slightly less than
+            38.44 mm so SiSim works.
          -->
         <constant name="tagger_sensor_length" value="98.33*mm"/>
         <constant name="tagger_sensor_width" value="38.3399*mm"/>
@@ -44,8 +44,8 @@
         <constant name="recoil_l1_4_module_width" value="40.34*mm"/>
         
         <!-- 
-        	Recoil tracker L1-4 sensor dimensions. Sensor width slightly less 
-        	than 38.44 mm so SiSim works.
+            Recoil tracker L1-4 sensor dimensions. Sensor width slightly less 
+            than 38.44 mm so SiSim works.
          -->
         <constant name="recoil_l1_4_sensor_length" value="98.33*mm"/>
         <constant name="recoil_l1_4_sensor_width" value="38.3399*mm"/>
@@ -56,8 +56,8 @@
         <constant name="recoil_l5_6_module_width" value="50*mm"/>
         
         <!-- 
-        	Recoil tracker L5-6 sensor dimensions. Sensor width slightly less 
-        	than 38.44 mm so SiSim works.
+            Recoil tracker L5-6 sensor dimensions. Sensor width slightly less 
+            than 38.44 mm so SiSim works.
          -->
         <constant name="recoil_l5_6_sensor_length" value="78*mm"/>
         <constant name="recoil_l5_6_sensor_width" value="48*mm"/>
@@ -125,19 +125,19 @@
         <!-- Analyzing dipole magnet dimensions and B-field -->
         <constant name="analyzing_dipole_length" value="91.44*cm" />
         <constant name="analyzing_dipole_width" value="45.72*cm" />
-        <constant name="analyzing_dipole_height" value="15.72*cm" />
+        <constant name="analyzing_dipole_height" value="30.48*cm" />
         <constant name="analyzing_dipole_x" value="0*cm" />
         <constant name="analyzing_dipole_y" value="0*cm" />
-        <constant name="analyzing_dipole_z" value="-40*cm" />
+        <constant name="analyzing_dipole_z" value="-40*cm" /> 
         <constant name="analyzing_dipole_by" value="-1.5" />
 
         <!-- Recoil dipole magnet dimensions and B-field -->
-        <constant name="recoil_dipole_length" value="14.28*cm" />
-        <constant name="recoil_dipole_width" value="50*cm" />
-        <constant name="recoil_dipole_height" value="50*cm" />
+        <constant name="recoil_dipole_length" value="14.28*cm" /> 
+        <constant name="recoil_dipole_width" value="45.72*cm" />
+        <constant name="recoil_dipole_height" value="30.48*cm" />
         <constant name="recoil_dipole_x" value="0*cm" />
         <constant name="recoil_dipole_y" value="0*cm" />
-        <constant name="recoil_dipole_z" value="12.86*cm" />
+        <constant name="recoil_dipole_z" value="12.86*cm" /> 
         <constant name="recoil_dipole_by" value="-0.75" />
 
     </define>
@@ -200,7 +200,7 @@
         </detector>        
 
         <detector id="1" name="TaggerTracker" type="HPSTracker2" readout="TaggerTrackerHits" combineHits="true" insideTrackingVolume="true">
-			<comment>The Tagger Tracker</comment>
+            <comment>The Tagger Tracker</comment>
             <module name="LDMXTaggerModule" vis="TaggerTrackerVis">
                 <box x="tagger_module_length" y="tagger_module_width"/>
                 <module_component thickness="tagger_si_thickness" material="Silicon" sensitive="true">
@@ -276,7 +276,8 @@
         </detector>
 
         <detector id="2" name="RecoilTracker" type="HPSTracker2" readout="RecoilTrackerHits" combineHits="true" insideTrackingVolume="true">
-
+            <comment>The Recoil Tracker</comment>
+            
             <module name="LDMXRecoilL14Module" vis="RecoilTrackerVis">
                 <box x="recoil_l1_4_module_length" y="recoil_l1_4_module_width"/>
                 <module_component thickness="recoil_l1_4_si_thickness" material="Silicon" sensitive="true">
