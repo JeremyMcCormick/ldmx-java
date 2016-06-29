@@ -61,8 +61,8 @@
             <debug>false</debug>
         </driver>
 
-		<driver name="TaggerHelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
-            <debug>false</debug>
+		<driver name="TaggerHelicalTrackHitDriver" type="org.ldmx.tracking.LdmxHelicalTrackHitDriver">
+            <debug>true</debug>
             <clusterTimeCut>12.0</clusterTimeCut>
             <maxDt>16.0</maxDt>
             <clusterAmplitudeCut>-99</clusterAmplitudeCut>
@@ -116,7 +116,7 @@
             <debug>false</debug>
         </driver>
 
-		<driver name="RecoilHelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
+		<driver name="RecoilHelicalTrackHitDriver" type="org.ldmx.tracking.LdmxHelicalTrackHitDriver">
             <debug>false</debug>
             <clusterTimeCut>12.0</clusterTimeCut>
             <maxDt>16.0</maxDt>
