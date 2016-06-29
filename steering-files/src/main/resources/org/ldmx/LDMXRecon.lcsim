@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lcsim xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
-       xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+             xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
     <execute>
         <driver name="EventMarkerDriver"    />
         <driver name="LdmxTrackerSetup"     />
-        
+
         <driver name="SimpleTaggerReadout"  />
         <driver name="TaggerRawHitFitterDriver" />
         <driver name="TaggerTrackerHitDriver"/>
         <driver name="TaggerHelicalTrackHitDriver"/>
         <driver name="TaggerTrackReconDriver"/>   
-        
+
         <driver name="SimpleRecoilReadout"  />
         <driver name="RecoilRawHitFitterDriver" />
         <driver name="RecoilTrackerHitDriver"/>
         <driver name="RecoilHelicalTrackHitDriver"/>
         <driver name="RecoilTrackReconDriver"/> 
-        
+
         <driver name="LCIODriver"           />
         <driver name="CleanupDriver"        />
     </execute>    
@@ -39,7 +39,7 @@
             <readout>TaggerTrackerHits</readout>
             <verbosity>0</verbosity>
         </driver>
-        
+
         <driver name="TaggerRawHitFitterDriver" type="org.ldmx.tracking.RawTrackerHitFitterDriver">
             <fitAlgorithm>Linear</fitAlgorithm>
             <useTimestamps>false</useTimestamps>
@@ -61,8 +61,8 @@
             <debug>false</debug>
         </driver>
 
-		<driver name="TaggerHelicalTrackHitDriver" type="org.ldmx.tracking.LdmxHelicalTrackHitDriver">
-            <debug>true</debug>
+        <driver name="TaggerHelicalTrackHitDriver" type="org.ldmx.tracking.LdmxHelicalTrackHitDriver">
+            <debug>false</debug>
             <clusterTimeCut>12.0</clusterTimeCut>
             <maxDt>16.0</maxDt>
             <clusterAmplitudeCut>-99</clusterAmplitudeCut>
@@ -116,7 +116,7 @@
             <debug>false</debug>
         </driver>
 
-		<driver name="RecoilHelicalTrackHitDriver" type="org.ldmx.tracking.LdmxHelicalTrackHitDriver">
+        <driver name="RecoilHelicalTrackHitDriver" type="org.ldmx.tracking.LdmxHelicalTrackHitDriver">
             <debug>false</debug>
             <clusterTimeCut>12.0</clusterTimeCut>
             <maxDt>16.0</maxDt>
@@ -141,8 +141,8 @@
         <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
             <outputFilePath>ldmx_readout_sim</outputFilePath>
         </driver>
-        
+
         <driver name="CleanupDriver" type="org.lcsim.recon.tracking.digitization.sisim.config.ReadoutCleanupDriver" />
-    
+
     </drivers>
 </lcsim>
