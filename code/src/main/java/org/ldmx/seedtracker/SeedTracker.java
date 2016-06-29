@@ -143,7 +143,6 @@ public class SeedTracker extends Driver {
             if (_diag != null) _diag.fireStrategyChanged(strategy);
 
             //  Perform track finding under this strategy
-            System.out.println("Finding tracks");
             _finder.FindTracks(strategy, _bfield);
 
             //  Make the timing plots if requested
