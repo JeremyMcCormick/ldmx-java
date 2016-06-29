@@ -4,12 +4,19 @@
     <execute>
         <driver name="EventMarkerDriver"    />
         <driver name="LdmxTrackerSetup"     />
+        
         <driver name="SimpleTaggerReadout"  />
+        <driver name="TaggerRawHitFitterDriver" />
+        <driver name="TaggerTrackerHitDriver"/>
+        <driver name="TaggerHelicalTrackHitDriver"/>
+        <driver name="TaggerTrackReconDriver"/>   
+        
         <driver name="SimpleRecoilReadout"  />
-        <driver name="RawTrackerHitFitterDriver" />
-        <driver name="TrackerHitDriver"/>
-        <driver name="HelicalTrackHitDriver"/>
-        <driver name="TrackReconDriver"/>  
+        <driver name="RecoilRawHitFitterDriver" />
+        <driver name="RecoilTrackerHitDriver"/>
+        <driver name="RecoilHelicalTrackHitDriver"/>
+        <driver name="RecoilTrackReconDriver"/> 
+        
         <driver name="LCIODriver"           />
         <driver name="CleanupDriver"        />
     </execute>    
@@ -20,7 +27,10 @@
         </driver>
 
         <driver name="LdmxTrackerSetup" type="org.ldmx.detector.LdmxTrackerSetup"   />
-        
+
+        <!-- 
+             Tagger Tracker 
+        -->
         <driver name="SimpleTaggerReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
             <noPileup>true</noPileup>
             <subdetectorName>TaggerTracker</subdetectorName>
@@ -30,16 +40,7 @@
             <verbosity>0</verbosity>
         </driver>
         
-        <driver name="SimpleRecoilReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
-            <noPileup>true</noPileup>
-            <subdetectorName>RecoilTracker</subdetectorName>
-            <enablePileupCut>false</enablePileupCut>
-            <rawTrackerHitCollectionName>RecoilRawTrackerHits</rawTrackerHitCollectionName>
-            <readout>RecoilTrackerHits</readout>
-            <verbosity>0</verbosity>
-        </driver>
-
-        <driver name="RawTrackerHitFitterDriver" type="org.ldmx.tracking.RawTrackerHitFitterDriver">
+        <driver name="TaggerRawHitFitterDriver" type="org.ldmx.tracking.RawTrackerHitFitterDriver">
             <fitAlgorithm>Linear</fitAlgorithm>
             <useTimestamps>false</useTimestamps>
             <correctTimeOffset>false</correctTimeOffset>
@@ -54,25 +55,85 @@
             <fittedHitCollectionName>TaggerFittedRawTrackerHits</fittedHitCollectionName>
         </driver>
 
-        <driver name="TrackerHitDriver" type="org.ldmx.tracking.DataTrackerHitDriver">
+        <driver name="TaggerTrackerHitDriver" type="org.ldmx.tracking.DataTrackerHitDriver">
             <subdetectorName>TaggerTracker</subdetectorName>
+            <stripHitOutputCollectionName>TaggerClusters</stripHitOutputCollectionName>
             <debug>false</debug>
         </driver>
-		
-		<driver name="HelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
+
+		<driver name="TaggerHelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
             <debug>false</debug>
             <clusterTimeCut>12.0</clusterTimeCut>
             <maxDt>16.0</maxDt>
             <clusterAmplitudeCut>-99</clusterAmplitudeCut>
             <clusterTimeCut>-99</clusterTimeCut>
             <subdetectorName>TaggerTracker</subdetectorName>
+            <stripHitsCollectionName>TaggerClusters</stripHitsCollectionName>
+            <helicalTrackHitRelationsCollectionName>TaggerHelicalTrackHitRelations</helicalTrackHitRelationsCollectionName>
+            <outputHitCollectionName>TaggerHelicalTrackHits</outputHitCollectionName> 
         </driver>
 
-        <driver name="TrackReconDriver" type="org.ldmx.tracking.TrackerReconDriver">
-            <trackCollectionName>Tracks</trackCollectionName>
+        <driver name="TaggerTrackReconDriver" type="org.ldmx.tracking.TrackerReconDriver">
+            <trackCollectionName>TaggerTracks</trackCollectionName>
+            <inputHitCollectionName>RotatedTaggerHelicalTrackHits</inputHitCollectionName>
             <strategyResource>/org/ldmx/tracking/strategies/TaggerStrategies.xml</strategyResource>
             <debug>false</debug>
             <subdetectorName>TaggerTracker</subdetectorName>
+            <applySectorBinning>false</applySectorBinning>
+            <skipChecks>true</skipChecks>
+        </driver>                
+
+        <!-- 
+             Recoil Tracker 
+        -->
+        <driver name="SimpleRecoilReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
+            <noPileup>true</noPileup>
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <enablePileupCut>false</enablePileupCut>
+            <rawTrackerHitCollectionName>RecoilRawTrackerHits</rawTrackerHitCollectionName>
+            <readout>RecoilTrackerHits</readout>
+            <verbosity>0</verbosity>
+        </driver>
+
+        <driver name="RecoilRawHitFitterDriver" type="org.ldmx.tracking.RawTrackerHitFitterDriver">
+            <fitAlgorithm>Linear</fitAlgorithm>
+            <useTimestamps>false</useTimestamps>
+            <correctTimeOffset>false</correctTimeOffset>
+            <correctT0Shift>false</correctT0Shift>
+            <useTruthTime>true</useTruthTime>
+            <subtractTOF>false</subtractTOF>
+            <subtractTriggerTime>false</subtractTriggerTime>
+            <correctChanT0>false</correctChanT0>
+            <debug>false</debug>
+            <rawHitCollectionName>RecoilRawTrackerHits</rawHitCollectionName>
+            <fitCollectionName>RecoilShapeFitParameters</fitCollectionName>
+            <fittedHitCollectionName>RecoilFittedRawTrackerHits</fittedHitCollectionName>
+        </driver>
+
+        <driver name="RecoilTrackerHitDriver" type="org.ldmx.tracking.DataTrackerHitDriver">
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <stripHitOutputCollectionName>RecoilClusters</stripHitOutputCollectionName>
+            <debug>false</debug>
+        </driver>
+
+		<driver name="RecoilHelicalTrackHitDriver" type="org.hps.recon.tracking.HelicalTrackHitDriver">
+            <debug>false</debug>
+            <clusterTimeCut>12.0</clusterTimeCut>
+            <maxDt>16.0</maxDt>
+            <clusterAmplitudeCut>-99</clusterAmplitudeCut>
+            <clusterTimeCut>-99</clusterTimeCut>
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <stripHitsCollectionName>RecoilClusters</stripHitsCollectionName>
+            <helicalTrackHitRelationsCollectionName>RecoilHelicalTrackHitRelations</helicalTrackHitRelationsCollectionName>
+            <outputHitCollectionName>RecoilHelicalTrackHits</outputHitCollectionName>
+        </driver>
+
+        <driver name="RecoilTrackReconDriver" type="org.ldmx.tracking.TrackerReconDriver">
+            <trackCollectionName>RecoilTracks</trackCollectionName>
+            <inputHitCollectionName>RotatedRecoilHelicalTrackHits</inputHitCollectionName>
+            <strategyResource>/org/ldmx/tracking/strategies/RecoilStrategies.xml</strategyResource>
+            <debug>false</debug>
+            <subdetectorName>RecoilTracker</subdetectorName>
             <applySectorBinning>false</applySectorBinning>
             <skipChecks>true</skipChecks>
         </driver>                
