@@ -6,10 +6,10 @@
         <!--Cutoffs-->
         <MinPT>0.100</MinPT>
         <MinHits>6</MinHits>
-        <MinConfirm>1</MinConfirm>
-        <MaxDCA>100.0</MaxDCA>
-        <MaxZ0>100.0</MaxZ0>
-        <MaxChisq>2500.0</MaxChisq>
+        <MinConfirm>2</MinConfirm>
+        <MaxDCA>10.0</MaxDCA>
+        <MaxZ0>10.0</MaxZ0>
+        <MaxChisq>25</MaxChisq>
         <BadHitChisq>10.0</BadHitChisq>
         <!--Layers-->
         <Layers>                 
@@ -17,7 +17,7 @@
             <Layer type="Seed" layer_number="3" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Seed" layer_number="5" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Confirm" layer_number="7" detector_name="TaggerTracker" be_flag="BARREL" />
-            <Layer type="Extend" layer_number="9" detector_name="TaggerTracker" be_flag="BARREL" />
+            <Layer type="Confirm" layer_number="9" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Extend" layer_number="11" detector_name="TaggerTracker" be_flag="BARREL" />
             <Layer type="Extend" layer_number="13" detector_name="TaggerTracker" be_flag="BARREL" />
         </Layers>
