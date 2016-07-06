@@ -132,13 +132,18 @@
         <constant name="analyzing_dipole_by" value="-1.5" />
 
         <!-- Recoil dipole magnet dimensions and B-field -->
-        <constant name="recoil_dipole_length" value="14.28*cm" /> 
-        <constant name="recoil_dipole_width" value="45.72*cm" />
-        <constant name="recoil_dipole_height" value="30.48*cm" />
-        <constant name="recoil_dipole_x" value="0*cm" />
-        <constant name="recoil_dipole_y" value="0*cm" />
-        <constant name="recoil_dipole_z" value="12.86*cm" /> 
-        <constant name="recoil_dipole_by" value="-0.75" />
+        <constant name="recoil_dipole_length" value="14.28*cm"/> 
+        <constant name="recoil_dipole_width" value="45.72*cm"/>
+        <constant name="recoil_dipole_height" value="30.48*cm"/>
+        <constant name="recoil_dipole_x" value="0*cm"/>
+        <constant name="recoil_dipole_y" value="0*cm"/>
+        <constant name="recoil_dipole_z" value="12.86*cm"/> 
+        <constant name="recoil_dipole_by" value="-0.75"/>
+        
+        <!-- trigger pad parameters -->
+        <constant name="trigger_pad_thickness" value="1.0*mm"/>
+        <constant name="trigger_pad_zclear" value="0.001*mm"/>
+        <constant name="trigger_pad_z" value="target_z + (target_thickness / 2) + (trigger_pad_thickness / 2) + trigger_pad_zclear"/>
 
     </define>
 
@@ -172,7 +177,14 @@
             <D type="density" value="0.845" unit="g/cm3"/>
             <fraction n="0.84491305" ref="C"/>
             <fraction n="0.042542086" ref="H"/>
-            <fraction n=" 0.11254487" ref="O"/>
+            <fraction n="0.11254487" ref="O"/>
+        </material>
+        
+        <!-- trigger pad scintillator -->
+        <material name="Polyvinyltoluene">
+            <D type="density" value="1.023" unit="g/cm3"/>
+            <composite n="27" ref="C"/>
+            <composite n="30" ref="H"/>            
         </material>
 
     </materials>
@@ -642,6 +654,13 @@
                 <slice material="Air" thickness="2.0"/>
             </layer>
 
+        </detector>        
+            <detector id="5" name="TriggerPad" type="TestBeamCalorimeter" readout="TriggerPadHits" insideTrackingVolume="true">
+            <dimensions x="target_dim_x" y="target_dim_y"/>
+            <position z="trigger_pad_z"/>
+            <layer repeat="1">
+                <slice material="Polyvinyltoluene" thickness="trigger_pad_thickness" sensitive="yes"/>
+            </layer>
         </detector>
 
     </detectors>
@@ -667,6 +686,11 @@
 
         <readout name="EcalHits">
             <segmentation type="GridXYZ" gridSizeX="1.0" gridSizeY="1.0"/>
+            <id>system:3,barrel:2,layer:7,x:32:-16,y:-16</id>
+        </readout>
+        
+        <readout name="TriggerPadHits">
+            <segmentation type="GridXYZ" gridSizeX="0.0" gridSizeY="0.0" gridSizeZ="0.0"/>
             <id>system:3,barrel:2,layer:7,x:32:-16,y:-16</id>
         </readout>
 
