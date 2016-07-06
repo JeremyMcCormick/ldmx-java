@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.hps.conditions.database.DatabaseConditionsManager;
 import org.hps.conditions.svt.SvtTimingConstants;
@@ -27,6 +26,7 @@ import org.lcsim.recon.tracking.digitization.sisim.SiElectrodeData;
 import org.lcsim.recon.tracking.digitization.sisim.SiElectrodeDataCollection;
 import org.lcsim.recon.tracking.digitization.sisim.SiSensorSim;
 import org.lcsim.recon.tracking.digitization.sisim.config.SimTrackerHitReadoutDriver;
+
 import org.hps.readout.ecal.ClockSingleton;
 import org.hps.readout.ecal.ReadoutTimestamp;
 import org.hps.readout.ecal.TriggerableDriver;
@@ -40,48 +40,58 @@ import org.hps.util.RandomGaussian;
  * @author <a href="mailto:omoreno@slac.stanford.edu">Omar Moreno</a> 
  */
 public class SimpleLdmxReadout extends TriggerableDriver {
- 
+
+    private SimTrackerHitReadoutDriver readoutDriver = new SimTrackerHitReadoutDriver();
+    
+    // Charge deposition simulation
+    private SiSensorSim siSimulation = new CDFSiSensorSim();
+
+    // Default shaper output shape to use.
+    private PulseShape shape = new PulseShape.FourPole();
+   
+    private Map<SiSensor, PriorityQueue<StripHit>[]> hitMap = new HashMap<SiSensor, PriorityQueue<StripHit>[]>();
+    private List<SiSensor> sensors = null;
+    
     // Sub-detector name 
     private String subdetectorName = "Tracker"; 
 
-    private PulseShape shape = new PulseShape.FourPole();
-
-    private SimTrackerHitReadoutDriver readoutDriver = new SimTrackerHitReadoutDriver();
-    private SiSensorSim siSimulation = new CDFSiSensorSim();
-    private Map<SiSensor, PriorityQueue<StripHit>[]> hitMap = new HashMap<SiSensor, PriorityQueue<StripHit>[]>();
-    private List<SiSensor> sensors = null;
-
-    // readout period time offset in ns
+    // Default readout name
+    private String readout = "TrackerHits";
+    
+    // Cuts settings
+    private boolean dropBadChannels = true;
+    private boolean enablePileupCut = true;
+    private boolean enableThresholdCut = true;
+    
+    private double noiseThreshold = 2.0;
+    private double pileupCutoff = 300.0;
     private double readoutOffset = 0.0;
     private double readoutLatency = 280.0;
-    private double pileupCutoff = 300.0;
-    private String readout = "TrackerHits";
-    private double timeOffset = 30.0;
-    private boolean noPileup = false;
-    private boolean addNoise = true;
-
-    private boolean useTimingConditions = false;
-
-    // cut settings
-    private boolean enableThresholdCut = true;
     private int samplesAboveThreshold = 3;
-    private double noiseThreshold = 2.0;
-    private boolean enablePileupCut = true;
-    private boolean dropBadChannels = true;
+    private double timeOffset = 30.0;
 
     // Collection Names
     private String outputCollection = "RawTrackerHits";
-    private String relationCollection = "TrueHitRelations";
+    private String trueHitRelationCollectionName = "TrueHitRelations";
 
     // Flags
+    private boolean noPileup = false;
+    private boolean addNoise = true;
+    private boolean useTimingConditions = false;
+    private boolean debug = false;
     private int verbosity = 0;
-    boolean debug = false;
 
+    // Default constructor
     public SimpleLdmxReadout() {
         add(readoutDriver);
         triggerDelay = 100.0;
     }
 
+    /**
+     * Enable/disable the addition of noise to the shaper output samples.
+     * 
+     * @param addNoise true to add noise, false to disable it.
+     */
     public void setAddNoise(boolean addNoise) {
         this.addNoise = addNoise;
     }
@@ -150,6 +160,16 @@ public class SimpleLdmxReadout extends TriggerableDriver {
     
     public void setUseTimingConditions(boolean useTimingConditions) {
         this.useTimingConditions = useTimingConditions;
+    }
+   
+    /**
+     * Set the name of the collection containing the relations between 
+     * RawTrackerHits and SimTrackerHits.
+     * 
+     * @param trueHitRelationCollectionName CollectionName
+     */
+    public void setTrueHitRelationCollectionName(String trueHitRelationCollectionName) { 
+        this.trueHitRelationCollectionName = trueHitRelationCollectionName;
     }
 
     /**
@@ -235,6 +255,7 @@ public class SimpleLdmxReadout extends TriggerableDriver {
 
             // Create a list to hold the analog data
             List<RawTrackerHit> hits = new ArrayList<RawTrackerHit>();
+            List<LCRelation> trueHitRelations = new ArrayList<LCRelation>();
 
             for (StripHit stripHit : stripHits) {
                 HpsSiSensor sensor = (HpsSiSensor) stripHit.sensor;
@@ -247,7 +268,7 @@ public class SimpleLdmxReadout extends TriggerableDriver {
                     signal[sampleN] = sensor.getPedestal(channel, sampleN);
                 }
                 if (addNoise) {
-                    addNoise(sensor, channel, signal);
+                    this.addNoise(sensor, channel, signal);
                 }
 
                 for (int sampleN = 0; sampleN < 6; sampleN++) {
@@ -255,24 +276,26 @@ public class SimpleLdmxReadout extends TriggerableDriver {
                     shape.setParameters(channel, (HpsSiSensor) sensor);
                     signal[sampleN] += amplitude * shape.getAmplitudePeakNorm(time);//add the pulse to the pedestal
                     samples[sampleN] = (short) Math.round(signal[sampleN]);
-                    if (verbosity > 1) {
-                        System.out.println("\t\tMaking samples: sample#" + sampleN + " has " + samples[sampleN] + " ADC counts");
-                    }
+                    //this.printDebug("\t\tMaking samples: sample#" + sampleN + " has " + samples[sampleN] + " ADC counts");
                 }
 
                 long channel_id = sensor.makeChannelID(channel);
                 RawTrackerHit hit = new BaseRawTrackerHit(0, channel_id, samples, new ArrayList<SimTrackerHit>(stripHit.simHits), sensor);
                 if (readoutCuts(hit)) {
                     hits.add(hit);
+                    for (SimTrackerHit simHit : hit.getSimTrackerHits()) {
+                        LCRelation hitRelation = new BaseLCRelation(hit, simHit);
+                        trueHitRelations.add(hitRelation);
+                    }
                 }
             }
 
             int flags = 1 << LCIOConstants.TRAWBIT_ID1;
-            // flags += 1 << LCIOConstants.RTHBIT_HITS;
             event.put(outputCollection, hits, RawTrackerHit.class, flags, readout);
-            if (verbosity >= 1) {
-                System.out.println("Made " + hits.size() + " RawTrackerHits");
-            }
+            event.put(trueHitRelationCollectionName, trueHitRelations, LCRelation.class, 0);
+        
+            this.printDebug("Made " + hits.size() + " RawTrackerHits");
+            this.printDebug("Made " + trueHitRelations.size() + " LCRelations");
         }
     }
 
@@ -332,7 +355,6 @@ public class SimpleLdmxReadout extends TriggerableDriver {
                 this.printDebug("Hit amplitude: " + amplitude);
 
                 stripHits.add(new StripHit(sensor, channel, amplitude, time, simHits));
-                
             }
             
             // Clear the sensors of all deposited charge
@@ -471,7 +493,7 @@ public class SimpleLdmxReadout extends TriggerableDriver {
 
         int flags = 1 << LCIOConstants.TRAWBIT_ID1;
         event.put(outputCollection, hits, RawTrackerHit.class, flags, readout);
-        event.put(relationCollection, trueHitRelations, LCRelation.class, 0);
+        event.put(trueHitRelationCollectionName, trueHitRelations, LCRelation.class, 0);
         if (verbosity >= 1) {
             System.out.println("Made " + hits.size() + " RawTrackerHits");
             System.out.println("Made " + trueHitRelations.size() + " LCRelations");
