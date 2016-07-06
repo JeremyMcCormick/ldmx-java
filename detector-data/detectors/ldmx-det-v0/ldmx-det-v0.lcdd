@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="2480466875" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="3619608348" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
@@ -15,6 +15,13 @@
       <idfield signed="false" label="sensor" length="1" start="25" />
       <idfield signed="true" label="side" length="2" start="32" />
       <idfield signed="false" label="strip" length="12" start="34" />
+    </idspec>
+    <idspec name="TriggerPadHits" length="64">
+      <idfield signed="false" label="system" length="3" start="0" />
+      <idfield signed="false" label="barrel" length="2" start="3" />
+      <idfield signed="false" label="layer" length="7" start="5" />
+      <idfield signed="true" label="x" length="16" start="32" />
+      <idfield signed="true" label="y" length="16" start="48" />
     </idspec>
     <idspec name="EcalScoringHits" length="46">
       <idfield signed="false" label="system" length="6" start="0" />
@@ -69,6 +76,10 @@
       <idspecref ref="EcalHits" />
       <grid_xyz grid_size_x="1.0" grid_size_y="1.0" grid_size_z="0.0" />
     </calorimeter>
+    <calorimeter name="TriggerPad" ecut="0.0" eunit="MeV" verbose="0" hits_collection="TriggerPadHits">
+      <idspecref ref="TriggerPadHits" />
+      <grid_xyz grid_size_x="0.0" grid_size_y="0.0" grid_size_z="0.0" />
+    </calorimeter>
   </sensitive_detectors>
   <limits />
   <regions>
@@ -119,6 +130,7 @@
       <constant name="ecal_scoring_dim_x" value="300.0" />
       <constant name="target_dim_y" value="35.0" />
       <constant name="recoil_l1_4_module_width" value="40.34" />
+      <constant name="trigger_pad_thickness" value="1.0" />
       <constant name="z_offset" value="-300.0" />
       <constant name="ecal_scoring_dim_y" value="600.0" />
       <constant name="target_dim_x" value="95.0" />
@@ -139,7 +151,9 @@
       <constant name="analyzing_dipole_x" value="0.0" />
       <constant name="ecal_scoring_thickness" value="0.1" />
       <constant name="analyzing_dipole_y" value="0.0" />
+      <constant name="trigger_pad_z" value="300.676" />
       <constant name="analyzing_dipole_z" value="-400.0" />
+      <constant name="trigger_pad_zclear" value="0.001" />
       <constant name="tagger_layer2_x" value="-14.758" />
       <constant name="tracking_region_min" value="0.0" />
       <constant name="tracker_zclear" value="1.0" />
@@ -505,6 +519,9 @@
       <position name="Ecal_layerType25_slice4_position" x="0.0" y="0.0" z="4.35" unit="mm" />
       <position name="Ecal_layerType25_slice5_position" x="0.0" y="0.0" z="6.35" unit="mm" />
       <position name="Ecal_layer25_position" x="0.0" y="0.0" z="137.15000000000006" unit="mm" />
+      <position name="TriggerPad_position" x="0.0" y="0.0" z="300.676" unit="mm" />
+      <position name="TriggerPad_layerType0_slice0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <position name="TriggerPad_layer0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
     </define>
     <materials>
       <element Z="7" formula="N" name="N">
@@ -574,6 +591,11 @@
         <fraction n="0.84491305" ref="C" />
         <fraction n="0.042542086" ref="H" />
         <fraction n="0.11254487" ref="O" />
+      </material>
+      <material name="Polyvinyltoluene">
+        <D type="density" value="1.023" unit="g/cm3" />
+        <composite n="27" ref="C" />
+        <composite n="30" ref="H" />
       </material>
       <material name="Vacuum">
         <D type="density" unit="g/cm3" value="0.00000001" />
@@ -821,6 +843,9 @@
       <box name="Ecal_layerType25_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
       <box name="Ecal_layerType25_slice4_box" x="600.0" y="300.0" z="2.0" />
       <box name="Ecal_layerType25_slice5_box" x="600.0" y="300.0" z="2.0" />
+      <box name="TriggerPad_box" x="95.0" y="35.0" z="1.0" />
+      <box name="TriggerPad_layerType0_box" x="95.0" y="35.0" z="1.0" />
+      <box name="TriggerPad_layerType0_slice0_box" x="95.0" y="35.0" z="1.0" />
     </solids>
     <structure>
       <volume name="TargetModuleVolume_component0">
@@ -3291,6 +3316,33 @@
         </physvol>
         <visref ref="EcalDetVis" />
       </volume>
+      <volume name="TriggerPad_layerType0_slice0">
+        <materialref ref="Polyvinyltoluene" />
+        <solidref ref="TriggerPad_layerType0_slice0_box" />
+        <sdref ref="TriggerPad" />
+        <visref ref="InvisibleNoDaughters" />
+      </volume>
+      <volume name="TriggerPad_layerType0">
+        <materialref ref="Air" />
+        <solidref ref="TriggerPad_layerType0_box" />
+        <physvol>
+          <volumeref ref="TriggerPad_layerType0_slice0" />
+          <positionref ref="TriggerPad_layerType0_slice0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="slice" value="0" />
+        </physvol>
+        <visref ref="InvisibleWithDaughters" />
+      </volume>
+      <volume name="TriggerPad_envelope">
+        <materialref ref="Air" />
+        <solidref ref="TriggerPad_box" />
+        <physvol>
+          <volumeref ref="TriggerPad_layerType0" />
+          <positionref ref="TriggerPad_layer0_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="layer" value="0" />
+        </physvol>
+      </volume>
       <volume name="tracking_volume">
         <materialref ref="TrackingMaterial" />
         <solidref ref="tracking_cylinder" />
@@ -3644,6 +3696,12 @@
           <physvolid field_name="barrel" value="0" />
           <physvolid field_name="layer" value="10" />
           <physvolid field_name="module" value="10" />
+        </physvol>
+        <physvol>
+          <volumeref ref="TriggerPad_envelope" />
+          <positionref ref="TriggerPad_position" />
+          <rotationref ref="identity_rot" />
+          <physvolid field_name="system" value="5" />
         </physvol>
         <regionref ref="TrackingRegion" />
         <visref ref="TrackingVis" />
