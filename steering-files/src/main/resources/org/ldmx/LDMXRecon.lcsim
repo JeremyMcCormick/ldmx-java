@@ -9,13 +9,13 @@
         <driver name="TaggerRawHitFitterDriver" />
         <driver name="TaggerTrackerHitDriver"/>
         <driver name="TaggerHelicalTrackHitDriver"/>
-        <driver name="TaggerTrackReconDriver"/>   
+        <driver name="TaggerTrackReconDriver"/>
 
         <driver name="SimpleRecoilReadout"  />
         <driver name="RecoilRawHitFitterDriver" />
         <driver name="RecoilTrackerHitDriver"/>
         <driver name="RecoilHelicalTrackHitDriver"/>
-        <driver name="RecoilTrackReconDriver"/> 
+        <driver name="RecoilTrackReconDriver"/>
 
         <driver name="LCIODriver"           />
         <driver name="CleanupDriver"        />
@@ -32,11 +32,13 @@
              Tagger Tracker 
         -->
         <driver name="SimpleTaggerReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
-            <noPileup>true</noPileup>
-            <subdetectorName>TaggerTracker</subdetectorName>
+            <debug>false</debug>
             <enablePileupCut>false</enablePileupCut>
+            <noPileup>true</noPileup>
             <rawTrackerHitCollectionName>TaggerRawTrackerHits</rawTrackerHitCollectionName>
             <readout>TaggerTrackerHits</readout>
+            <subdetectorName>TaggerTracker</subdetectorName>
+            <trueHitRelationCollectionName>TaggerTrueHitRelations</trueHitRelationCollectionName>
             <verbosity>0</verbosity>
         </driver>
 
@@ -87,11 +89,13 @@
              Recoil Tracker 
         -->
         <driver name="SimpleRecoilReadout" type="org.ldmx.tracking.SimpleLdmxReadout" >
-            <noPileup>true</noPileup>
-            <subdetectorName>RecoilTracker</subdetectorName>
+            <debug>false</debug>
             <enablePileupCut>false</enablePileupCut>
+            <noPileup>true</noPileup>
             <rawTrackerHitCollectionName>RecoilRawTrackerHits</rawTrackerHitCollectionName>
             <readout>RecoilTrackerHits</readout>
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <trueHitRelationCollectionName>RecoilTrueHitRelations</trueHitRelationCollectionName>
             <verbosity>0</verbosity>
         </driver>
 
