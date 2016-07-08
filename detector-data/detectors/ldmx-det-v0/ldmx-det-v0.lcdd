@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="3619608348" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v0/compact.xml" checksum="3361321108" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
@@ -843,9 +843,9 @@
       <box name="Ecal_layerType25_slice3_box" x="600.0" y="300.0" z="0.30000000000000004" />
       <box name="Ecal_layerType25_slice4_box" x="600.0" y="300.0" z="2.0" />
       <box name="Ecal_layerType25_slice5_box" x="600.0" y="300.0" z="2.0" />
-      <box name="TriggerPad_box" x="95.0" y="35.0" z="1.0" />
-      <box name="TriggerPad_layerType0_box" x="95.0" y="35.0" z="1.0" />
-      <box name="TriggerPad_layerType0_slice0_box" x="95.0" y="35.0" z="1.0" />
+      <box name="TriggerPad_box" x="35.0" y="95.0" z="1.0" />
+      <box name="TriggerPad_layerType0_box" x="35.0" y="95.0" z="1.0" />
+      <box name="TriggerPad_layerType0_slice0_box" x="35.0" y="95.0" z="1.0" />
     </solids>
     <structure>
       <volume name="TargetModuleVolume_component0">

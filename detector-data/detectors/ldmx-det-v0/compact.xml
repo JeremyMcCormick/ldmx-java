@@ -656,7 +656,7 @@
 
         </detector>        
             <detector id="5" name="TriggerPad" type="TestBeamCalorimeter" readout="TriggerPadHits" insideTrackingVolume="true">
-            <dimensions x="target_dim_x" y="target_dim_y"/>
+            <dimensions x="target_dim_y" y="target_dim_x"/>
             <position z="trigger_pad_z"/>
             <layer repeat="1">
                 <slice material="Polyvinyltoluene" thickness="trigger_pad_thickness" sensitive="yes"/>
