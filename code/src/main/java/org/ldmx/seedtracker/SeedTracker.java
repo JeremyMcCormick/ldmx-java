@@ -52,7 +52,6 @@ public class SeedTracker extends Driver {
     protected double _rtrk = 1000.;
     protected boolean _autosectoring = false;
     protected AIDA aida = AIDA.defaultInstance();
-    protected boolean _timing = false;
     protected String _inputCol = "HelicalTrackHits";
     private int _iterativeConfirmedFits = 0;
     private boolean _debug = false;
@@ -118,21 +117,12 @@ public class SeedTracker extends Driver {
         //  Pass the event to the diagnostics package
         if (_diag != null) _diag.setEvent(event);
 
-        //  Initialize timing
-        long last_time = System.currentTimeMillis();
-
         //  Get the hit collection from the event
         List<HelicalTrackHit> hitcol = event.get(HelicalTrackHit.class, _inputCol);
         
         //  Sort the hits for this event
         _hitmanager.OrganizeHits(hitcol);
         
-        //  Make the timing plots if requested
-        long start_time = System.currentTimeMillis();
-        double dtime = ((double) (start_time - last_time)) / 1000.;
-        last_time = start_time;
-        if (_timing) aida.cloud1D("Organize Hits").fill(dtime);
-
         //  Make sure that we have cleared the list of track seeds in the finder
         _finder.clearTrackSeedList();
 
@@ -144,12 +134,6 @@ public class SeedTracker extends Driver {
 
             //  Perform track finding under this strategy
             _finder.FindTracks(strategy, _bfield);
-
-            //  Make the timing plots if requested
-            long time = System.currentTimeMillis();
-            dtime = ((double) (time - last_time)) / 1000.;
-            last_time = time;
-            if (_timing) aida.cloud1D("Tracking time for strategy "+strategy.getName()).fill(dtime);
         }
 
         //  Get the list of final list of SeedCandidates
@@ -194,12 +178,7 @@ public class SeedTracker extends Driver {
 
         //  Clear the list of track seeds accumulated in the track finder
         _finder.clearTrackSeedList();
-
-        //  Make the total time plot if requested
-        long end_time = System.currentTimeMillis();
-        dtime = ((double) (end_time - start_time)) / 1000.;
-        if (_timing) aida.cloud1D("Total tracking time").fill(dtime);
-
+        
         return;
     }
 
@@ -263,10 +242,6 @@ public class SeedTracker extends Driver {
             _diag.setBField(_bfield);
         }
     }*/
-
-    public void setTimingPlots(boolean timing) {
-        _timing = timing;
-    }
 
     public void setTrkCollectionName(String name) {
         _maketracks.setTrkCollectionName(name);
