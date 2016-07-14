@@ -101,7 +101,7 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
     //----------------------//
 
     private String stripHitsCollectionName = "stripHits";
-
+    
     /**
      * Default Ctor
      */
@@ -254,7 +254,7 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
             }
         }
 
-        List<HelicalTrack2DHit> axialhits = new ArrayList<>();
+        List<HelicalTrack2DHit> axialhits = new ArrayList<HelicalTrack2DHit>();
         List<LCRelation> axialmcrelations = new ArrayList<LCRelation>();
 
         // If the event doesn't have the specified collection of strip clusters, skip it.
@@ -298,6 +298,7 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
             } else { 
                 HelicalTrack2DHit axialHelTrkHit = makeDigiAxialHit(h);
                 helTrkHits.add(axialHelTrkHit);
+                axialhits.add(axialHelTrkHit);
                 /*
                         axialhits.add(haxial);
                         if (hittomc != null) {
@@ -429,10 +430,12 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
         }
         
         if (_doTransformToTracking) {
-            addRotatedHitsToEvent(event, stereoCrosses, hittomc != null);
-            if (_saveAxialHits) {
-                addRotated2DHitsToEvent(event, axialhits);
-            }
+           
+            List<HelicalTrackHit> rotatedHelTrkHits = new ArrayList<HelicalTrackHit>();
+            addRotatedHitsToEvent(event, stereoCrosses, rotatedHelTrkHits, hittomc != null);
+            addRotated2DHitsToEvent(event, axialhits, rotatedHelTrkHits);
+        
+            event.put("Rotated" + _outname, rotatedHelTrkHits, HelicalTrackHit.class, 0);
         }
     } // Process()
 
@@ -510,9 +513,8 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
         return strip;
     }
 
-    private void addRotatedHitsToEvent(EventHeader event, List<HelicalTrackCross> stereohits, boolean isMC) {
+    private void addRotatedHitsToEvent(EventHeader event, List<HelicalTrackCross> stereohits, List<HelicalTrackHit> rotatedHelTrkHits, boolean isMC) {
 
-        List<HelicalTrackHit> rotatedhits = new ArrayList<HelicalTrackHit>();
         List<LCRelation> hthrelations = new ArrayList<LCRelation>();
         List<LCRelation> mcrelations = new ArrayList<LCRelation>();
         for (HelicalTrackCross cross : stereohits) {
@@ -557,14 +559,13 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
             for (MCParticle mcp : cross.getMCParticles()) {
                 newhit.addMCParticle(mcp);
             }
-            rotatedhits.add(newhit);
+            rotatedHelTrkHits.add(newhit);
             hthrelations.add(new MyLCRelation(cross, newhit));
             for (MCParticle mcp : newhit.getMCParticles()) {
                 mcrelations.add(new MyLCRelation(newhit, mcp));
             }
         }
 
-        event.put("Rotated" + _outname, rotatedhits, HelicalTrackHit.class, 0);
         event.put("Rotated" + _hitrelname, hthrelations, LCRelation.class, 0);
         if (isMC) {
             event.put("Rotated" + _mcrelname, mcrelations, LCRelation.class, 0);
@@ -574,8 +575,8 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
     /*
      *  Rotate the 2D tracker hits
      */
-    private void addRotated2DHitsToEvent(EventHeader event, List<HelicalTrack2DHit> striphits) {
-        List<HelicalTrack2DHit> rotatedhits = new ArrayList<HelicalTrack2DHit>();
+    private void addRotated2DHitsToEvent(EventHeader event, List<HelicalTrack2DHit> striphits, List<HelicalTrackHit> rotatedHelTrkHits) {
+        
         List<LCRelation> mcrelations = new ArrayList<LCRelation>();
         for (HelicalTrack2DHit twodhit : striphits) {
             Hep3Vector pos = new BasicHep3Vector(twodhit.getPosition());
@@ -596,16 +597,15 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
             for (MCParticle mcp : twodhit.getMCParticles()) {
                 newhit.addMCParticle(mcp);
             }
-            rotatedhits.add(newhit);
+            rotatedHelTrkHits.add(newhit);
             for (MCParticle mcp : newhit.getMCParticles()) {
                 mcrelations.add(new MyLCRelation(newhit, mcp));
             }
         }
         if (debug) {
-            System.out.println(this.getClass().getSimpleName() + ": " + _axialname + " size = " + rotatedhits.size());
             System.out.println(this.getClass().getSimpleName() + ": " + _axialmcrelname + " size = " + mcrelations.size());
         }
-        event.put("Rotated" + _axialname, rotatedhits, HelicalTrackHit.class, 0);
+        //event.put("Rotated" + _axialname, rotatedhits, HelicalTrackHit.class, 0);
         event.put("Rotated" + _axialmcrelname, mcrelations, LCRelation.class, 0);
     }
 
