@@ -606,7 +606,7 @@ public class LdmxHelicalTrackHitDriver extends org.lcsim.fit.helicaltrack.Helica
             System.out.println(this.getClass().getSimpleName() + ": " + _axialmcrelname + " size = " + mcrelations.size());
         }
         //event.put("Rotated" + _axialname, rotatedhits, HelicalTrackHit.class, 0);
-        event.put("Rotated" + _axialmcrelname, mcrelations, LCRelation.class, 0);
+        //event.put("Rotated" + _axialmcrelname, mcrelations, LCRelation.class, 0);
     }
 
     public void saveAxial2DHits(boolean saveThem) {
