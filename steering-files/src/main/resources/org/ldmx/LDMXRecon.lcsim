@@ -133,13 +133,14 @@
         </driver>
 
         <driver name="RecoilTrackReconDriver" type="org.ldmx.tracking.TrackerReconDriver">
-            <trackCollectionName>RecoilTracks</trackCollectionName>
-            <inputHitCollectionName>RotatedRecoilHelicalTrackHits</inputHitCollectionName>
-            <strategyResource>/org/ldmx/tracking/strategies/RecoilStrategies.xml</strategyResource>
-            <debug>false</debug>
-            <subdetectorName>RecoilTracker</subdetectorName>
             <applySectorBinning>false</applySectorBinning>
+            <debug>false</debug>
+            <inputHitCollectionName>RotatedRecoilHelicalTrackHits</inputHitCollectionName>
+            <rejectUncorrectedHits>false</rejectUncorrectedHits>
             <skipChecks>true</skipChecks>
+            <strategyResource>/org/ldmx/tracking/strategies/RecoilStrategies.xml</strategyResource>
+            <subdetectorName>RecoilTracker</subdetectorName>
+            <trackCollectionName>RecoilTracks</trackCollectionName>
         </driver>                
 
         <driver name="LCIODriver" type="org.lcsim.util.loop.LCIODriver">
