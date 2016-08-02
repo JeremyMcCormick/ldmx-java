@@ -5,11 +5,11 @@
     <Strategy name="TaggerTracker Seed 135">
         <!--Cutoffs-->
         <MinPT>0.100</MinPT>
-        <MinHits>6</MinHits>
-        <MinConfirm>2</MinConfirm>
-        <MaxDCA>10.0</MaxDCA>
-        <MaxZ0>10.0</MaxZ0>
-        <MaxChisq>25</MaxChisq>
+        <MinHits>5</MinHits>
+        <MinConfirm>1</MinConfirm>
+        <MaxDCA>1000.0</MaxDCA>
+        <MaxZ0>1000.0</MaxZ0>
+        <MaxChisq>250</MaxChisq>
         <BadHitChisq>10.0</BadHitChisq>
         <!--Layers-->
         <Layers>                 
