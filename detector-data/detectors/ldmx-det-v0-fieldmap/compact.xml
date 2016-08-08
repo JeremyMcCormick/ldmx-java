@@ -686,7 +686,7 @@
     
     <fields>
         <field type="FieldMap3D" name="LDMXAnalyzingDipoleFieldMap3D"
-            filename="BmapCorrected3D_13k_unfolded_scaled_1.15384615385.dat"
+            filename="fieldmap/BmapCorrected3D_13k_unfolded_scaled_1.15384615385.dat"
             xoffset="analyzing_dipole_x" yoffset="analyzing_dipole_y" zoffset="analyzing_dipole_z" />
     </fields>
 

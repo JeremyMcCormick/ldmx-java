@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v0-fieldmap/compact.xml" checksum="372227961" />
+    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v0-fieldmap/compact.xml" checksum="2516624990" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
@@ -3726,7 +3726,7 @@
     </setup>
   </gdml>
   <fields>
-    <field_map_3d name="LDMXAnalyzingDipoleFieldMap3D" lunit="mm" funit="tesla" filename="BmapCorrected3D_13k_unfolded_scaled_1.15384615385.dat" xoffset="0.0" yoffset="0.0" zoffset="-100.0" />
+    <field_map_3d name="LDMXAnalyzingDipoleFieldMap3D" lunit="mm" funit="tesla" filename="fieldmap/BmapCorrected3D_13k_unfolded_scaled_1.15384615385.dat" xoffset="0.0" yoffset="0.0" zoffset="-100.0" />
   </fields>
 </lcdd>
 
