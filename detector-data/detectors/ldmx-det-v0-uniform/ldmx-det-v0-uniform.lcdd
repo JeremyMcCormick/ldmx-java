@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
-    <detector name="ldmx-det-v0" />
-    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v0-uniform/compact.xml" checksum="3595902692" />
+    <detector name="ldmx-det-v0-uniform" />
+    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v0-uniform/compact.xml" checksum="991043360" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>This is the first draft for an LDMX detector including the Tagger and Recoil trackers, the Tungsten target, and the ECal. Tracker geometry is from Tim Nelson, and ECal geometry was derived from the layers_plain.csv spreadsheet. The HGCAL_LDMX github project was used for additional information about the ECal including material definitions.</comment>
   </header>
@@ -152,7 +152,7 @@
       <constant name="ecal_scoring_thickness" value="0.1" />
       <constant name="analyzing_dipole_y" value="0.0" />
       <constant name="trigger_pad_z" value="300.676" />
-      <constant name="analyzing_dipole_z" value="-400.0" />
+      <constant name="analyzing_dipole_z" value="-428.6" />
       <constant name="trigger_pad_zclear" value="0.001" />
       <constant name="tagger_layer2_x" value="-14.758" />
       <constant name="tracking_region_min" value="0.0" />
@@ -161,7 +161,7 @@
       <constant name="world_side" value="5000.0" />
       <constant name="tagger_module_width" value="40.34" />
       <constant name="tracker_layer1_z" value="307.5" />
-      <constant name="recoil_dipole_z" value="128.6" />
+      <constant name="recoil_dipole_z" value="100.0" />
       <constant name="recoil_dipole_y" value="0.0" />
       <constant name="tracker_layer3_z" value="337.5" />
       <constant name="recoil_dipole_x" value="0.0" />
@@ -175,13 +175,13 @@
       <constant name="tagger_layer5_z" value="92.5" />
       <constant name="tagger_layer7_x" value="-0.065" />
       <constant name="tagger_layer7_z" value="292.5" />
-      <constant name="recoil_dipole_by" value="-1.5" />
+      <constant name="recoil_dipole_by" value="-0.75" />
       <constant name="tagger_layer1_z" value="-307.5" />
       <constant name="tagger_layer3_x" value="-9.657" />
       <constant name="tagger_layer3_z" value="-107.5" />
       <constant name="tagger_layer5_x" value="-2.723" />
       <constant name="recoil_l1_4_sensor_length" value="98.33" />
-      <constant name="recoil_dipole_length" value="142.79999999999998" />
+      <constant name="recoil_dipole_length" value="200.0" />
       <constant name="recoil_l5_6_sensor_width" value="48.0" />
       <constant name="analyzing_dipole_by" value="-1.5" />
       <constant name="recoil_l1_4_si_thickness" value="0.32" />
@@ -194,7 +194,7 @@
       <constant name="target_thickness" value="0.35" />
       <constant name="tagger_sensor_width" value="38.3399" />
       <constant name="tagger_layer1_x" value="-20.874" />
-      <constant name="analyzing_dipole_length" value="914.4" />
+      <constant name="analyzing_dipole_length" value="857.2" />
       <constant name="recoil_l1_4_module_length" value="100.0" />
       <constant name="tracking_region_z" value="-300.0" />
       <constant name="recoil_dipole_height" value="304.8" />
@@ -3737,8 +3737,8 @@
     </setup>
   </gdml>
   <fields>
-    <box_dipole name="RecoilDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="128.6" dx="228.6" dy="152.4" dz="71.39999999999999" bx="0.0" by="-1.5" bz="0.0" />
-    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-400.0" dx="228.6" dy="152.4" dz="457.2" bx="0.0" by="-1.5" bz="0.0" />
+    <box_dipole name="RecoilDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="100.0" dx="228.6" dy="152.4" dz="100.0" bx="0.0" by="-0.75" bz="0.0" />
+    <box_dipole name="AnalyzingDipole" lunit="mm" funit="tesla" x="0.0" y="0.0" z="-428.6" dx="228.6" dy="152.4" dz="428.6" bx="0.0" by="-1.5" bz="0.0" />
   </fields>
 </lcdd>
 

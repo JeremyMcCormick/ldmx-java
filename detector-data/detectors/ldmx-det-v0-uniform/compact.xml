@@ -1,7 +1,7 @@
 <lccdd xmlns:compact="http://www.lcsim.org/schemas/compact/1.0" 
        xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/compact/1.0/compact.xsd">
 
-    <info name="ldmx-det-v0" author="Jeremy McCormick, Tim Nelson, Omar Moreno">
+    <info name="ldmx-det-v0-uniform" author="Jeremy McCormick, Tim Nelson, Omar Moreno">
         <comment>
             This is the first draft for an LDMX detector including the Tagger
             and Recoil trackers, the Tungsten target, and the ECal.  Tracker
@@ -123,22 +123,22 @@
         <constant name="target_z" value="0.0*mm - z_offset"/>
 
         <!-- Analyzing dipole magnet dimensions and B-field -->
-        <constant name="analyzing_dipole_length" value="91.44*cm" />
+        <constant name="analyzing_dipole_length" value="85.72*cm" />
         <constant name="analyzing_dipole_width" value="45.72*cm" />
         <constant name="analyzing_dipole_height" value="30.48*cm" />
         <constant name="analyzing_dipole_x" value="0*cm" />
         <constant name="analyzing_dipole_y" value="0*cm" />
-        <constant name="analyzing_dipole_z" value="-40*cm" /> 
+        <constant name="analyzing_dipole_z" value="-42.86*cm" /> 
         <constant name="analyzing_dipole_by" value="-1.5" />
 
         <!-- Recoil dipole magnet dimensions and B-field -->
-        <constant name="recoil_dipole_length" value="14.28*cm"/> 
+        <constant name="recoil_dipole_length" value="20*cm"/> 
         <constant name="recoil_dipole_width" value="45.72*cm"/>
         <constant name="recoil_dipole_height" value="30.48*cm"/>
         <constant name="recoil_dipole_x" value="0*cm"/>
         <constant name="recoil_dipole_y" value="0*cm"/>
-        <constant name="recoil_dipole_z" value="12.86*cm"/> 
-        <constant name="recoil_dipole_by" value="-1.5"/>
+        <constant name="recoil_dipole_z" value="10*cm"/> 
+        <constant name="recoil_dipole_by" value="-0.75"/>
         
         <!-- trigger pad parameters -->
         <constant name="trigger_pad_thickness" value="1.0*mm"/>
