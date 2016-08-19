@@ -3,10 +3,13 @@ package org.ldmx.utils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.GZIPInputStream;
 
 import hep.io.stdhep.StdhepEvent;
 import hep.io.stdhep.StdhepWriter;
+import hep.physics.vec.BasicHep3Vector;
+import hep.physics.vec.Hep3Vector;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -34,8 +37,14 @@ public class LheToStdhep {
     private static final int FIRST_MOTHER_INDEX = 3; 
     private static final int SECOND_MOTHER_INDEX = 4; 
     private static final int FIRST_DAUGHTER_INDEX = 5; 
-    private static final int SECOND_DAUGHTER_INDEX = 6; 
-     
+    private static final int SECOND_DAUGHTER_INDEX = 6;
+    
+    private static double targetThickness = 0.35; // mm
+    private static double targetDeltaX = 10.0; // mm
+    private static double targetDeltaY = 20.0; // mm
+    private static double targetZPosition  = 0.00; // mm 
+    
+    
     public static void main(String[] args) throws IOException {
 
         
@@ -126,7 +135,20 @@ public class LheToStdhep {
         
         return eventNodes; 
     }
-    
+   
+    /** 
+     * 
+     */
+    private static Hep3Vector getVertexPosition() { 
+       
+       double x = ThreadLocalRandom.current().nextDouble(-targetDeltaX, targetDeltaX);
+       double y = ThreadLocalRandom.current().nextDouble(-targetDeltaY, targetDeltaY);
+       double z = ThreadLocalRandom.current().nextDouble(
+               targetZPosition - targetThickness/2, 
+               targetZPosition + targetThickness/2);
+        
+       return new BasicHep3Vector(x, y, z); 
+    }
 
     /**
      * 
@@ -150,6 +172,9 @@ public class LheToStdhep {
         // split using the newline character as a delimiter.  
         String[] eventData = event.getTextTrim().split("\n");   
      
+        // Get the vertex position that will be used for this particle.
+        Hep3Vector vertexPosition = getVertexPosition();
+        
         for (int datumIndex = 0; datumIndex < eventData.length; datumIndex++) {
             
             // Split a line by whitespace
@@ -211,25 +236,12 @@ public class LheToStdhep {
                     + " mass: " + particleMomentum[particleIndex*5 + 4]
             );
             
-            // Rotate the particle by 30 mrad around the beam axis
-            /*Hep3Vector rotatedMomentum = 
-                    rotateToDetector(particleMomentum[particleIndex*5], 
-                            particleMomentum[particleIndex*5+1], 
-                            particleMomentum[particleIndex*5+1]); 
-            
-            particleMomentum[particleIndex*5] = rotatedMomentum.x();
-            particleMomentum[particleIndex*5 + 1] = rotatedMomentum.y();
-            particleMomentum[particleIndex*5 + 2] = rotatedMomentum.z(); */
-
-            // Set the origin of the particle
-            /*Hep3Vector rotatedVertex = rotateToDetector(sigmaX*generator.nextGaussian() + offsetX, 
-                    sigmaY*generator.nextGaussian() + offsetY, 
-                    sigmaZ*generator.nextGaussian() + offsetZ); */
-            // Use a pencil beam for now
-            particleVertex[particleIndex*4] = 0;
-            particleVertex[particleIndex*4+1] = 0;
-            particleVertex[particleIndex*4+2] = 0;
+            particleVertex[particleIndex*4] = vertexPosition.x();
+            particleVertex[particleIndex*4+1] = vertexPosition.y();
+            particleVertex[particleIndex*4+2] = vertexPosition.z();
             particleVertex[particleIndex*4+3] = 0; 
+           
+            System.out.println(">>>> vertex: " + vertexPosition.toString());
             
             // Increment the particle number
             particleIndex++;
