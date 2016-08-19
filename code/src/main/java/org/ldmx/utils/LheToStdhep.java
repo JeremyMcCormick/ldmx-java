@@ -78,7 +78,11 @@ public class LheToStdhep {
             // the default.
             if(line.hasOption("o")){
                 stdhepFileName = line.getOptionValue("o");
+            } else { 
+                stdhepFileName = lheGzFileName.substring(lheGzFileName.lastIndexOf("/") + 1, lheGzFileName.indexOf(".lhe.gz"));
+                stdhepFileName += ".stdhep";
             }
+            
         } catch(ParseException e){
             System.out.println("Unable to parse command line arguments: " + e.getMessage());
         }
@@ -87,6 +91,7 @@ public class LheToStdhep {
         
         List<Element> events = getLheEvents(lheGzStream);
         System.out.println("[ LheToStdhep ] : A total of " + events.size() + " will be processed.");
+        System.out.println("[ LheToStdhep ] : Events will be written to file: " + stdhepFileName);
         
         convertToStdHep(events, stdhepFileName);
     }
