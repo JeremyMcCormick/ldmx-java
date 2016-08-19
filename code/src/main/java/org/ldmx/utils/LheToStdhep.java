@@ -44,6 +44,7 @@ public class LheToStdhep {
     private static double targetDeltaY = 20.0; // mm
     private static double targetZPosition  = 0.00; // mm 
     
+    private static boolean verbose = false;
     
     public static void main(String[] args) throws IOException {
 
@@ -56,8 +57,9 @@ public class LheToStdhep {
         // Create the Options
         // TODO: Add ability to parse list of files.
         Options options = new Options(); 
-        options.addOption("i", "input",  true, "Input lhe.gz file name");
-        options.addOption("o", "output", true, "Output Stdhep file name");
+        options.addOption("i", "input",   true, "Input lhe.gz file name");
+        options.addOption("o", "output",  true, "Output Stdhep file name");
+        options.addOption("v", "verbose", true, "Turn on verbose mode.");
        
         try {
            
@@ -66,17 +68,19 @@ public class LheToStdhep {
             
             // If the file is not specified, notify the user and exit the 
             // application.
-            if(!line.hasOption("i")){
+            if (!line.hasOption("i")) {
                 System.out.println("Please specify an LHE file to process.");
                 System.exit(0);
             }
-           
+          
+            if (line.hasOption("v")) verbose = true;
+            
             // Get the name of the input file
             lheGzFileName = line.getOptionValue("i");
        
             // If the user specified an output file name, use that instead of
             // the default.
-            if(line.hasOption("o")){
+            if (line.hasOption("o")) {
                 stdhepFileName = line.getOptionValue("o");
             } else { 
                 stdhepFileName = lheGzFileName.substring(lheGzFileName.lastIndexOf("/") + 1, lheGzFileName.indexOf(".lhe.gz"));
@@ -90,8 +94,8 @@ public class LheToStdhep {
         GZIPInputStream lheGzStream = new GZIPInputStream(new FileInputStream(lheGzFileName));
         
         List<Element> events = getLheEvents(lheGzStream);
-        System.out.println("[ LheToStdhep ] : A total of " + events.size() + " will be processed.");
-        System.out.println("[ LheToStdhep ] : Events will be written to file: " + stdhepFileName);
+        System.out.println("[ lheToStdhep ] : A total of " + events.size() + " will be processed.");
+        System.out.println("[ lheToStdhep ] : Events will be written to file: " + stdhepFileName);
         
         convertToStdHep(events, stdhepFileName);
     }
@@ -154,6 +158,10 @@ public class LheToStdhep {
         
        return new BasicHep3Vector(x, y, z); 
     }
+    
+    private static void printMessage(String message) { 
+        if (verbose) System.out.println("[ lheToStdhep ] : " + message); 
+    }
 
     /**
      * 
@@ -188,12 +196,12 @@ public class LheToStdhep {
             if(datumIndex == 0) {
                 
                 eventNumber = Integer.valueOf(eventTokens[EVENT_NUMBER_INDEX]);
-                System.out.println("#================================================#\n#");
-                System.out.println("# Event: " + eventNumber);
+                printMessage("#================================================#\n#");
+                printMessage("# Event: " + eventNumber);
                 
                 numberOfParticles = Integer.valueOf(eventTokens[N_PARTICLE_INDEX]);
-                System.out.println("# Number of particles: " + numberOfParticles + "\n#");
-                System.out.println("#================================================#");
+                printMessage("# Number of particles: " + numberOfParticles + "\n#");
+                printMessage("#================================================#");
         
                 // Reset all arrays used to build the Stdhep event
                 particleIndex = 0; 
@@ -211,22 +219,22 @@ public class LheToStdhep {
             pdgID[particleIndex] = Integer.valueOf(eventTokens[PDG_ID_INDEX]);
             
             
-            System.out.println(">>> PDG ID: " + pdgID[particleIndex]);
+            printMessage(">>> PDG ID: " + pdgID[particleIndex]);
             
             // Get the status of the particle (initial state = -1, final state = 1, resonance = 2)
             particleStatus[particleIndex] = Integer.valueOf(eventTokens[STATUS_INDEX]);
             if(particleStatus[particleIndex] == -1) particleStatus[particleIndex] = 3; 
-            System.out.println(">>>> Particle Status: " + particleStatus[particleIndex]);
+            printMessage(">>>> Particle Status: " + particleStatus[particleIndex]);
             
             motherParticles[particleIndex*2] = Integer.valueOf(eventTokens[FIRST_MOTHER_INDEX]);
             motherParticles[particleIndex*2 + 1] = Integer.valueOf(eventTokens[SECOND_MOTHER_INDEX]);
-            System.out.println(">>>> Mothers: 1) " + motherParticles[particleIndex*2] + " 2) " + motherParticles[particleIndex*2 + 1]);
+            printMessage(">>>> Mothers: 1) " + motherParticles[particleIndex*2] + " 2) " + motherParticles[particleIndex*2 + 1]);
             
             // Get the daughter particles
             daughterParticles[particleIndex*2] = Integer.valueOf(eventTokens[FIRST_DAUGHTER_INDEX]);
             daughterParticles[particleIndex*2 + 1] = Integer.valueOf(eventTokens[SECOND_DAUGHTER_INDEX]);
             if (daughterParticles[particleIndex*2] != 0 || daughterParticles[particleIndex*2 + 1] != 0) throw new RuntimeException("wtf?");
-            System.out.println(">>>> Daughter: 1) " + daughterParticles[particleIndex*2] + " 2) " + daughterParticles[particleIndex*2 + 1]);
+            printMessage(">>>> Daughter: 1) " + daughterParticles[particleIndex*2] + " 2) " + daughterParticles[particleIndex*2 + 1]);
             
             // Get the kinematics of the particle
             particleMomentum[particleIndex*5] = Double.valueOf(eventTokens[7]);     // px
@@ -234,7 +242,7 @@ public class LheToStdhep {
             particleMomentum[particleIndex*5 + 2] = Double.valueOf(eventTokens[9]); // pz
             particleMomentum[particleIndex*5 + 3] = Double.valueOf(eventTokens[10]); // Particle Energy
             particleMomentum[particleIndex*5 + 4] = Double.valueOf(eventTokens[11]); // Particle Mass
-            System.out.println(">>>> px: " + particleMomentum[particleIndex*5] 
+            printMessage(">>>> px: " + particleMomentum[particleIndex*5] 
                     + " py: " + particleMomentum[particleIndex*5 + 1]
                     + " pz: " + particleMomentum[particleIndex*5 + 2]
                     + " energy: " + particleMomentum[particleIndex*5 + 3]
@@ -246,12 +254,12 @@ public class LheToStdhep {
             particleVertex[particleIndex*4+2] = vertexPosition.z();
             particleVertex[particleIndex*4+3] = 0; 
            
-            System.out.println(">>>> vertex: " + vertexPosition.toString());
+            printMessage(">>>> vertex: " + vertexPosition.toString());
             
             // Increment the particle number
             particleIndex++;
             
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            printMessage(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         }
         
         // Create the Stdhep event and write it 
