@@ -1,7 +1,10 @@
 package org.ldmx.utils;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.GZIPInputStream;
@@ -49,7 +52,7 @@ public class LheToStdhep {
     public static void main(String[] args) throws IOException {
 
         
-        String lheGzFileName = null; 
+        List<String> lheGzFiles = new ArrayList<String>(); 
         String stdhepFileName = "output.stdhep";
 
         CommandLineParser parser = new DefaultParser();
@@ -57,8 +60,8 @@ public class LheToStdhep {
         // Create the Options
         // TODO: Add ability to parse list of files.
         Options options = new Options(); 
-        options.addOption("i", "input",   true, "Input lhe.gz file name");
-        options.addOption("o", "output",  true, "Output Stdhep file name");
+        options.addOption("i", "input",   true, "Path to lhe.gz file to process.");
+        options.addOption("l", "list",    true, "Text file containing a list of lhe.gz files to process.");
         options.addOption("v", "verbose", true, "Turn on verbose mode.");
        
         try {
@@ -68,36 +71,50 @@ public class LheToStdhep {
             
             // If the file is not specified, notify the user and exit the 
             // application.
-            if (!line.hasOption("i")) {
-                System.out.println("Please specify an LHE file to process.");
+            if (!line.hasOption("i") && !line.hasOption("l")) {
+                System.out.println("[ lheToStdhep ] : Please specify an lhe.gz file or a list of files to process.");
                 System.exit(0);
+            } else if (line.hasOption("i") && line.hasOption("l")) { 
+                System.out.println("[ lheToStdhep ] : Cannot specify both an individual input file and a list of files.");
             }
           
             if (line.hasOption("v")) verbose = true;
             
             // Get the name of the input file
-            lheGzFileName = line.getOptionValue("i");
-       
-            // If the user specified an output file name, use that instead of
-            // the default.
-            if (line.hasOption("o")) {
-                stdhepFileName = line.getOptionValue("o");
+            if (line.hasOption("i")) {
+                lheGzFiles.add(line.getOptionValue("i"));
             } else { 
-                stdhepFileName = lheGzFileName.substring(lheGzFileName.lastIndexOf("/") + 1, lheGzFileName.indexOf(".lhe.gz"));
-                stdhepFileName += ".stdhep";
+                BufferedReader reader = new BufferedReader(new FileReader(line.getOptionValue("l"))); 
+                String filePath = null;
+                while((filePath = reader.readLine()) != null) {
+                    lheGzFiles.add(filePath);
+                }
+                reader.close();
             }
-            
         } catch(ParseException e){
             System.out.println("Unable to parse command line arguments: " + e.getMessage());
         }
+       
+        for (String lheGzFile : lheGzFiles) { 
+            
+            System.out.println("[ lheToStdhep ]: Processing " + lheGzFile);
+            
+            // Build the output file name
+            stdhepFileName = lheGzFile.substring(lheGzFile.lastIndexOf("/") + 1, lheGzFile.indexOf(".lhe.gz"));
+            stdhepFileName += ".stdhep";
+            
+            // Ungzip the file 
+            GZIPInputStream lheGzStream = new GZIPInputStream(new FileInputStream(lheGzFile));
+            
+            // Get all of the lhe events 
+            List<Element> events = getLheEvents(lheGzStream);
+            System.out.println("[ lheToStdhep ] : A total of " + events.size() + " will be processed.");
+            System.out.println("[ lheToStdhep ] : Events will be written to file: " + stdhepFileName);
+            convertToStdHep(events, stdhepFileName);
+        }
         
-        GZIPInputStream lheGzStream = new GZIPInputStream(new FileInputStream(lheGzFileName));
         
-        List<Element> events = getLheEvents(lheGzStream);
-        System.out.println("[ lheToStdhep ] : A total of " + events.size() + " will be processed.");
-        System.out.println("[ lheToStdhep ] : Events will be written to file: " + stdhepFileName);
         
-        convertToStdHep(events, stdhepFileName);
     }
 
     /**
