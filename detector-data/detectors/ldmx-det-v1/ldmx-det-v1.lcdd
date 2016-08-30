@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v1" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v1/compact.xml" checksum="2196928459" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v1/compact.xml" checksum="2158875596" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>Copied from ldmx-det-v0-fieldmap and modified: 1) added active target 2) increased size of scoring plane to 1x1 meter</comment>
   </header>
@@ -86,13 +86,13 @@
   </regions>
   <display>
     <vis name="EcalLayerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
+      <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
     <vis name="EcalScoringVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
       <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
     <vis name="EcalDetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="1.0" G="1.0" B="1.0" alpha="0.0" />
+      <color R="1.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
     <vis name="InvisibleWithDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="false">
       <color R="0.0" G="0.0" B="0.0" alpha="0.0" />
@@ -104,13 +104,13 @@
       <color R="0.74" G="0.71" B="0.41" alpha="1.0" />
     </vis>
     <vis name="TriggerPadVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="0.0" G="1.0" B="1.0" alpha="0.0" />
+      <color R="0.0" G="1.0" B="1.0" alpha="1.0" />
     </vis>
     <vis name="TaggerTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
       <color R="0.8" G="0.67" B="0.0" alpha="1.0" />
     </vis>
     <vis name="TargetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
-      <color R="0.5" G="0.5" B="0.5" alpha="0.0" />
+      <color R="0.5" G="0.5" B="0.5" alpha="1.0" />
     </vis>
     <vis name="InvisibleNoDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="false">
       <color R="0.0" G="0.0" B="0.0" alpha="0.0" />

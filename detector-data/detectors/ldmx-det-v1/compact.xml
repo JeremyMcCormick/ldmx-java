@@ -175,13 +175,13 @@
 
     <display>
         <vis name="TaggerTrackerVis" r="0.8" g="0.67" b="0.0" alpha="1.0" showDaughters="false"/>
-        <vis name="TargetVis" r="0.5" g="0.5" b="0.5" alpha="0.0" showDaughters="true"/>
+        <vis name="TargetVis" r="0.5" g="0.5" b="0.5" alpha="1.0" showDaughters="true"/>
         <vis name="RecoilTrackerVis" r="0.74" g="0.71" b="0.41" alpha="1.0" showDaughters="false"/>
         <vis name="EcalScoringVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="false"/>
         <vis name="EcalSensorVis" r="1.0" g="0.95" b="0.5" alpha="1.0"/>
-        <vis name="EcalLayerVis" r="1.0" g="1.0" b="1.0" alpha="0.0" showDaughters="true"/>
-        <vis name="EcalDetVis" r="1.0" g="1.0" b="1.0" alpha="0.0" showDaughters="true"/>
-        <vis name="TriggerPadVis" r="0.0" g="1.0" b="1.0" alpha="0.0" showDaughters="true"/>
+        <vis name="EcalLayerVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="true"/>
+        <vis name="EcalDetVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="true"/>
+        <vis name="TriggerPadVis" r="0.0" g="1.0" b="1.0" alpha="1.0" showDaughters="true"/>
     </display>
 
     <detectors>

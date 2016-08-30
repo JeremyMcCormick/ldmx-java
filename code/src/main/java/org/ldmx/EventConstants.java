@@ -14,6 +14,7 @@ public final class EventConstants {
     public static final String ECAL = "Ecal";
     public static final String ECAL_SCORING = "EcalScoring";
     public static final String TARGET = "Target";
+    public static final String TRIGGER_PAD = "TriggerPad";
     
     /* hits collection names */
     public static final String TAGGER_SIM_HITS = "TaggerTrackerHits";
@@ -22,6 +23,7 @@ public final class EventConstants {
     public static final String RECOIL_RAW_HITS = "RecoilRawTrackerHits";
     public static final String ECAL_SIM_HITS = "EcalHits";
     public static final String ECAL_SCORING_SIM_HITS = "EcalScoringHits";
+    public static final String TRIGGER_PAD_SIM_HITS = "TriggerPadHits";
         
     /* MCParticle collection */
     public static final String MCPARTICLES = "MCParticle";

@@ -8,6 +8,7 @@ import static org.ldmx.EventConstants.RECOIL;
 import static org.ldmx.EventConstants.RECOIL_SIM_HITS;
 import static org.ldmx.EventConstants.TAGGER;
 import static org.ldmx.EventConstants.TAGGER_SIM_HITS;
+import static org.ldmx.EventConstants.TRIGGER_PAD_SIM_HITS;
 import hep.aida.ICloud1D;
 import hep.aida.ICloud2D;
 import hep.aida.IHistogram1D;
@@ -120,6 +121,9 @@ public class SimAnalysisDriver extends Driver {
     private IHistogram1D ecalScoringPhotonMomentumZ;
     private ICloud2D ecalScoringPrimaryXY;
     private ICloud2D ecalScoringDauXY;
+    
+    private ICloud1D triggerPadEnergy;
+    private ICloud1D triggerPadTime;
           
     private IDDecoder calID;
     private IDDecoder recoilID;
@@ -165,6 +169,9 @@ public class SimAnalysisDriver extends Driver {
         recoilParticleEdep = PLOT.cloud2D("/" + RECOIL_SIM_HITS + "/Particle E vs Edep", NO_CONVERT);
         recoilParticleEdep.annotation().addItem("xAxisLabel", "Energy [GeV]");
         recoilParticleEdep.annotation().addItem("yAxisLabel", "Energy [KeV]");
+        // Of course, this doesn't work in AIDA...
+        //recoilParticleEdep.annotation().addItem("xAxisScale", "log");
+        //recoilParticleEdep.annotation().addItem("yAxisScale", "log");
         
         /* Tagger plots */
         taggerHitCount = PLOT.histogram1D("/" + TAGGER_SIM_HITS + "/Hit Count", 100, 0., 100.);
@@ -237,6 +244,10 @@ public class SimAnalysisDriver extends Driver {
         ecalScoringDauXY = PLOT.cloud2D("/" + ECAL_SCORING_SIM_HITS + "/Dau XY", NO_CONVERT);
         ecalScoringDauXY.annotation().addItem("xAxisLabel", "X [mm]");
         ecalScoringDauXY.annotation().addItem("yAxisLabel", "Y [mm]");
+        
+        /* Trigger Pad plots */
+        triggerPadEnergy = PLOT.cloud1D("/" + TRIGGER_PAD_SIM_HITS + "/Hit Energy");
+        triggerPadTime = PLOT.cloud1D("/" + TRIGGER_PAD_SIM_HITS + "/Hit Time");
     }
     
     public void detectorChanged(Detector detector) {
@@ -576,7 +587,7 @@ public class SimAnalysisDriver extends Driver {
                     this.ecalScoringPhotonMomentumZ.fill(ecalScoringHit.getMomentum()[2]);
                 }
                 
-                ecalScoringDauXY.fill(startPoint[0], startPoint[0]);
+                ecalScoringDauXY.fill(startPoint[0], startPoint[1]);
                 
             } else { /* primary particle */
                 this.ecalScoringPrimaryXY.fill(startPoint[0], startPoint[1]);
@@ -585,6 +596,18 @@ public class SimAnalysisDriver extends Driver {
 
         ecalScoringElectronCount.fill(ecalScoringPdgCounts.get(ELECTRON));
         ecalScoringPhotonCount.fill(ecalScoringPdgCounts.get(PHOTON));
+        
+        /**
+         * Trigger Pad plots
+         */
+        final List<SimCalorimeterHit> triggerPadHits = event.get(SimCalorimeterHit.class, TRIGGER_PAD_SIM_HITS);
+        for (SimCalorimeterHit hit : triggerPadHits) {
+            triggerPadEnergy.fill(hit.getRawEnergy());
+            triggerPadTime.fill(hit.getTime());
+        }
+    }
+    
+    public void endOfData() {
     }
         
     private Collection<SimTrackerHit> findHits(List<List<SimTrackerHit>> hits, MCParticle particle) {

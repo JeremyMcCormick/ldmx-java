@@ -7,10 +7,13 @@
     <execute>
         <driver name="SimAnalysis"/>
         <driver name="AidaSave"/>
+        <!--
+        <driver name="PlotWriter"/>
         <driver name="RootSave"/>
+        -->
     </execute>
     <control>
-        <numberOfEvents>10000</numberOfEvents>
+        <numberOfEvents>70000</numberOfEvents>
     </control>
     <drivers>
         <driver name="SimAnalysis" type="org.ldmx.analysis.SimAnalysisDriver"/>
@@ -20,5 +23,10 @@
         <driver name="RootSave" type="org.lcsim.job.AidaSaveDriver">
             <outputFileName>ldmx_sim_anal.root</outputFileName>
         </driver>
+        <!--
+        <driver name="PlotWriter" type="org.lcsim.util.aida.GraphicsWriterDriver">
+            <outputDir>./ldmx_sim_anal_plots</outputDir>
+        </driver>
+        -->
     </drivers>
 </lcsim>
