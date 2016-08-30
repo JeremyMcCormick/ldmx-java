@@ -113,6 +113,12 @@
         <constant name="ecal_scoring_dim_y" value="1*m"/>
         <constant name="ecal_scoring_thickness" value="0.1*mm"/>
         
+        <!-- HCal scoring -->
+        <constant name="hcal_scoring_z" value="ecal_face_z + ecal_total_thickness + 0.1*mm"/>
+        <constant name="hcal_scoring_dim_x" value="1.5*m"/>
+        <constant name="hcal_scoring_dim_y" value="1.5*m"/>
+        <constant name="hcal_scoring_thickness" value="0.1*mm"/>
+        
         <!-- target measurements -->
         <constant name="target_dim_x" value="3.5*cm"/>
         <constant name="target_dim_y" value="9.5*cm"/>        
@@ -178,6 +184,7 @@
         <vis name="TargetVis" r="0.5" g="0.5" b="0.5" alpha="1.0" showDaughters="true"/>
         <vis name="RecoilTrackerVis" r="0.74" g="0.71" b="0.41" alpha="1.0" showDaughters="false"/>
         <vis name="EcalScoringVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="false"/>
+        <vis name="HcalScoringVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="false"/>
         <vis name="EcalSensorVis" r="1.0" g="0.95" b="0.5" alpha="1.0"/>
         <vis name="EcalLayerVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="true"/>
         <vis name="EcalDetVis" r="1.0" g="1.0" b="1.0" alpha="1.0" showDaughters="true"/>
@@ -361,12 +368,22 @@
         </detector>
  
         <detector id="3" name="EcalScoring" type="HPSTracker2" readout="EcalScoringHits" insideTrackingVolume="false">
-            <module name="ScoringModule" vis="EcalScoringVis">
+            <module name="EcalScoringModule" vis="EcalScoringVis">
                 <box x="ecal_scoring_dim_x" y="ecal_scoring_dim_y"/>
                 <module_component thickness="ecal_scoring_thickness" material="Vacuum" sensitive="true"/>
             </module>
             <layer id="1">
-                <module_placement name="ScoringModule" id="0" x="0" y="0" z="ecal_scoring_z" rx="0" ry="0" rz="0"/>
+                <module_placement name="EcalScoringModule" id="0" x="0" y="0" z="ecal_scoring_z" rx="0" ry="0" rz="0"/>
+            </layer>
+        </detector>
+        
+        <detector id="7" name="HcalScoring" type="HPSTracker2" readout="HcalScoringHits" insideTrackingVolume="false">
+            <module name="HcalScoringModule" vis="HcalScoringVis">
+                <box x="hcal_scoring_dim_x" y="hcal_scoring_dim_y"/>
+                <module_component thickness="hcal_scoring_thickness" material="Vacuum" sensitive="true"/>
+            </module>
+            <layer id="1">
+                <module_placement name="HcalScoringModule" id="0" x="0" y="0" z="hcal_scoring_z" rx="0" ry="0" rz="0"/>
             </layer>
         </detector>
 
@@ -658,6 +675,11 @@
         </readout>
 
         <readout name="EcalScoringHits">
+            <id>system:6,barrel:3,layer:4,module:12,sensor:1,side:32:-2,strip:12</id>
+            <processor type="ScoringTrackerHitProcessor"/>
+        </readout>
+        
+        <readout name="HcalScoringHits">
             <id>system:6,barrel:3,layer:4,module:12,sensor:1,side:32:-2,strip:12</id>
             <processor type="ScoringTrackerHitProcessor"/>
         </readout>
