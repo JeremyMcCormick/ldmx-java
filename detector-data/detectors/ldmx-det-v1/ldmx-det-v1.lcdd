@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v1" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v1/compact.xml" checksum="1273946371" />
+    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v1/compact.xml" checksum="2196928459" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>Copied from ldmx-det-v0-fieldmap and modified: 1) added active target 2) increased size of scoring plane to 1x1 meter</comment>
   </header>
@@ -103,10 +103,13 @@
     <vis name="RecoilTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
       <color R="0.74" G="0.71" B="0.41" alpha="1.0" />
     </vis>
+    <vis name="TriggerPadVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
+      <color R="0.0" G="1.0" B="1.0" alpha="0.0" />
+    </vis>
     <vis name="TaggerTrackerVis" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="true">
       <color R="0.8" G="0.67" B="0.0" alpha="1.0" />
     </vis>
-    <vis name="TargetVis" line_style="unbroken" drawing_style="solid" show_daughters="false" visible="true">
+    <vis name="TargetVis" line_style="unbroken" drawing_style="wireframe" show_daughters="true" visible="true">
       <color R="0.5" G="0.5" B="0.5" alpha="0.0" />
     </vis>
     <vis name="InvisibleNoDaughters" line_style="unbroken" drawing_style="wireframe" show_daughters="false" visible="false">
@@ -3332,7 +3335,7 @@
           <rotationref ref="identity_rot" />
           <physvolid field_name="slice" value="0" />
         </physvol>
-        <visref ref="InvisibleWithDaughters" />
+        <visref ref="TriggerPadVis" />
       </volume>
       <volume name="TriggerPad_envelope">
         <materialref ref="Air" />
@@ -3343,6 +3346,7 @@
           <rotationref ref="identity_rot" />
           <physvolid field_name="layer" value="0" />
         </physvol>
+        <visref ref="TriggerPadVis" />
       </volume>
       <volume name="tracking_volume">
         <materialref ref="TrackingMaterial" />
@@ -3351,7 +3355,7 @@
           <volumeref ref="Target_envelope" />
           <positionref ref="Target_position" />
           <rotationref ref="identity_rot" />
-          <physvolid field_name="system" value="10" />
+          <physvolid field_name="system" value="6" />
         </physvol>
         <physvol>
           <volumeref ref="LDMXTaggerModuleVolume" />
