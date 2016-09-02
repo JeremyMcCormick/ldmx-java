@@ -2,15 +2,15 @@
 <StrategyList xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
                     xs:noNamespaceSchemaLocation="http://lcsim.org/recon/tracking/seedtracker/strategybuilder/strategies.xsd">
     <TargetDetector>LDMXRecoilTracker</TargetDetector>
-    <Strategy name="RecoilTracker Seed 357">
+    <Strategy name="RecoilTracker Seed 357 C1">
         <!--Cutoffs-->
-        <MinPT>0.100</MinPT>
+        <MinPT>0.00</MinPT>
         <MinHits>4</MinHits>
         <MinConfirm>1</MinConfirm>
-        <MaxDCA>10.0</MaxDCA>
-        <MaxZ0>10.0</MaxZ0>
-        <MaxChisq>25</MaxChisq>
-        <BadHitChisq>10.0</BadHitChisq>
+        <MaxDCA>1000.0</MaxDCA>
+        <MaxZ0>1000.0</MaxZ0>
+        <MaxChisq>250</MaxChisq>
+        <BadHitChisq>100.0</BadHitChisq>
         <!--Layers-->
         <Layers>                 
             <Layer type="Seed" layer_number="3" detector_name="RecoilTracker" be_flag="BARREL" />
@@ -19,6 +19,44 @@
             <Layer type="Confirm" layer_number="1" detector_name="RecoilTracker" be_flag="BARREL" />
             <Layer type="Extend" layer_number="9" detector_name="RecoilTracker" be_flag="BARREL" />
             <Layer type="Extend" layer_number="10" detector_name="RecoilTracker" be_flag="BARREL" />
+        </Layers>
+    </Strategy>
+    <Strategy name="RecoilTracker Seed 357 C9">
+        <!--Cutoffs-->
+        <MinPT>0.00</MinPT>
+        <MinHits>4</MinHits>
+        <MinConfirm>1</MinConfirm>
+        <MaxDCA>1000.0</MaxDCA>
+        <MaxZ0>1000.0</MaxZ0>
+        <MaxChisq>250</MaxChisq>
+        <BadHitChisq>100.0</BadHitChisq>
+        <!--Layers-->
+        <Layers>                 
+            <Layer type="Seed" layer_number="3" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Seed" layer_number="5" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Seed" layer_number="7" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Confirm" layer_number="9" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Extend" layer_number="1" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Extend" layer_number="10" detector_name="RecoilTracker" be_flag="BARREL" />
+        </Layers>
+    </Strategy>
+    <Strategy name="RecoilTracker Seed 357 C10">
+        <!--Cutoffs-->
+        <MinPT>0.00</MinPT>
+        <MinHits>4</MinHits>
+        <MinConfirm>1</MinConfirm>
+        <MaxDCA>1000.0</MaxDCA>
+        <MaxZ0>1000.0</MaxZ0>
+        <MaxChisq>250</MaxChisq>
+        <BadHitChisq>100.0</BadHitChisq>
+        <!--Layers-->
+        <Layers>                 
+            <Layer type="Seed" layer_number="3" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Seed" layer_number="5" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Seed" layer_number="7" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Confirm" layer_number="10" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Extend" layer_number="9" detector_name="RecoilTracker" be_flag="BARREL" />
+            <Layer type="Extend" layer_number="1" detector_name="RecoilTracker" be_flag="BARREL" />
         </Layers>
     </Strategy>
 </StrategyList>
