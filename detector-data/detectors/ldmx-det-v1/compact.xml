@@ -203,6 +203,7 @@
 
         <detector id="6" name="Target" type="TestBeamCalorimeter" readout="TargetHits" vis="TargetVis" insideTrackingVolume="true">
             <dimensions x="target_dim_x" y="target_dim_y"/>
+            <position z="target_z"/>
             <layer repeat="1">
                 <slice thickness="target_thickness" material="Tungsten" sensitive="yes"/>
             </layer>

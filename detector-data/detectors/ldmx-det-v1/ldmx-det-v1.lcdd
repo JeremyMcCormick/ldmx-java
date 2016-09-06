@@ -2,7 +2,7 @@
 <lcdd xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcdd/1.0/lcdd.xsd">
   <header>
     <detector name="ldmx-det-v1" />
-    <generator name="lcsim" version="1.0" file="/media/work/git/ldmx-java/detector-data/detectors/ldmx-det-v1/compact.xml" checksum="3962571540" />
+    <generator name="lcsim" version="1.0" file="/home/omoreno/work/ldmx/software/ldmx-java/detector-data/detectors/ldmx-det-v1/compact.xml" checksum="2683231337" />
     <author name="Jeremy McCormick, Tim Nelson, Omar Moreno" />
     <comment>Copied from ldmx-det-v0-fieldmap and modified: 1) added active target 2) increased size of scoring plane to 1x1 meter</comment>
   </header>
@@ -236,7 +236,7 @@
       <constant name="ecal_y" value="500.0" />
       <constant name="tagger_module_length" value="100.0" />
       <position name="tracking_region_pos" x="0.0" y="0.0" z="-300.0" unit="mm" />
-      <position name="Target_position" x="0.0" y="0.0" z="0.0" unit="mm" />
+      <position name="Target_position" x="0.0" y="0.0" z="300.0" unit="mm" />
       <position name="Target_layerType0_slice0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <position name="Target_layer0_position" x="0.0" y="0.0" z="0.0" unit="mm" />
       <position name="LDMXTaggerModuleVolume_component0_position" x="0.0" y="0.0" z="-0.1" unit="mm" />
